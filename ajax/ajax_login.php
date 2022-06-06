@@ -12,6 +12,7 @@
 		echo 'empty'; 
 		exit;
 	}
+	//
 
 	$username = strtolower(preg_replace('/\s+/', '', $_REQUEST['username']));
 	$password = hash('sha256', preg_replace('/\s+/', '', $_REQUEST['password'])); 

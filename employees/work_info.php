@@ -1083,7 +1083,7 @@
 					<div style="overflow:auto;" class="mt-4" id="hideauto">
 						    <div>
 						      <button type="button" class="btn btn-primary btn-fl previous" onclick=""><?=$lng['Prev']?></button>
-						      <button type="button" class="btn btn-primary btn-fr  next" onclick=""><?=$lng['Next']?></button>
+						      <button type="button" class="btn btn-primary btn-fr next lastdate_select" onclick=""><?=$lng['Next']?></button>
 						    </div>
 						</div>
 				</div>
@@ -1095,7 +1095,7 @@
 										<th><?=$lng['Employee status']?></th><td>
 											<select name="emp_status" style="pointer-events: none;width:140px;">
 												<? foreach($emp_status as $k=>$v){ ?>
-													<option <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
+													<option class='empstat' <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
 												<? } ?>
 											</select>
 											<b style="color:#b00"><?=$lng['Please change this from End Contract tab']?></b>
@@ -1108,6 +1108,7 @@
 						<div style="overflow:auto;" class="mt-4" id="hideauto">
 						    <div>
 						      <button type="button" class="btn btn-primary btn-fl previous" onclick=""><?=$lng['Prev']?></button>
+						      <button type="button" class="btn btn-primary btn-fr" onclick="">Submit</button>
 						      <!--<button type="button" class="btn btn-primary btn-fr" id="next" onclick=""><?=$lng['Next']?></button>-->
 						    </div>
 						</div>
@@ -2617,6 +2618,15 @@
 		    current_fs.hide();
 		});
 
+		$('.lastdate_select').click(function(){
+			console.log('thisdat');
+			if($('input[name="resign_date"]').val()==''){
+				$('.empstat').each(function(){
+					if($(this).val()=='2'||$(this).val()=='3')$(this).attr('disabled',true);
+				});
+			}
+		});
+
 		$(document).on('click','#openEmploymentPopup',function(){
 			$('#modalOpenEmployment').modal('toggle');
 			
@@ -2624,6 +2634,8 @@
 		$('input[type="checkbox"]').click(function(){
 			if ($(this).is (':checked')){
 				$('input[name="resign_date"]').attr('disabled',false);
+			}else{
+				$('input[name="resign_date"]').attr('disabled',true);
 			}
 		})
 	})

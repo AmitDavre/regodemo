@@ -12,7 +12,7 @@
 	// echo '</pre>';
 	// exit;
 
-
+if(!isset($_REQUEST['end_employment']))$_REQUEST['end_employment']='';
 	$update = 0;
 	if(isset($_REQUEST['updateEmp'])){
 		$update = $_REQUEST['updateEmp'];

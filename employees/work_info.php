@@ -1065,7 +1065,7 @@
 					<table class="basicTable editTable" border="0">
 						<tbody>
 						<tr>
-						<th><input type='checkbox' <?php if(empty($data['end_employment']))echo "checked"; ?> class='ml-4' checked value='no' id='no_end_employment' onclick='$("#end_employment").prop("checked",!this.checked);$("input[name=\"resign_date\"]").attr("disabled",true);'></th>
+						<th><input type='checkbox' <?php if(empty($data['end_employment']))echo "checked"; if(!isset($data['end_employment']))?> class='ml-4' value='no' id='no_end_employment' onclick='$("#end_employment").prop("checked",!this.checked);$("input[name=\"resign_date\"]").attr("disabled",true);'></th>
 						<td style='padding-left: 1.35%;'>No end of Employment</td>
 						</tr>
 						<tr>
@@ -1089,7 +1089,7 @@
 						</div>
 				</div>
 				
-				<div class='tabw' >
+				<div class='tabw' id='empstatus'>
 									<table class="basicTable editTable" border="0">
 									<tbody>
 									<tr>
@@ -2013,15 +2013,15 @@
 		})
 		$('.submit_employment_form').click(function(){
 			$("#employment_form").submit();
-			console.log('GRGR');
+			//console.log('GRGR');
 		})
 		$("#employment_form").submit(function(e){
 			e.preventDefault();
 			var data=new FormData(this);
-			for (var key in data) {
-				console.log(key, data[key]);
-				//fd.append(key, data[key]);
-			}
+			// for (var key in data) {
+			// 	console.log(key, data[key]);
+			// 	//fd.append(key, data[key]);
+			// }
 			$.ajax({
 				url:'ajax/update_employees.php',
 				type: 'POST',
@@ -2039,14 +2039,14 @@
 						$("body").overhang({
 							type: "success",
 							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
-							duration: 3,
+							duration: 2,
 							callback: function(value){
 								location.reload();
 							}
 						})
-						if(!update){
+						
 							setTimeout(function(){location.reload();},1000);
-						}
+						
 					}else{
 						$("body").overhang({
 							type: "error",
@@ -2709,25 +2709,53 @@
 		    previous_fs.show();
 		    current_fs.hide();
 		});
+		/*$('#empstatus').on('show',function(){
+			console.log('grvr');
+			$(this).each(function(){
+				if($(this).attr('disabled')==false){
+					$(this).attr('selected',true);
+					return;
+				}else $(this).attr('selected',false);
+
+			});
+		});*/
 
 		$('.lastdate_select').click(function(){
 			//console.log($('#end_employment').is(':checked'));
-			if($('input[name="resign_date"]').val()=='' || $('#end_employment').is(':checked')){
-				console.log('yjyej');
+			if($('input[name="resign_date"]').val()=='' || !$('#end_employment').is(':checked')){
+				//console.log('yjyej');
 				$('.empstat').each(function(){
 					if($(this).val()=='2'||$(this).val()=='3')
 						$(this).attr('disabled',true);
 					else $(this).attr('disabled',false);
 				});
+				$('.empstat').each(function(){   
+					console.log($(this).prop('disabled'));
+				if($(this).prop('disabled')==false){
+					$(this).attr('selected',true);					//
+					console.log('kdjkd');
+					return;
+				}else {$(this).attr('selected',false);}		/////////////////
+			});
 				$('#end_employment_button').hide();
 				$('#end_employment_submit').show();
 			}else{
-				console.log('thisdat');
+				//sconsole.log('thisdat');
 				$('.empstat').each(function(){
+					//console.log('kdjkd');
 					if($(this).val()=='2' || $(this).val()=='3')
 						$(this).attr('disabled',false);
 					else $(this).attr('disabled',true);
 				});
+
+				$('.empstat').each(function(){
+					//console.log($(this).prop('disabled'));
+				if($(this).prop('disabled')==false){       /////////////////////
+					$(this).attr('selected',true);
+											//
+					return;
+				}else $(this).attr('selected',false);         ///////////////////  
+			});
 				$('#end_employment_button').show();
 				$('#end_employment_submit').hide();
 			}

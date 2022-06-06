@@ -271,7 +271,7 @@
 									<tr>
 										<th><?='Employment End date'?></th>
 										<td>
-											<input type="text" style="cursor:pointer;width:140px;" name="resign_date" placeholder="..." value="<? if(!empty($data['resign_date'])){echo date('d-m-Y', strtotime($data['resign_date']));}?>" readonly="readonly">
+											<input type="text" style="cursor:pointer;width:140px;" placeholder="..." value="<? if(!empty($data['resign_date'])){echo date('d-m-Y', strtotime($data['resign_date']));}?>" readonly="readonly">
 												
 										</td>
 									</tr>
@@ -1040,9 +1040,10 @@
 					</button>
 				</div>
 				<div class="modal-body modal-tabs">
-				<form>
+				<form id='employment_form'>
+			<input type="hidden" name="emp_id" value="<?=$data['emp_id']?>">
 				<div class='tabw'>
-					<table class="basicTable editTable" border="0" style="width: 100%;>
+					<table class="basicTable editTable" border="0" style="width: 100%;">
 								<tbody>
 									<tr style="line-height:100%">
 										<th><?=$lng['Joining date']?></th>
@@ -1064,11 +1065,11 @@
 					<table class="basicTable editTable" border="0">
 						<tbody>
 						<tr>
-						<th><input type='checkbox' class='ml-4' value='no' name='end-employment[]'></th>
+						<th><input type='checkbox' <?php if(empty($data['end_employment']))echo "checked"; ?> class='ml-4' checked value='no' id='no_end_employment' onclick='$("#end_employment").prop("checked",!this.checked);$("input[name=\"resign_date\"]").attr("disabled",true);'></th>
 						<td style='padding-left: 1.35%;'>No end of Employment</td>
 						</tr>
 						<tr>
-						<th><input type='checkbox' class='ml-4' value='end' name='end-employment[]'></th>
+						<th><input type='checkbox' <?php if(!empty($data['end_employment']))echo "checked"; ?> class='ml-4' value='end' id='end_employment' name='end_employment' onclick='$("#no_end_employment").prop("checked",!this.checked)'></th>
 						<td style='padding-left: 1.35%;'>End of Employment</td>
 						</tr>
 						<tr>
@@ -1083,7 +1084,7 @@
 					<div style="overflow:auto;" class="mt-4" id="hideauto">
 						    <div>
 						      <button type="button" class="btn btn-primary btn-fl previous" onclick=""><?=$lng['Prev']?></button>
-						      <button type="button" class="btn btn-primary btn-fr  next" onclick=""><?=$lng['Next']?></button>
+						      <button type="button" class="btn btn-primary btn-fr next lastdate_select" onclick=""><?=$lng['Next']?></button>
 						    </div>
 						</div>
 				</div>
@@ -1093,9 +1094,9 @@
 									<tbody>
 									<tr>
 										<th><?=$lng['Employee status']?></th><td>
-											<select name="emp_status" style="pointer-events: none;width:140px;">
+											<select name="emp_status" style="width:140px;">
 												<? foreach($emp_status as $k=>$v){ ?>
-													<option <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
+													<option class='empstat' <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
 												<? } ?>
 											</select>
 											<b style="color:#b00"><?=$lng['Please change this from End Contract tab']?></b>
@@ -1108,6 +1109,44 @@
 						<div style="overflow:auto;" class="mt-4" id="hideauto">
 						    <div>
 						      <button type="button" class="btn btn-primary btn-fl previous" onclick=""><?=$lng['Prev']?></button>
+						      <button type="button" class="btn btn-primary btn-fr submit_employment_form" id='end_employment_submit' onclick="">Submit</button>
+						      <button type="button" class="btn btn-primary btn-fr next" id='end_employment_button' onclick=""><?=$lng['Next']?></button>
+						    </div>
+						</div>
+				</div>
+				<div class='tabw'>
+				<table class="basicTable editTable" border="0">
+									<tbody>
+									<tr>
+										<th>
+											Notice Date 
+										</th>
+										<td>
+										<input class='datepick' type="text" style="cursor:pointer;width:140px;" name="notice_date" placeholder="..." value="<? if(!empty($data['notice_date'])){echo date('d-m-Y', strtotime($data['notice_date']));}?>">
+										</td>
+									</tr>
+									<tr>
+										<th>
+											Last Working Date 
+										</th>
+										<td>
+										<input disabled class='datepick' type="text" style="cursor:pointer;width:140px;" name='last_date' placeholder="..." value="<? if(!empty($data['resign_date'])){echo date('d-m-Y', strtotime($data['resign_date']));}?>">
+										</td>
+									</tr>
+									<tr>
+										<th>
+											End of Employment Reason
+										</th>
+										<td>
+										<input type="text" style="cursor:pointer;width:140px;" name="resign_reason" placeholder="..." value="<? if(!empty($data['resign_reason'])){echo $data['resign_reason'];}?>">
+										</td>
+									</tr>
+									</tbody>
+				</table>
+				<div style="overflow:auto;" class="mt-4" id="hideauto">
+						    <div>
+						      <button type="button" class="btn btn-primary btn-fl previous" onclick=""><?=$lng['Prev']?></button>
+						      <button type="button" class="btn btn-primary btn-fr submit_employment_form" onclick="">Submit</button>
 						      <!--<button type="button" class="btn btn-primary btn-fr" id="next" onclick=""><?=$lng['Next']?></button>-->
 						    </div>
 						</div>
@@ -1972,7 +2011,60 @@
 			//$('#sAlert').fadeIn(200);
 			//$("#submitBtn").addClass('flash');
 		})
-
+		$('.submit_employment_form').click(function(){
+			$("#employment_form").submit();
+			console.log('GRGR');
+		})
+		$("#employment_form").submit(function(e){
+			e.preventDefault();
+			var data=new FormData(this);
+			for (var key in data) {
+				console.log(key, data[key]);
+				//fd.append(key, data[key]);
+			}
+			$.ajax({
+				url:'ajax/update_employees.php',
+				type: 'POST',
+				data: data,
+				async: false,
+				cache: false,
+				contentType: false,
+				processData: false,
+				success: function(result){
+					//$('#dump').html(result); return false;
+					//$("#submitBtn").removeClass('flash');
+					//$("#sAlert").fadeOut(200); 
+					//return false
+					if($.trim(result) == 'success'){
+						$("body").overhang({
+							type: "success",
+							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
+							duration: 3,
+							callback: function(value){
+								location.reload();
+							}
+						})
+						if(!update){
+							setTimeout(function(){location.reload();},1000);
+						}
+					}else{
+						$("body").overhang({
+							type: "error",
+							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?> : '+result,
+							duration: 4,
+						})
+					}
+					$("#submitBtn i").removeClass('fa-refresh fa-spin').addClass('fa-save');
+				},
+				error:function (xhr, ajaxOptions, thrownError){
+					$("body").overhang({
+						type: "error",
+						message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+						duration: 4,
+					})
+				}
+			});
+	});
 		$("#infoForm").on('submit', function(e){ // SUBMIT EMPLOYEE FORM ///////////////////////////////////
 			//e.preventDefault();
 			var err = 0;
@@ -2598,6 +2690,7 @@
 			$("#caBtn").addClass('flash');
 		});	
 
+
 		var current_fs, next_fs, previous_fs; //fieldsets
 		var opacity;
 		$(".next").click(function(){
@@ -2617,13 +2710,40 @@
 		    current_fs.hide();
 		});
 
+		$('.lastdate_select').click(function(){
+			//console.log($('#end_employment').is(':checked'));
+			if($('input[name="resign_date"]').val()=='' || $('#end_employment').is(':checked')){
+				console.log('yjyej');
+				$('.empstat').each(function(){
+					if($(this).val()=='2'||$(this).val()=='3')
+						$(this).attr('disabled',true);
+					else $(this).attr('disabled',false);
+				});
+				$('#end_employment_button').hide();
+				$('#end_employment_submit').show();
+			}else{
+				console.log('thisdat');
+				$('.empstat').each(function(){
+					if($(this).val()=='2' || $(this).val()=='3')
+						$(this).attr('disabled',false);
+					else $(this).attr('disabled',true);
+				});
+				$('#end_employment_button').show();
+				$('#end_employment_submit').hide();
+			}
+		});
+		$('input[name="resign_date"]').change(function(){
+			$('input[name="last_date"]').val($(this).val());
+		});
 		$(document).on('click','#openEmploymentPopup',function(){
 			$('#modalOpenEmployment').modal('toggle');
 			
 			});
-		$('input[type="checkbox"]').click(function(){
+		$('#end_employment').change(function(){
 			if ($(this).is (':checked')){
 				$('input[name="resign_date"]').attr('disabled',false);
+			}else{
+				$('input[name="resign_date"]').attr('disabled',true);
 			}
 		})
 	})

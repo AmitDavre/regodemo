@@ -1093,7 +1093,7 @@
 									<tbody>
 									<tr>
 										<th><?=$lng['Employee status']?></th><td>
-											<select name="emp_status" style="pointer-events: none;width:140px;">
+											<select name="emp_status" style="width:140px;">
 												<? foreach($emp_status as $k=>$v){ ?>
 													<option class='empstat' <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
 												<? } ?>

@@ -1131,7 +1131,7 @@
 							<td colspan="2" style="height:10px"></td>
 						</tr>
 					</tbody>
-					<thead>
+					<!--<thead>
 						<tr style="line-height:100%">
 							<th colspan="2"><?=$lng['ADDITIONAL COMPENSATIONS AT END OF EMPLOYEMENT']?></th>
 						</tr>
@@ -1172,7 +1172,7 @@
 							<th><?=$lng['Remarks']?></th>
 							<td><textarea placeholder="..." rows="4" name="remarks"><?=$data['remarks']?></textarea></td>
 						</tr>
-					</tbody>
+					</tbody>-->
 				</table>
 			</div>
 			
@@ -1180,7 +1180,69 @@
 		</fieldset></form>
 		
 	</div>
-
+	
+	<div class="modal fade" id="addben" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-user"></i>&nbsp; <?=$lng['ADDITIONAL COMPENSATIONS AT END OF EMPLOYEMENT']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+				<form id='addbenForm'>
+					<table class="basicTable editTable" border="0">
+					<tbody>
+						<tr>
+							<th><?=$lng['Month Payroll']?></th>
+							<td>
+								<select name="month_payroll">
+									<option value="0"><?=$lng['Please select']?></option>
+									<?foreach($months as $k => $v){?>
+										<option value="<?=$k?>"><?=$v?></option>
+									<? } ?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th><?=$lng['Remaining salary']?></th>
+							<td><input class="float72 sel notnull" type="text" name="remaining_salary" placeholder="..." value="<?=$data['remaining_salary']?>"></td>
+						</tr>
+						<tr>
+							<th><?=$lng['Notice payment']?></th>
+							<td><input class="float72 sel notnull" type="text" name="notice_payment" placeholder="..." value="<?=$data['notice_payment']?>"></td>
+						</tr>
+						<tr>
+							<th><?=$lng['Paid leave']?></th>
+							<td><input class="float72 sel notnull" type="text" name="paid_leave" placeholder="..." value="<?=$data['paid_leave']?>"></td>
+						</tr>
+						<tr>
+							<th><?=$lng['Severance']?></th>
+							<td><input class="float72 sel notnull" type="text" name="severance" placeholder="..." value="<?=$data['severance']?>"></td>
+						</tr>
+						<tr>
+							<th><?=$lng['Other income']?></th>
+							<td><input class="float72 sel notnull" type="text" name="other_income" placeholder="..." value="<?=$data['other_income']?>"></td>
+						</tr>
+						<tr>
+							<th><?=$lng['Remarks']?></th>
+							<td><textarea placeholder="..." rows="4" name="remarks"><?=$data['remarks']?></textarea></td>
+						</tr>
+					</tbody>
+					</table>
+					<div style="overflow:auto;" class="mt-4" id="hideauto">
+						    <div>
+						      <button type="button" class="btn btn-primary btn-fl" data-dismiss="modal" aria-label="Close" onclick=""><?=$lng['Cancel']?></button>
+						      <button type="button" class="btn btn-primary btn-fr" id="addbenSubmit" onclick=""><?=$lng['Submit']?></button>
+						    </div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<!-- Modal modalAddNew -->
 	<div class="modal fade" id="modalAddEmpcareer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-lg" role="document">
@@ -2060,8 +2122,59 @@
 			orientation: "bottom left",
 			
 		})
+		
+		$('#addbenSubmit').click(function(){
+			$('#addbenForm').submit();
+		});
+		
+		$('#addbenForm').submit(function(e){// SUBMIT EMPLOYEE FORM ///////////////////////////////////
+				e.preventDefault();
+				var data = new FormData(this);
+				data.append('emp_id',$('#input[name="emp_id"]').val());
+				$.ajax({
+					url: "ajax/update_employees.php",
+					type: 'POST',
+					data: data,
+					async: false,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(result){
+						//$('#dump').html(result); return false;
+						$("#submitBtn").removeClass('flash');
+						$("#sAlert").fadeOut(200);
 
-
+						if($.trim(result) == 'success'){
+							$("body").overhang({
+								type: "success",
+								message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
+								duration: 2,
+								callback: function(v){
+									localStorage.removeItem('addben');
+									location.reload();
+								}
+							})
+							if(!update){
+								setTimeout(function(){location.reload();},1000);
+							}
+						}else{
+							$("body").overhang({
+								type: "error",
+								message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?> : '+result,
+								duration: 4,
+							})
+						}
+						//setTimeout(function(){$("#submitBtn i").removeClass('fa-refresh fa-spin').addClass('fa-save');},500);
+					},
+					error:function (xhr, ajaxOptions, thrownError){
+						$("body").overhang({
+							type: "error",
+							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+							duration: 4,
+						})
+					}
+				});
+			})
 		$("#financialForm").on('submit', function(e){ // SUBMIT EMPLOYEE FORM ///////////////////////////////////
 			e.preventDefault();
 			var data = new FormData(this);
@@ -2084,6 +2197,7 @@
 							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
 							duration: 2,
 							callback: function(v){
+								localStorage.setItem('addben','true');
 								location.reload();
 							}
 						})
@@ -2558,6 +2672,10 @@
 
 
 	$(document).ready(function() {
+		if(localStorage.getItem('addben')!=null){
+			$('#addben').modal('show');
+		}
+
 		
 		var update2 = <?=json_encode($update)?>;
 		var emp_id2 = <?=json_encode($_SESSION['rego']['empID'])?>;
@@ -2573,6 +2691,7 @@
 		}
 
 		$(document).on("click", "#editBtn", function(e){
+			
 			//alert(dateParmeter);
 			$(".sdatepick12").datepicker("destroy");
 			$('#modalAddEmpcareer2 input#sdates2').removeClass('sdatepick1').addClass('startPicker2');
@@ -2805,7 +2924,6 @@
 			
 			localStorage.setItem('activeTabFin2', $(e.target).attr('href'));
 		});
-
 	})
 
 	var currentTab2 = 0;

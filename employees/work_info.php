@@ -2886,7 +2886,7 @@
 						message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
 						duration: 2,
 						callback: function(v){
-							// window.location.reload();
+							 window.location.reload();
 						}
 					})
 					

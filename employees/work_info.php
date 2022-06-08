@@ -21,9 +21,22 @@
 				$ecdata[] = $ecdatas;
 			}
 		}
-
-
-
+		////////////  getting start date from payroll month start
+		$res1 = $dbc->query("SELECT month FROM {$cid}_payroll_2022 WHERE emp_id='$empID'");
+		if($rows=$res1->fetch_assoc())
+		{
+			$res2 = $dbc->query("SELECT time_start FROM {$cid}_payroll_months WHERE month='2022_{$rows['month']}'");
+			if($res2)$rows2=$res2->fetch_assoc();
+			//print_r($rows2);exit;
+			$start_date=$rows2['time_start'];
+		}
+		//getting all positions
+		$res1=$dbc->query("SELECT * FROM {$cid}_positions");
+		if($res1){
+		    $rows=$res1->fetch_all(MYSQLI_ASSOC);
+		    $positions=$rows;
+		}//print_r($positions);exit;
+		///////////
 		$res = $dbc->query("SELECT * FROM ".$cid."_employees WHERE emp_id = '".$empID."'");
 		$data = $res->fetch_assoc();
 		if(empty($data['image'])){$data['image'] = 'images/profile_image.jpg';}
@@ -1047,7 +1060,11 @@
 								<tbody>
 									<tr style="line-height:100%">
 										<th><?=$lng['Joining date']?></th>
-										<td><input readonly style="cursor:pointer" class="datepick" type="text" name="joining_date" id="joining_date" placeholder="..." value="<? if(!empty($data['joining_date'])){echo date('d-m-Y', strtotime($data['joining_date']));}?>"></td>
+										<td>
+										<input readonly style="cursor:pointer" class="datepick" type="text" name="joining_date" id="joining_date" placeholder="..." 
+										value="<? if(!empty($data['joining_date'])){echo date('d-m-Y', strtotime($data['joining_date']));}else 
+										    if(!empty($start_date)){echo ($start_date);}?>">
+										</td>
 									</tr>
 									<!--<tr>
 										<th><?=$lng['Probation due date']?></th>
@@ -1299,7 +1316,24 @@
 											</select>
 										</td>
 									</tr>
-									
+									<tr>
+										<th><?=$lng['Position']?></th>
+										<td>
+											<select name="position_new" >
+												<option value="">...</option>
+												<? foreach($positions as $k=>$v){ ?>
+													<option  value="<?=$v['id']?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+										<td>											
+											<select name="position_curr" >
+												<option value="">...</option>
+												<? foreach($positions as $k=>$v){ ?>
+													<option <? if($ecdata[0]['position'] == $v['id']){echo 'selected';}?> value="<?=$v['id']?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select></td>
+									</tr>
 			
 								</tbody>
 							</table>
@@ -1412,6 +1446,8 @@
 
 	
 	$(document).ready(function() {
+
+		
 		
 		var update = <?=json_encode($update)?>;
 		var emp_id = <?=json_encode($_SESSION['rego']['empID'])?>;
@@ -2690,7 +2726,18 @@
 			$("#caBtn").addClass('flash');
 		});	
 
-
+		
+		$('#modalOpenEmployment').on('shown.bs.modal',function(){
+			if(<?php if(isset($start_date))
+			    echo 'true'; else echo 'false';?>){
+				$("body").overhang({
+					type: "error",
+					message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<b>This employee has already payroll calculations with this joining date<br> Changes will be registered as an new start <br>You will need to update Benefits and responsibilities newly for this employee.</b>',
+					duration: 10,
+				})
+			}
+		});
+		
 		var current_fs, next_fs, previous_fs; //fieldsets
 		var opacity;
 		$(".next").click(function(){
@@ -2819,7 +2866,9 @@
 	function SaveNewUsersssForm(){
 
 		var formData = new FormData($('#modalOpenResponsibilities #careerForm')[0]);
-
+		/*formData.forEach((value,key) => {
+			  console.log(key+" "+value)
+			});*/
 		$.ajax({
 			url: "ajax/update_career_responsibilities.php",
 			type: "POST", 
@@ -2830,13 +2879,14 @@
 			processData: false,
 			success: function(data){
 				//$("#dump").html(data); return false;
+				
 				if(data.result == 'success'){
 					$("body").overhang({
 						type: "success",
 						message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
 						duration: 2,
 						callback: function(v){
-							// window.location.reload();
+							 window.location.reload();
 						}
 					})
 					
@@ -2860,6 +2910,7 @@
 						// window.location.reload();
 					}
 				})
+				//console.log(xhr.responseText);
 			}
 		});
 

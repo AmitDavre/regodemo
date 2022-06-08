@@ -1186,7 +1186,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 				<h5 class="modal-title"><i class="fa fa-user"></i>&nbsp; <?=$lng['ADDITIONAL COMPENSATIONS AT END OF EMPLOYEMENT']?></h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick='localStorage.removeItem("addben")'>
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -1194,7 +1194,7 @@
 					<h4>Add additional compensations in career database ?</h4>
 					<div style="overflow:auto;" class="mt-4" id="hideauto">
 						    <div>
-						      <button type="button" class="btn btn-primary btn-fl" data-dismiss="modal" aria-label="Close" onclick=""><?=$lng['No']?></button>
+						      <button type="button" class="btn btn-primary btn-fl" data-dismiss="modal" aria-label="Close" onclick="localStorage.removeItem('addben')"><?=$lng['No']?></button>
 						      <button type="button" class="btn btn-primary btn-fr" id="addbenSubmit" onclick=""><?='YES'?></button>
 						    </div>
 					</div>

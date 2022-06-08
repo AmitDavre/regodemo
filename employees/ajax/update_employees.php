@@ -11,7 +11,18 @@
 	// print_r($_REQUEST);
 	// echo '</pre>';
 	// exit;
-
+	if(!empty($_REQUEST['same_sso'])){
+	    $same_as_id['same_sso']=$_REQUEST['same_sso'];
+	}
+	unset($_REQUEST['same_sso']);
+	if(!empty($_REQUEST['same_tax'])){
+	    $same_as_id['same_tax']=$_REQUEST['same_tax'];
+	}
+	unset($_REQUEST['same_tax']);
+	if(isset($same_as_id)){
+	    $_REQUEST['same_as_id']=serialize($same_as_id);
+	}
+	
 if(!isset($_REQUEST['end_employment']))$_REQUEST['end_employment']='';
 	$update = 0;
 	if(isset($_REQUEST['updateEmp'])){
@@ -257,6 +268,9 @@ if(!isset($_REQUEST['end_employment']))$_REQUEST['end_employment']='';
 		if(!isset($olddata['calc_psf'])){ $_REQUEST['calc_psf'] = $sys_settings['calc_psf'];}
 		if(!isset($olddata['calc_pvf'])){ $_REQUEST['calc_pvf'] = $sys_settings['calc_pvf'];}
 		if(!isset($olddata['account_code'])){ $_REQUEST['account_code'] = $sys_settings['account_code'];}
+		if(!isset($olddata['same_as_id'])){$_REQUEST['same_as_id'] = $sys_settings['same_as_id'];}
+		if(!isset($olddata['sso_id'])){$_REQUEST['sso_id'] = $sys_settings['sso_id'];}
+		
 	}
 
 
@@ -286,7 +300,7 @@ if(!isset($_REQUEST['end_employment']))$_REQUEST['end_employment']='';
 	}
 	$sql = substr($sql,0,-1);
 	
-	//var_dump($sql);
+	//var_dump($sql);die();
 	
 	if($dbc->query($sql)){
 		//updateEmployeesForPayroll($cid);

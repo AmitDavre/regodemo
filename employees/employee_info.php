@@ -143,8 +143,12 @@
 	// echo '<pre>'; exit;
 
 	$emp_def_settings = $rego_settings['all_settings'];  //get default setting for employee...
-
-
+	
+	
+	//print_r(unserialize($data['same_as_id']));die();
+	$same_as_id=unserialize($data['same_as_id']);
+	$same_tax=$same_as_id['same_tax'];
+	$same_sso=$same_as_id['same_sso'];
 ?>
    <h2 style="position:relative">
 		<span><i class="fa fa-users fa-mr"></i> <?=$lng['Employee info']?>&nbsp;&nbsp;<i class="fa fa-arrow-circle-right"></i></span>
@@ -330,6 +334,16 @@
 							<tr>
 								<th><?=$lng['Tax ID no.']?></th>
 								<td><input class="xtax_id_number" type="text" name="tax_id" placeholder="..." value="<?=$data['tax_id']?>"></td>
+								<td class="pl-2">
+									<input type="checkbox" name='same_tax' id='same_tax' <?php if(isset($same_tax))echo 'checked';?>> <b>Same as ID card no.</b>
+								</td>
+							</tr>
+							<tr>
+								<th><?='SSO ID no.'?></th>
+								<td><input class="xtax_id_number" type="text" name="sso_id"  placeholder="..." value="<?=$data['sso_id']?>"></td>
+								<td class="pl-2">
+									<input type="checkbox" name='same_sso' id='same_sso' <?php if(isset($same_sso))echo 'checked';?>> <b>Same as ID card no.</b>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -717,7 +731,7 @@
 		})
 
 		$("#infoForm").on('submit', function(e){ // SUBMIT EMPLOYEE FORM ///////////////////////////////////
-			//e.preventDefault();
+			e.preventDefault();
 			var err = 0;
 			if($('input[name="emp_id"]').val() == ''){err = 1;}
 			if($('input[name="emp_id_editable"]').val() == ''){err = 1;}
@@ -931,11 +945,34 @@
 			
 		}
 
-		
 
 		// GET selected team on load 
-
+		
 		$( document ).ready(function() {
+
+			$('input[name="idcard_nr"]').keyup(function(){
+				if($('#same_tax'))$('input[name="tax_id"]').val($(this).val());
+				if($('#same_sso'))$('input[name="sso_id"]').val($(this).val());
+			});
+			$('#same_tax').change(function(){
+				if(this.checked){
+					$('input[name="tax_id"]').attr('readonly',true);
+					$('input[name="tax_id"]').val($($('input[name="idcard_nr"]')).val());
+					}else {
+						$('input[name="tax_id"]').attr('readonly',false);
+						$('input[name="tax_id"]').val('');
+					}
+			});
+			$('#same_sso').change(function(){
+				if(this.checked){
+					$('input[name="sso_id"]').attr('readonly',true);
+					$('input[name="sso_id"]').val($($('input[name="idcard_nr"]')).val());
+					}else {
+						$('input[name="sso_id"]').attr('readonly',false);
+						$('input[name="sso_id"]').val('');
+					}
+			});
+			
 
 			var teamVal = $('#empTeam').val();
 			var cid= "<?php echo $cid?>";

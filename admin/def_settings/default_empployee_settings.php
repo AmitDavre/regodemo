@@ -89,7 +89,9 @@
 	//unset($positions['th'][2]);
 	//var_dump($positions); exit;
 	
-
+	$same_as_id=unserialize($settings['same_as_id']);
+	$same_tax=$same_as_id['same_tax'];
+	$same_sso=$same_as_id['same_sso'];
 
 ?>
  
@@ -193,6 +195,24 @@
 											</select>
 										</td>
 									</tr>
+									<tr>
+        								<th><?=$lng['ID card']?></th>
+        								<td><input class="xtax_id_number" type="text" name="idcard_nr" placeholder="..." value="<?=$settings['idcard_nr']?>"></td>
+        							</tr>
+        							<tr>
+        								<th><?=$lng['Tax ID no.']?></th>
+        								<td><input class="xtax_id_number" type="text" name="tax_id" placeholder="..." value="<?=$settings['tax_id']?>" style='width:70% !important;'>
+        									<div class='ml-2 mt-2 fr' style='display:inline-block'><input type="checkbox" name='same_tax' id='same_tax' <?php if(isset($same_tax))echo 'checked';?>> <b>Same as ID card no.</b>
+        								</div>
+        								</td>
+        							</tr>
+        							<tr>
+        								<th><?='SSO ID no.'?></th>
+        								<td><input class="xtax_id_number" type="text" name="sso_id"  placeholder="..." value="<?=$settings['sso_id']?>" style='width:70% !important;'>
+        									<div class='ml-2 mt-2 fr' style='display:inline-block'><input type="checkbox"  name='same_sso' id='same_sso' <?php if(isset($same_sso))echo 'checked';?>> <b>Same as ID card no.</b>
+        								</div>
+        								</td>
+        							</tr>
 									<tr><td style="line-height:10px">&nbsp;</td></tr>
 								</tbody>
 								<thead>
@@ -808,6 +828,28 @@ function calcoptsel(that,id){
 }
 
 $(document).ready(function() {
+	$('input[name="idcard_nr"]').keyup(function(){
+		if($('#same_tax').is(':checked'))$('input[name="tax_id"]').val($(this).val());
+		if($('#same_sso').is(':checked'))$('input[name="sso_id"]').val($(this).val());
+	});
+	$('#same_tax').change(function(){
+		if(this.checked){
+			$('input[name="tax_id"]').attr('readonly',true);
+			$('input[name="tax_id"]').val($($('input[name="idcard_nr"]')).val());
+			}else {
+				$('input[name="tax_id"]').attr('readonly',false);
+				$('input[name="tax_id"]').val('');
+			}
+	});
+	$('#same_sso').change(function(){
+		if(this.checked){
+			$('input[name="sso_id"]').attr('readonly',true);
+			$('input[name="sso_id"]').val($($('input[name="idcard_nr"]')).val());
+			}else {
+				$('input[name="sso_id"]').attr('readonly',false);
+				$('input[name="sso_id"]').val('');
+			}
+	});
 	
 	var posi = <?=json_encode($pos_count + 1)?>;
 	var getAttendAllowDeduct = <?=json_encode($varAllowDeduct)?>;

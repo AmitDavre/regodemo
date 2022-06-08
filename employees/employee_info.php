@@ -951,8 +951,8 @@
 		$( document ).ready(function() {
 
 			$('input[name="idcard_nr"]').keyup(function(){
-				if($('#same_tax'))$('input[name="tax_id"]').val($(this).val());
-				if($('#same_sso'))$('input[name="sso_id"]').val($(this).val());
+				if($('#same_tax').is(':checked'))$('input[name="tax_id"]').val($(this).val());
+				if($('#same_sso').is(':checked'))$('input[name="sso_id"]').val($(this).val());
 			});
 			$('#same_tax').change(function(){
 				if(this.checked){

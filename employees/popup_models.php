@@ -912,14 +912,17 @@
 					<table class="basicTable inputs mb-2" id="makeitem" border="0">
 						<thead>
 							<tr>
-								<th colspan="2"><?=$lng['Enter Data']?></th>
+								<th colspan="3"><?=$lng['Enter Data']?></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<th class="tal"><?=$lng['Tax ID no.']?></th>
 								<td>
-									<input placeholder="__" name="modal_tax_id_value"  id = "modal_tax_id_value"  type="text" value="" />
+									<input readonly placeholder="__" name="modal_tax_id_value"  id = "modal_tax_id_value"  type="text" value="" />
+								</td>
+								<td >
+									<input checked class='ml-2' type="checkbox" name='check_same_tax' id='check_same_tax'> <b>Same as ID card no.</b>
 								</td>
 							</tr>
 						</tbody>
@@ -931,6 +934,140 @@
 				    <div>
 				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
 				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModal('tax_id');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalmodify_same_sso" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?='Modify SSO ID same as IDcard Data'?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><?='SSOId same as IDcard no.'?></th>
+								<td>
+								<select style="width: 100%;" name="modal_same_sso_value"  id = "modal_same_sso_value">
+										<option value="select"  ><?=$lng['Select']?></option>
+											<option value='on'>Yes</option>
+											<option value=''>No</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModal('same_sso');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalmodify_same_tax" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?='Modify Tax ID same as Idcard Data'?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><?='Tax ID same as Idcard'?></th>
+								<td>
+									<select style="width: 100%;" id="modal_same_tax_value" name="modal_same_tax_value">
+										<option value="select"  ><?=$lng['Select']?></option>
+											<option value='on'>Yes</option>
+											<option value=''>No</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModal('same_tax');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalmodify_sso_id" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?='Modify SSO ID Data'?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="3"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><?='SSO ID'?></th>
+								<td>
+									<input readonly placeholder="__" name="modal_sso_id_value"  id = "modal_sso_id_value"  type="text" value="" />
+								</td>
+								<td>
+									<input checked class="ml-2" type="checkbox" name='check_same_sso' id='check_same_sso' > <b>Same as ID card no.</b>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModal('sso_id');"><?=$lng['Submit']?></button>
 				    </div>
 				</div>
 			</div>
@@ -1127,7 +1264,7 @@
 					<table class="basicTable inputs mb-2" id="makeitem" border="0">
 						<thead>
 							<tr>
-								<th colspan="2"><?=$lng['Enter Data']?></th>
+								<th colspan="3"><?=$lng['Enter Data']?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -1137,6 +1274,10 @@
 									<input placeholder="__" name="modal_edit_text_value" id="modal_edit_text_value" type="text" value="" />
 									<input type="hidden" name="hidden_row_id" id="hidden_row_id" value="">
 									<input type="hidden" name="hidden_field_to_update" id="hidden_field_to_update" value="">
+								</td>
+								<td >
+									<input class="ml-2" type="checkbox" hidden name='same_check' id='same_check'> <b>Same as ID card no.</b>
+									<input hidden id='same_check_data'>
 								</td>
 							</tr>
 						</tbody>

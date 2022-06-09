@@ -92,9 +92,8 @@
 			$getAllData[$rowaLL['emp_id']] = $rowaLL;
 		}
 	}
-
-
-
+    
+// 	    print_r($getAllData);exit;
 	// echo '<pre>';
 	// print_r($batchCodes);
 	// echo '</pre>';
@@ -177,12 +176,48 @@
 	else if ($updateValue == 'birthdate')
 	{
 		$postValue= $_REQUEST['modal_birthdate_value'];
+	}else if ($updateValue == 'sso_id')
+	{
+	    $postValue= $_REQUEST['modal_sso_id_value'];
+	}else if ($updateValue == 'same_tax')
+	{
+	    $postValue= $_REQUEST['modal_same_tax_value'];
+	}else if ($updateValue == 'same_sso')
+	{
+	    $postValue= $_REQUEST['modal_same_sso_value'];
 	}
-
-
-
+    //echo $postValue.$updateValue;die();
+    
+	if($updateValue != 'same_tax' && $updateValue != 'same_sso')
 	$dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue." = '".$postValue."' ");
-
+	else{
+	    $updateValue1=$updateValue;
+	    $postValue1=$postValue;
+	    foreach ($getAllData as $key => $value) {
+	    $same_as_id=unserialize($value['same_as_id']);
+	    //print_r($same_as_id);
+	    if ($updateValue == 'same_tax')
+	    {
+	        //$postValue= $_REQUEST['modal_same_tax_value'];
+	        $postValue1=serialize(array($updateValue=>$postValue,'same_sso'=>$same_as_id['same_sso']));
+	        $updateValue1='same_as_id';
+	        if($postValue=='on'){
+	            $updatesame='tax';
+	            $postsame=$value['idcard_nr'];
+	        }
+	    }else if ($updateValue == 'same_sso')
+	    {
+	        //$postValue= $_REQUEST['modal_same_sso_value'];
+	        $postValue1=serialize(array($updateValue=>$postValue,'same_tax'=>$same_as_id['same_tax']));
+	        $updateValue1='same_as_id';
+	        if($postValue=='on'){
+	            $updatesame='sso';
+	            $postsame=$value['idcard_nr'];
+	        }
+	    }
+	    //echo $postValue.$same_as_id['same_sso'];
+	    $dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue1." = '".$postValue1."',".$updatesame." = '".$postsame."' WHERE id='{$value['id']}'");
+	}}
 	// make an entry in log table 
 
 
@@ -194,7 +229,7 @@
 
 	foreach ($getAllData as $key => $value) {
 
-
+	  
 		// check if needs to insert or update  
 
 		$sqlaLL1 = "SELECT * FROM ".$cid."_temp_log_history WHERE emp_id = '".$value['emp_id']."' AND field = '".$emp_db[$updateValue]."'";
@@ -222,6 +257,6 @@
 
 	
 	// die();
-	ob_clean();
+	//ob_clean();
 	echo 'success';
 ?>

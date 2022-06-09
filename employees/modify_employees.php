@@ -259,8 +259,17 @@
 // echo '</pre>';
 
 // die();
-
-
+	foreach ($alltempdata as $k=>$v){
+	$same_as_id=unserialize($v['same_as_id']);
+	$alltempdata[$k]['same_tax']=$same_as_id['same_tax'];
+	$alltempdata[$k]['same_sso']=$same_as_id['same_sso'];
+	}
+	foreach ($allOlddata as $k=>$v){
+	    $same_as_id=unserialize($v['same_as_id']);
+	    $allOlddata[$k]['same_tax']=$same_as_id['same_tax'];
+	    $allOlddata[$k]['same_sso']=$same_as_id['same_sso'];
+	}
+//      print_r($alltempdata);
 ?>
 <style type="text/css">
 
@@ -857,6 +866,15 @@
 							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_tax_id_li">
 								 <a class="modifydata_tax_id" style="border-right: none;" href="#"><span><?=$lng['Tax ID no.']?><i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifysame_tax">
+								 <a class="modifydata_same_tax" style="border-right: none;" href="#"><span><?='Tax Id Same as IDcard no.'?><i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_sso_id_li">
+								 <a class="modifydata_sso_id" style="border-right: none;" href="#"><span><?='SSO ID no.'?><i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifysame_sso">
+								 <a class="modifydata_same_sso" style="border-right: none;" href="#"><span><?='SSO Id Same as IDcard no.'?><i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
 						
 						</ul>						
 					</div>						
@@ -1084,6 +1102,9 @@
 										<th class="tal "><?=$lng['ID card']?></th>
 										<th class="tal "><?=$lng['ID card expiry date']?></th>
 										<th class="tal "><?=$lng['Tax ID no.']?></th>
+										<th class="tal "><?='TaxId Same as IDcard no.'?></th>
+										<th class="tal "><?='SSO ID no.'?></th>
+										<th class="tal "><?='SSOId Same as IDcard no.'?></th>
 									</tr>
 								</thead>
 								<tbody id="seldata1">
@@ -1113,7 +1134,9 @@
 												<td><?=$value['idcard_nr']?></td>
 												<td><?=$value['idcard_exp']?></td>
 												<td><?=$value['tax_id']?></td>
-			
+        										<td><?if($value['same_tax']=='on')echo 'yes'; else echo 'no';?></td>
+        										<td><?=$value['sso_id']?></td>
+        										<td><?if($value['same_sso']=='on')echo 'yes'; else echo 'no';?></td>
 												
 											</tr>
 
@@ -1523,6 +1546,9 @@
 										<th class="tal "><?=$lng['ID card']?></th>
 										<th class="tal "><?=$lng['ID card expiry date']?></th>
 										<th class="tal "><?=$lng['Tax ID no.']?></th>
+										<th class="tal "><?='TaxId Same as IDcard no.'?></th>
+										<th class="tal "><?='SSO ID no.'?></th>
+										<th class="tal "><?='SSOId Same as IDcard no.'?></th>
 
 									</tr>
 								</thead>
@@ -1552,7 +1578,10 @@
 												<td><?=$value['drvlicense_exp']?></td>
 												<td><?=$value['idcard_nr']?></td>
 												<td><?=$value['idcard_exp']?></td>
-												<td><?=$value['tax_id']?></td>
+												<td><?=$value['tax_id']?></td>	
+        										<td><?if($value['same_tax']=='on')echo 'yes'; else echo 'no';?></td>
+        										<td><?=$value['sso_id']?></td>
+        										<td><?if($value['same_sso']=='on')echo 'yes'; else echo 'no';?></td>
 											</tr>
 
 									<? } } ?>
@@ -2315,7 +2344,6 @@
 		})
 
 
-
 	function checkAllcheckboxes(){
 		//for position
 		if($('#modalmodify input[name="position"]').prop('checked') == true){
@@ -2485,9 +2513,10 @@
 	}
 
 	
-	
+	//var row=null;
 	$(document).ready(function(){
-
+		
+		
 // ===============================  COMMON DATATABLE SECTION SCRIPT ===============================//
 <?php include('section_script/common_datatable_script.php'); ?>
 // ===============================  COMMON DATATABLE SECTION SCRIPT ===============================//
@@ -2627,6 +2656,18 @@
 		$(document).on("click", ".modifydata_tax_id", function(e){
 			e.preventDefault();
 			$('#modalmodify_tax_id').modal('toggle');
+		});		
+		$(document).on("click", ".modifydata_same_tax", function(e){
+			e.preventDefault();
+			$('#modalmodify_same_tax').modal('toggle');
+		});		
+		$(document).on("click", ".modifydata_sso_id", function(e){
+			e.preventDefault();
+			$('#modalmodify_sso_id').modal('toggle');
+		});		
+		$(document).on("click", ".modifydata_same_sso", function(e){
+			e.preventDefault();
+			$('#modalmodify_same_sso').modal('toggle');
 		});		
 
 		$(document).on("click", ".modifydata_birthdate", function(e){
@@ -4433,7 +4474,10 @@ function submitPopupModal(modal)
 	var modal_maritial_value = $('#modal_maritial_value').val(); // Maritial Modal  
 	var modal_religion_value = $('#modal_religion_value').val(); // Religion Modal  
 	var modal_birthdate_value = $('#modal_birthdate_value').val(); // Birthdate Modal  
-
+	var modal_sso_id_value = $('#modal_sso_id_value').val();
+	var modal_same_sso_value = $('#modal_same_sso_value').val();
+	var modal_same_tax_value = $('#modal_same_tax_value').val();
+	if(modal=='modal_sso_id_value')
 	var updateAnything= '1' ;
 
 	
@@ -4460,6 +4504,9 @@ function submitPopupModal(modal)
 			modal_maritial_value:modal_maritial_value,
 			modal_religion_value:modal_religion_value,
 			modal_birthdate_value:modal_birthdate_value,
+			modal_sso_id_value:modal_sso_id_value,
+			modal_same_sso_value:modal_same_sso_value,
+			modal_same_tax_value:modal_same_tax_value,
 			updateAnything:updateAnything,
 		},
 		success: function(result){
@@ -4764,9 +4811,10 @@ function saveTpEmpsTable()
 
 
 // =============================== EDIT DATATABLE COLUMN FIELD VALUES  ===================//
-
+var row=null;
 $(document).on("click", ".commonEditColumn", function(e){
 
+	$('same_check').attr('hidden',true);
 	var textFieldArray = <?=json_encode($textFieldArray)?>;
 	var dateFieldArray = <?=json_encode($dateFieldArray)?>;
 	var dropdownFieldArray = <?=json_encode($dropdownFieldArray)?>;
@@ -4777,29 +4825,60 @@ $(document).on("click", ".commonEditColumn", function(e){
 	var maritial = <?=json_encode($maritial)?>;
 	var religion = <?=json_encode($religion)?>;
 	var military_status = <?=json_encode($military_status)?>;
-
-
-
+	var yesno={"on":"Yes"};
+	
 	var classNameString = $(this).closest('td.commonEditColumn').attr('class');
 	var avoid = "commonEditColumn";
 	var fieldToUpdate = $.trim(classNameString.replace(avoid,''));
 
 	var oldvalue = $(this).closest('td.commonEditColumn').html();
+	var row=$(this).closest('tr');
 	var rowId = $(this).closest('tr').children('td:first').find('span#rowIdDatatableSpan').html();
 
+	//console.log(row);
 	$('#hidden_row_id').val(rowId);
 	$('#hidden_field_to_update').val(fieldToUpdate);
 
 	// open modal here
 
 	// check field type if drop down , text field or date and open common modal according to that 
-	console.log(textFieldArray);
+	//console.log(dropdownFieldArray);
 
 	if(jQuery.inArray(fieldToUpdate, textFieldArray) !== -1)
 	{
 		$('#text_field_span').html(allfieldsArray[fieldToUpdate]);
 		$('#modal_edit_text_value').val(oldvalue);
 		$('#modalEdit_text_field').modal('toggle');
+
+		if(fieldToUpdate=='tax_id'||fieldToUpdate=='sso_id'){
+			switch(fieldToUpdate){
+			case 'tax_id':
+				var field=row.find('.same_tax');
+				break;
+			case 'sso_id':
+				var field=row.find('.same_sso');
+				break;
+			}
+			//console.log(field);
+			$('#same_check').attr('hidden',false);
+			if(field.html()=='yes'){
+				$('#same_check').attr('checked',true);
+			}
+			else $('#same_check').attr('checked',false);
+
+		 	$('#same_check').on('change',function(){
+			 	//console.log(row);
+				if(this.checked)
+					{
+						$('#modal_edit_text_value').attr('readonly',true);
+						var field1=row.find('.idcard_nr');
+						$('#modal_edit_text_value').val(field1.html());
+				}else {
+					$('#modal_edit_text_value').attr('readonly',false);
+				}
+			});
+		}
+		
 	}	
 	else if(jQuery.inArray(fieldToUpdate, dateFieldArray) !== -1)
 	{
@@ -4834,6 +4913,14 @@ $(document).on("click", ".commonEditColumn", function(e){
 		{
 			var loopArray = military_status;
 		}
+		else if(fieldToUpdate == 'same_sso')
+		{
+			var loopArray = yesno;
+		}
+		else if(fieldToUpdate == 'same_tax')
+		{
+			var loopArray = yesno;
+		}
 
 
 		// Common append 
@@ -4842,10 +4929,10 @@ $(document).on("click", ".commonEditColumn", function(e){
                 $('<option></option>').val('select').html('Select')
             );
         $.each(loopArray, function(val, text) {
-
+        	var selected = "";
         	if(text == oldvalue)
         	{
-        		var selected = "selected";
+        		selected = "selected";
         	}
 
             mySelect.append(
@@ -4853,7 +4940,10 @@ $(document).on("click", ".commonEditColumn", function(e){
             );
         });
 
-
+        if(fieldToUpdate == 'same_tax'||fieldToUpdate == 'same_sso'){
+			mySelect.append($('<option></option>').val('').html('No'));
+        }
+		
         // open modal 
 		$('#dropdown_field_span').html(allfieldsArray[fieldToUpdate]);
 		$('#modalEdit_drop_down').modal('toggle');
@@ -4861,7 +4951,22 @@ $(document).on("click", ".commonEditColumn", function(e){
 
 
 });
-
+$(document).ready(function(){
+	 var same=['tax','sso']; //array
+	 	same.forEach(function(v){    //foreach
+			$('#check_same_'+same).on('change',function(){
+				if(this.checked)
+					switch(v){
+ 					case 'tax': $('#modal_tax_id_value').attr('readonly',true);break;
+ 					case 'sso': $('#modal_sso_id_value').attr('readonly',true);break;
+ 				}else switch(v){
+ 					case 'tax': $('#modal_tax_id_value').attr('readonly',false);break;
+ 					case 'sso': $('#modal_sso_id_value').attr('readonly',false);break;
+ 				}
+			});
+			
+		});
+})
 // =============================== EDIT DATATABLE COLUMN FIELD VALUES  ===================//
 
 
@@ -4971,7 +5076,7 @@ function submitPopupModalEdit(valueCheck){
 	{
 		var dataToUpdate = $('#modal_edit_dropdown_value').val();
 	}
-
+	//console.log({rowId:rowId,fieldToUpdate:fieldToUpdate,dataToUpdate:dataToUpdate});
 	$.ajax({
 		url: "ajax/update_on_field_edit/update_temp_employee_data_on_click.php",
 		data:{rowId:rowId,fieldToUpdate:fieldToUpdate,dataToUpdate:dataToUpdate},

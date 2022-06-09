@@ -126,6 +126,9 @@
 							      { className: "commonEditColumn idcard_nr", "targets": [ 18 ] },
 							      { className: "commonEditColumn idcard_exp", "targets": [ 19 ] },
 							      { className: "commonEditColumn tax_id", "targets": [ 20 ] },
+							      { className: "commonEditColumn same_tax", "targets": [ 21 ] },
+							      { className: "commonEditColumn sso_id", "targets": [ 22 ] },
+							      { className: "commonEditColumn same_sso", "targets": [ 23 ] },
 
 						    ],
 			<?=$dtable_lang?>

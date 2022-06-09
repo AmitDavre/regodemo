@@ -10,10 +10,10 @@
 
 
 	// PERSONAL INFORMATION
-	$textFieldArray = array('sid','firstname','lastname','en_name','nationality','height','weight','bloodtype','drvlicense_nr','idcard_nr','tax_id');
+	$textFieldArray = array('sid','firstname','lastname','en_name','nationality','height','weight','bloodtype','drvlicense_nr','idcard_nr','tax_id','sso_id');
 	$dateFieldArray = array('birthdate','drvlicense_exp','idcard_exp');
-	$dropdownFieldArray = array('title','gender','maritial','religion','military_status');
-
+	$dropdownFieldArray = array('title','gender','maritial','religion','military_status','same_sso','same_tax');
+	
 	// CONTACT ARRAYS
 	$textFieldContactArray = array('reg_address','sub_district','district','province','postnr','country','latitude','longitude','cur_address','personal_phone','work_phone','personal_email','work_email','username');
 	$dropdownFieldContactArray = array('username_option');
@@ -65,6 +65,10 @@
 	$allfieldsArray['idcard_nr'] = $lng['ID card'];
 	$allfieldsArray['idcard_exp'] = $lng['ID card expiry date'];
 	$allfieldsArray['tax_id'] = $lng['Tax ID no.'];
+	$allfieldsArray['sso_id'] = 'SSO ID no.';
+	$allfieldsArray['same_tax'] = 'Tax ID same as IDcard no.';
+	$allfieldsArray['same_sso'] = 'SSO ID same as IDcard no.';
+	
 	$allfieldsArray['reg_address'] = $lng['Registered address'];
 	$allfieldsArray['sub_district'] = $lng['Sub district'];
 	$allfieldsArray['district'] = $lng['District'];
@@ -154,6 +158,10 @@
 	$eatt_cols2[] = array('idcard_nr',$lng['ID card']);
 	$eatt_cols2[] = array('idcard_exp',$lng['ID card expiry date']);
 	$eatt_cols2[] = array('tax_id',$lng['Tax ID no.']);
+	
+	$eatt_cols2[]=array('sso_id','SSO ID no.');
+	$eatt_cols2[]=array('same_tax','Tax ID same as IDcard no.');
+	$eatt_cols2[]=array('same_sso','SSO ID same as IDcard no.');
 
 	end($eatt_cols2);
 	$last_col2 = key($eatt_cols2) + 1;

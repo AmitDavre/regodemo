@@ -200,6 +200,18 @@
 				{
 					$('ul li#modifydata_tax_id_li').removeClass('displayNone');		
 				}
+				if(nr == '21')
+				{
+					$('ul li#modifydata_sso_id_li').removeClass('displayNone');		
+				}
+				if(nr == '22')
+				{
+					$('ul li#modifydata_same_tax').removeClass('displayNone');		
+				}
+				if(nr == '23')
+				{
+					$('ul li#modifydata_same_sso').removeClass('displayNone');		
+				}
 
 			
 			}
@@ -290,7 +302,18 @@
 				{
 					$('ul li#modifydata_tax_id_li').addClass('displayNone');		
 				}
-			
+				if(nr == '21')
+				{
+					$('ul li#modifydata_sso_id_li').addClass('displayNone');		
+				}
+				if(nr == '22')
+				{
+					$('ul li#modifydata_same_tax').addClass('displayNone');		
+				}
+				if(nr == '23')
+				{
+					$('ul li#modifydata_same_sso').addClass('displayNone');		
+				}
 
 		
 

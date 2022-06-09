@@ -11,7 +11,17 @@
 	}
 	$_REQUEST['id_prefix'] = implode(',', $tmp);
 	
-
+	if(!empty($_REQUEST['same_sso'])){
+	    $same_as_id['same_sso']=$_REQUEST['same_sso'];
+	}
+	unset($_REQUEST['same_sso']);
+	if(!empty($_REQUEST['same_tax'])){
+	    $same_as_id['same_tax']=$_REQUEST['same_tax'];
+	}
+	unset($_REQUEST['same_tax']);
+	if(isset($same_as_id)){
+	    $_REQUEST['same_as_id']=serialize($same_as_id);
+	}
 
 	$sql = "UPDATE rego_default_settings SET 
 		auto_id = '".$dba->real_escape_string($_REQUEST['auto_id'])."', 
@@ -54,8 +64,11 @@
 		headoflocation = '".$dba->real_escape_string($_REQUEST['headoflocation'])."',
 		headofdivision = '".$dba->real_escape_string($_REQUEST['headofdivision'])."',
 		headofdepartment = '".$dba->real_escape_string($_REQUEST['headofdepartment'])."',
-		headofsupervisor = '".$dba->real_escape_string($_REQUEST['headofsupervisor'])."'"; 
-
+		headofsupervisor = '".$dba->real_escape_string($_REQUEST['headofsupervisor'])."', 
+        same_as_id = '{$dba->real_escape_string($_REQUEST['same_as_id'])}',
+        tax_id = '{$dba->real_escape_string($_REQUEST['tax_id'])}',
+        idcard_nr = '{$dba->real_escape_string($_REQUEST['idcard_nr'])}',
+        sso_id = '{$dba->real_escape_string($_REQUEST['sso_id'])}'";
 	
 	ob_clean();
 	if($dba->query($sql)){

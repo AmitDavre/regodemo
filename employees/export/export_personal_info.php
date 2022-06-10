@@ -57,6 +57,10 @@
 	$religionString = '';
 	foreach($religion as $v){$religionString .= $v.',';}
 	$religionString = substr($religionString,0,-1);
+	$yesnoString ='';
+	foreach($yesno as $v){$yesnoString .= $v.',';}
+	$yesnoString = substr($yesnoString,0,-1);
+	
 	
 	
 	require_once(DIR.'PhpSpreadsheet/vendor/autoload.php');
@@ -122,6 +126,13 @@
 			$tax_id_col = $abc; 
 			$sheet->getStyle($abc)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
 		}
+		if($k == 'sso_id'){
+		    $sso_id_col = $abc;
+		    $sheet->getStyle($abc)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
+		}
+		if($k == 'same_sso'){$same_sso_col = $abc;}
+		if($k == 'same_tax'){$same_tax_col = $abc;}
+		
 
 		$nr++;
 	}
@@ -209,6 +220,32 @@
 		$xmilitary->setFormula1('"'.$militaryString.'"');	
 		$sheet->setDataValidation($military_col.'4:'.$military_col.$rows, $xmilitary);	
 	}
+	if(isset($same_sso_col)){
+	    $xmilitary = $sheet->getCell($same_sso_col.'4')->getDataValidation();
+	    $xmilitary->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
+	    $xmilitary->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_STOP );
+	    $xmilitary->setAllowBlank(false);
+	    $xmilitary->setShowInputMessage(true);
+	    $xmilitary->setShowErrorMessage(true);
+	    $xmilitary->setShowDropDown(true);
+	    $xmilitary->setErrorTitle($lng['Input error']);
+	    $xmilitary->setError($lng['Value is not in list']);
+	    $xmilitary->setFormula1('"'.$yesnoString.'"');
+	    $sheet->setDataValidation($same_sso_col.'4:'.$same_sso_col.$rows, $xmilitary);
+	}
+	if(isset($same_tax_col)){
+	    $xmilitary = $sheet->getCell($same_tax_col.'4')->getDataValidation();
+	    $xmilitary->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
+	    $xmilitary->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_STOP );
+	    $xmilitary->setAllowBlank(false);
+	    $xmilitary->setShowInputMessage(true);
+	    $xmilitary->setShowErrorMessage(true);
+	    $xmilitary->setShowDropDown(true);
+	    $xmilitary->setErrorTitle($lng['Input error']);
+	    $xmilitary->setError($lng['Value is not in list']);
+	    $xmilitary->setFormula1('"'.$yesnoString.'"');
+	    $sheet->setDataValidation($same_tax_col.'4:'.$same_tax_col.$rows, $xmilitary);
+	}
 
 	$nr=0;
 	$rw = 3;
@@ -293,6 +330,24 @@
 		}
 		$sheet->getComment($military_col.$rw)->setWidth("200px")->setHeight($h."px");		
 	}
+	if(isset($same_sso_col)){
+	    $commentRichText = $sheet->getComment($same_sso_col.$rw)->getText()->createTextRun($lng['Military status'].':')->getFont()->setBold(true);
+	    $h = 25;
+	    foreach($yesno as $k=>$v){
+	        $sheet->getComment($same_sso_col.$rw)->getText()->createTextRun("\r\n".$v);
+	        $h += 20;
+	    }
+	    $sheet->getComment($same_sso_col.$rw)->setWidth("200px")->setHeight($h."px");
+	}
+	if(isset($same_tax_col)){
+	    $commentRichText = $sheet->getComment($same_tax_col.$rw)->getText()->createTextRun($lng['Military status'].':')->getFont()->setBold(true);
+	    $h = 25;
+	    foreach($yesno as $k=>$v){
+	        $sheet->getComment($same_tax_col.$rw)->getText()->createTextRun("\r\n".$v);
+	        $h += 20;
+	    }
+	    $sheet->getComment($same_tax_col.$rw)->setWidth("200px")->setHeight($h."px");
+	}
 	if(isset($drvlicense_exp_col)){
 		$commentRichText = $sheet->getComment($drvlicense_exp_col.$rw)->getText()->createTextRun($lng['Date format'].':')->getFont()->setBold(true);	
 		$sheet->getComment($drvlicense_exp_col.$rw)->getText()->createTextRun("\r\n".$lng['dd-mm-yyyy']."");	
@@ -335,9 +390,9 @@
 			$r=4; $c=0;
 			while($row = $res->fetch_assoc()){
 				foreach($export_fields as $k => $v){
-
+				    
 					$abc = getNameFromNumber($c);
-					if($k == 'idcard_nr' || $k == 'tax_id'){
+					if($k == 'idcard_nr' || $k == 'tax_id' || $k=='sso_id'){
 						$sheet->setCellValueExplicit($abc.$r, $row[$k], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); $c++;
 					}elseif($k == 'joining_date'){
 						$sheet->setCellValue($abc.$r, date('d-m-Y', strtotime($row[$k]))); $c++;
@@ -351,6 +406,16 @@
 						$sheet->setCellValue($abc.$r, $maritial[$row[$k]]); $c++;
 					}else if($k == 'military_status'){
 						$sheet->setCellValue($abc.$r, $military_status[$row[$k]]); $c++;
+					}else if($k == 'same_sso'){
+					    $sameasid=unserialize($row[$k]);
+					    if($sameasid['same_sso']=='on')
+					    $sheet->setCellValue($abc.$r, 'Yes');
+					    else $sheet->setCellValue($abc.$r, 'Yes'); $c++;
+					}else if($k == 'same_tax'){
+					    $sameasid=unserialize($row[$k]);
+					    if($sameasid['same_tax']=='on')
+					        $sheet->setCellValue($abc.$r, 'Yes');
+					        else $sheet->setCellValue($abc.$r, 'Yes'); $c++;
 					}else if($k == 'en_name'){
 						$sheet->setCellValue($abc.$r, $row['firstname'].' '.$row['lastname']); $c++;
 					}else{

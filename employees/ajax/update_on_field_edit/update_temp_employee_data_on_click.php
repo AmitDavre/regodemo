@@ -84,13 +84,11 @@
 	if($updateValue=='same_sso' || $updateValue=='same_tax'){
 	    $sameasid = unserialize($getAllDataWithoutId[0]['same_as_id']);
 	    if($updateValue == 'same_tax'){
-	        $postValue=serialize(array($updateValue=>$postValue,'same_sso'=>$sameasid['same_sso']));
+	        $postValue1=serialize(array($updateValue=>$postValue,'same_sso'=>$sameasid['same_sso']));
 	    }else{
-	        $postValue=serialize(array($updateValue=>$postValue,'same_tax'=>$sameasid['same_tax']));
+	        $postValue1=serialize(array($updateValue=>$postValue,'same_tax'=>$sameasid['same_tax']));
 	    }
-	    $updateValue='same_as_id';
-	    $_REQUEST['fieldToUpdate']=$updateValue;
-	    $_REQUEST['dataToUpdate']=$postValue;
+	    $updateValue1='same_as_id';
 	}
 	if($updateValue == 'tax_id' || $updateValue == 'sso_id')
 	{
@@ -167,14 +165,18 @@
 	        }
 	    
 	    $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."',same_as_id='{$sameasid}' WHERE id = '".$_REQUEST['rowId']."'";
+	}else if($updateValue == 'same_tax' || $updateValue == 'same_sso'){
+	    $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET same_as_id='{$postValue1}' WHERE id = '".$_REQUEST['rowId']."'";
+	    echo $sql;
 	}else $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."' WHERE id = '".$_REQUEST['rowId']."'";
+	
 	$dbc->query($sql);
     //echo $sql;
 	$sql1= "UPDATE ".$_SESSION['rego']['cid']."_sys_settings SET  common_save_check = '1' WHERE id = '1'";
 	$dbc->query($sql1);
 	
 
-	 ob_clean();
+	 //ob_clean();
 	echo 'success';
 
 

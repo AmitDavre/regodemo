@@ -661,7 +661,9 @@
 			  `longitude` varchar(255) COLLATE utf8_bin DEFAULT NULL,  
 			  `workFromHome` varchar(255) COLLATE utf8_bin DEFAULT NULL,  
 			  `ping_expire` varchar(255) COLLATE utf8_bin DEFAULT NULL,  
-			PRIMARY KEY (`emp_id`)
+			  `same_as_id` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+              `sso_id` varchar(15) COLLATE utf8_bin DEFAULT NULL,
+            PRIMARY KEY (`emp_id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 		if(!$dbc->query($sql)){
 			$err_msg .= '<span style="color:#c00"><i class="fa fa-times-circle"></i>&nbsp; Create database <b>Employees</b> failed. Error : <b>'.mysqli_error($dbc).'</b></span><br>';
@@ -1658,7 +1660,12 @@
 			`modify_empdata_section_cols` longtext COLLATE utf8_bin DEFAULT NULL,
 			`modify_empdata_section_showhide_cols` longtext COLLATE utf8_bin DEFAULT NULL,
 			`common_save_check` text COLLATE utf8_bin DEFAULT NULL,
-		  PRIMARY KEY (`id`) 
+		    `same_as_id` text COLLATE utf8_bin DEFAULT NULL,
+	        `idcard_nr` text COLLATE utf8_bin DEFAULT NULL,
+	        `sso_id` text COLLATE utf8_bin DEFAULT NULL,
+	        `tax_id` text COLLATE utf8_bin DEFAULT NULL,
+	
+            PRIMARY KEY (`id`) 
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 		if(!$dbc->query($sql)){
 			$err_msg .= '<span style="color:#c00"><i class="fa fa-times-circle"></i>&nbsp; Create database <b>System settings</b> failed. Error : <b>'.mysqli_error($dbc).'</b></span><br>';
@@ -1800,24 +1807,25 @@
 		`base_salary` varchar(100) COLLATE utf8_bin DEFAULT NULL,
         `contract_type` varcar(10) COLLLATE utf8_bin DEFAULT NULL,
         `calc_base` varchar(10) COLLATE utf8_bin DEFAULT NULL,
-        `bank_code` varchar(20) COLLATE utf8_bin DEFAULT NULL
-        `bank-name` varchar(50) COLLATE utf8_bin DEFAULT NULL
-        `bank_branch` varchar(10) COLLATE utf8_bin DEFAULT NULL
-        `bank_account` varchar(50) COLLATE utf8_bin DEFAULT NULL
-        `bank_account_name` varchar(100) COLLATE utf8_bin DEFAULT NULL
-        `pay_type` varchar(10) COLLATE utf8_bin DEFAULT NULL
-        `calc_method` varchar(10) COLLATE utf8_bin DEFAULT NULL
-        `calc_tax` varchar(1) COLLATE utf8_bin DEFAULT NULL
-        `tax_residency_status` varchar(11) COLLATE utf8_bin DEFAULT NULL
-        `income_section` varchar(11) COLLATE utf8_bin DEFAULT NULL
-        `modify_tax` varchar(55) COLLATE utf8_bin DEFAULT NULL
-        `calc_sso` varchar(1) COLLATE utf8_bin DEFAULT NULL
-        `sso_by` varchar(1) COLLATE utf8_bin DEFAULT NULL
-        `gov_house_banking` varchar(55) COLLATE utf8_bin DEFAULT NULL
-        `savings` varchar(55) COLLATE utf8_bin DEFAULT NULL
-        `legal_execution` varchar(55) COLLATE utf8_bin DEFAULT NULL
-        `kor_yor_sor` varchar(55) COLLATE utf8_bin DEFAULT NULL
-
+        `bank_code` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+        `bank-name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+        `bank_branch` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+        `bank_account` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+        `bank_account_name` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+        `pay_type` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+        `calc_method` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+        `calc_tax` varchar(1) COLLATE utf8_bin DEFAULT NULL,
+        `tax_residency_status` varchar(11) COLLATE utf8_bin DEFAULT NULL,
+        `income_section` varchar(11) COLLATE utf8_bin DEFAULT NULL,
+        `modify_tax` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+        `calc_sso` varchar(1) COLLATE utf8_bin DEFAULT NULL,
+        `sso_by` varchar(1) COLLATE utf8_bin DEFAULT NULL,
+        `gov_house_banking` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+        `savings` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+        `legal_execution` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+        `kor_yor_sor` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+        `same_as_id` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+        `sso_id` varchar(15) COLLATE utf8_bin DEFAULT NULL,
 		PRIMARY KEY (`id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 		if(!$dbc->query($sql)){

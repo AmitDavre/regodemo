@@ -229,7 +229,7 @@
 	        if($postValue=='on'){
 	            $updatesame='tax_id';
 	            $postsame=$value['idcard_nr'];
-	        }else $postsame=$postValue;
+	        }
 	    }else if ($updateValue == 'same_sso')
 	    {
 	        //$postValue= $_REQUEST['modal_same_sso_value'];
@@ -238,11 +238,14 @@
 	        if($postValue=='on'){
 	            $updatesame='sso_id';
 	            $postsame=$value['idcard_nr'];
-	        }else $postsame=$postValue;
+	        }
+	        
 	    }
-	    //echo $updatesame.$postsame;
-	    $dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue1." = '".$postValue1."',".$updatesame." = '".$postsame."' WHERE id='{$value['id']}'");
-	}}
+	    if(!empty($postsame))$dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue1." = '".$postValue1."',".$updatesame." = '".$postsame."' WHERE id='{$value['id']}'");
+	    else $dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue1." = '".$postValue1."' WHERE id='{$value['id']}'");
+	    
+	    echo "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue1." = '".$postValue1."',".$updatesame." = '".$postsame."' WHERE id='{$value['id']}'";
+	    }}
 	// make an entry in log table 
 
 
@@ -281,7 +284,7 @@
 	
 
 	
-	// die();
+	 die();
 	ob_clean();
 	echo 'success';
 ?>

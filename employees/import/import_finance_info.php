@@ -289,10 +289,6 @@
 						if (preg_match("/^\d+$/", $v)) 
 						{
 							$v= $v;    
-						} 
-						else if($v == '')
-						{
-							$v = 'empty';
 						}
 						else
 						{
@@ -1174,7 +1170,7 @@
 
 
 
-		//ob_clean();
+		ob_clean();
 		echo 'success';
 		exit;
 		

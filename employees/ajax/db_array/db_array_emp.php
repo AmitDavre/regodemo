@@ -24,7 +24,8 @@
 	$emp_db['idcard_exp'] = $lng['ID card expiry date'];
 	$emp_db['tax_id'] = $lng['Tax ID no.'];
 	$emp_db['sso_id'] = 'SSO ID no.';
-	//$emp_db['same_as_tax'] = 'Tax ID same as IDcard no.';
+	$emp_db['same_tax'] = 'Tax ID same as IDcard no.';
+	$emp_db['same_sso'] = 'SSO ID same as IDcard no.';
 	$emp_db['same_as_id'] = 'IDs same as IDcard no.';
 	
 	$emp_db['reg_address'] = $lng['Registered address'];

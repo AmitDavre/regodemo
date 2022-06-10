@@ -1276,7 +1276,7 @@
 									<input type="hidden" name="hidden_field_to_update" id="hidden_field_to_update" value="">
 								</td>
 								<td >
-									<input class="ml-2" type="checkbox" hidden name='same_check' id='same_check'> <b>Same as ID card no.</b>
+									<input class="ml-2" type="checkbox" hidden name='same_check' id='same_check'> <b id='same_text'>Same as ID card no.</b>
 									<input hidden id='same_check_data'>
 								</td>
 							</tr>

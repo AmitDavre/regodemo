@@ -84,13 +84,11 @@
 	if($updateValue=='same_sso' || $updateValue=='same_tax'){
 	    $sameasid = unserialize($getAllDataWithoutId[0]['same_as_id']);
 	    if($updateValue == 'same_tax'){
-	        $postValue=serialize(array($updateValue=>$postValue,'same_sso'=>$sameasid['same_sso']));
+	        $postValue1=serialize(array($updateValue=>$postValue,'same_sso'=>$sameasid['same_sso']));
 	    }else{
-	        $postValue=serialize(array($updateValue=>$postValue,'same_tax'=>$sameasid['same_tax']));
+	        $postValue1=serialize(array($updateValue=>$postValue,'same_tax'=>$sameasid['same_tax']));
 	    }
-	    $updateValue='same_as_id';
-	    $_REQUEST['fieldToUpdate']=$updateValue;
-	    $_REQUEST['dataToUpdate']=$postValue;
+	    $updateValue1='same_as_id';
 	}
 	if($updateValue == 'tax_id' || $updateValue == 'sso_id')
 	{
@@ -137,17 +135,19 @@
 		$sqlaLL1 = "SELECT * FROM ".$cid."_temp_log_history WHERE emp_id = '".$value['emp_id']."' AND field = '".$emp_db[$updateValue]."'";
 			if($resaLL1 = $dbc->query($sqlaLL1))
 			{
+			    
 				if($rowaLL1 = $resaLL1->fetch_assoc())
 				{
 					// update
-
+				    
 					$dbc->query("UPDATE  ".$cid."_temp_log_history SET   date = '".$dateUpdate."' ,  prev = '".$dbc->real_escape_string($value[$updateValue])."', new = '".$dbc->real_escape_string($postValue)."', missing_info = '".$dbc->real_escape_string($missing_info)."', invalid_value = '".$dbc->real_escape_string($invalid_value)."' WHERE emp_id = '".$value['emp_id']."' AND field = '".$emp_db[$updateValue]."'");
-
+					//echo("UPDATE  ".$cid."_temp_log_history SET   date = '".$dateUpdate."' ,  prev = '".$dbc->real_escape_string($value[$updateValue])."', new = '".$dbc->real_escape_string($postValue)."', missing_info = '".$dbc->real_escape_string($missing_info)."', invalid_value = '".$dbc->real_escape_string($invalid_value)."' WHERE emp_id = '".$value['emp_id']."' AND field = '".$emp_db[$updateValue]."'");
 				}
 				else
 				{
 					// insert 
 					$dbc->query("INSERT INTO ".$cid."_temp_log_history (no_change,en_name,batch_team_codes,user,batch_team, field, prev, new, emp_id,batch_no,import_type,invalid_value,user_id,missing_info) VALUES ('0','".$dbc->real_escape_string($value['en_name'])."','".$dbc->real_escape_string($batchCodes)."','".$dbc->real_escape_string($changedBy)."','".$dbc->real_escape_string($batchTeams)."','".$dbc->real_escape_string($emp_db[$updateValue])."','".$dbc->real_escape_string($value[$updateValue])."','".$dbc->real_escape_string($postValue)."','".$dbc->real_escape_string($value['emp_id'])."','".$dbc->real_escape_string($batchNumber)."','".$dbc->real_escape_string($import_type)."','".$dbc->real_escape_string($invalid_value)."','".$dbc->real_escape_string($sesssionUserId)."','".$dbc->real_escape_string($missing_info)."' ) ");
+				    //echo "INSERT INTO ".$cid."_temp_log_history (no_change,en_name,batch_team_codes,user,batch_team, field, prev, new, emp_id,batch_no,import_type,invalid_value,user_id,missing_info) VALUES ('0','".$dbc->real_escape_string($value['en_name'])."','".$dbc->real_escape_string($batchCodes)."','".$dbc->real_escape_string($changedBy)."','".$dbc->real_escape_string($batchTeams)."','".$dbc->real_escape_string($emp_db[$updateValue])."','".$dbc->real_escape_string($value[$updateValue])."','".$dbc->real_escape_string($postValue)."','".$dbc->real_escape_string($value['emp_id'])."','".$dbc->real_escape_string($batchNumber)."','".$dbc->real_escape_string($import_type)."','".$dbc->real_escape_string($invalid_value)."','".$dbc->real_escape_string($sesssionUserId)."','".$dbc->real_escape_string($missing_info)."' ) ";
 				}
 			}
 
@@ -155,16 +155,28 @@
 		  
 
 	}
-
-
-	$sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."' WHERE id = '".$_REQUEST['rowId']."'";
+	if($updateValue == 'tax_id' || $updateValue == 'sso_id'){
+	
+	        $sameasid = unserialize($getAllDataWithoutId[0]['same_as_id']);
+	        if($updateValue=='tax_id'){
+	            $sameasid=serialize(array('same_tax'=>$_REQUEST['same_check'],'same_sso'=>$sameasid['same_sso']));
+	        }else{
+	            $sameasid=serialize(array('same_sso'=>$_REQUEST['same_check'],'same_tax'=>$sameasid['same_tax']));
+	        }
+	    
+	    $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."',same_as_id='{$sameasid}' WHERE id = '".$_REQUEST['rowId']."'";
+	}else if($updateValue == 'same_tax' || $updateValue == 'same_sso'){
+	    $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET same_as_id='{$postValue1}' WHERE id = '".$_REQUEST['rowId']."'";
+	    echo $sql;
+	}else $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."' WHERE id = '".$_REQUEST['rowId']."'";
+	
 	$dbc->query($sql);
     //echo $sql;
 	$sql1= "UPDATE ".$_SESSION['rego']['cid']."_sys_settings SET  common_save_check = '1' WHERE id = '1'";
 	$dbc->query($sql1);
 	
 
-	 ob_clean();
+	 //ob_clean();
 	echo 'success';
 
 

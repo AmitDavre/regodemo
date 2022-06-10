@@ -173,7 +173,7 @@
 						$data[$key]['sid'] = $val[0];
 					}
 
-					if($field[$k] == 'idcard_nr' || $field[$k] == 'tax_id'){
+					if($field[$k] == 'idcard_nr' || $field[$k] == 'tax_id' || $field[$k] == 'sso_id'){
 						$v = str_replace(' ','', $v);
 						$v = str_replace('-','', $v);
 						$v = str_replace('/','', $v);
@@ -237,6 +237,18 @@
 						   $v = 'NULL';
 						}
 
+					}
+					if($field[$k] == 'same_sso'||$field[$k] == 'same_tax'){
+					    
+					    if($v=='Yes')
+					    {
+					        $v= 'on';
+					    }
+					    else
+					    {
+					        $v = '';
+					    }
+					    
 					}	
 					if($field[$k] == 'height')
 					{
@@ -273,7 +285,7 @@
 						}
 					}					
 
-					if($field[$k] == 'tax_id')
+					if($field[$k] == 'tax_id'||$field[$k] == 'sso_id')
 					{
 						if (preg_match("/^\d+$/", $v)) 
 						{
@@ -481,10 +493,11 @@
 	if($data){	
 		$sql = "INSERT INTO ".$_SESSION['rego']['cid']."_temp_employee_data (";
 		foreach($data[key($data)] as $key=>$val){
+		    if($key!='same_sso'&&$key!='same_tax')
 			$sql .= $key.', ';
 		}
 		//echo $sql; exit;
-		
+		$sql.='same_as_id, ';
 		$sql = substr($sql,0,-2);
 		$sql .= ') VALUES (';
 
@@ -671,6 +684,29 @@
 					$drvlicense_nrCheck = '';
 				}
 	
+			}
+			if($kEdit == 'sso_id')
+			{
+			    
+			    if($vEdit == 'NULL')
+			    {
+			        $new =  $prev; // same value
+			        $invalid_value = '1';
+			        $sso_idCheck = 'error';
+			    }
+			    else if($vEdit == 'empty')
+			    {
+			        $new =  $prev; // same value
+			        $invalid_value = '1';
+			        $sso_idCheck = 'empty';
+			    }
+			    else
+			    {
+			        $new = $vEdit ;
+			        $invalid_value = '0';
+			        $sso_idCheck = '';
+			    }
+			    
 			}			
 
 			if($kEdit == 'tax_id')
@@ -804,7 +840,8 @@
 				}
 	
 			}
-
+			
+            //echo $field.' ';
 			$sqlaLL1 = "SELECT * FROM ".$cid."_temp_log_history WHERE emp_id = '".$val['emp_id']."' AND field = '".$emp_db[$field]."'";
 			if($resaLL1 = $dbc->query($sqlaLL1))
 			{
@@ -927,7 +964,25 @@
 								}	
 							}
 
-						}						
+						}			
+						if($sso_idCheck != '')
+						{
+						    if($sso_idCheck == 'error')
+						    {
+						        if($field == 'tax_id')
+						        {
+						            $dbc->query("INSERT INTO ".$cid."_temp_log_history (no_change,en_name,batch_team_codes,user,batch_team, field, prev, new, emp_id,batch_no,import_type,invalid_value,user_id) VALUES ('1','".$dbc->real_escape_string($en_nameValue)."','".$dbc->real_escape_string($batchCodes)."','".$dbc->real_escape_string($changedBy)."','".$dbc->real_escape_string($batchTeams)."','".$dbc->real_escape_string($emp_db[$field])."','".$dbc->real_escape_string($prev)."','".$dbc->real_escape_string($new)."','".$dbc->real_escape_string($emp_id)."','".$dbc->real_escape_string($batchNumber)."','".$dbc->real_escape_string($import_type)."','".$dbc->real_escape_string($invalid_value)."','".$dbc->real_escape_string($user_id)."' ) ");
+						        }
+						    }
+						    else if($sso_idCheck == 'empty')
+						    {
+						        if($field == 'tax_id')
+						        {
+						            $dbc->query("INSERT INTO ".$cid."_temp_log_history (no_change,en_name,batch_team_codes,user,batch_team, field, prev, new, emp_id,batch_no,import_type,invalid_value,user_id,missing_info) VALUES ('1','".$dbc->real_escape_string($en_nameValue)."','".$dbc->real_escape_string($batchCodes)."','".$dbc->real_escape_string($changedBy)."','".$dbc->real_escape_string($batchTeams)."','".$dbc->real_escape_string($emp_db[$field])."','".$dbc->real_escape_string($prev)."','".$dbc->real_escape_string($new)."','".$dbc->real_escape_string($emp_id)."','".$dbc->real_escape_string($batchNumber)."','".$dbc->real_escape_string($import_type)."','".$dbc->real_escape_string($invalid_value)."','".$dbc->real_escape_string($user_id)."','1' ) ");
+						        }
+						    }
+						    
+						}	
 						if($titleCheck != '')
 						{
 							if($field == 'title')
@@ -1089,7 +1144,7 @@
 						$v = $v;
 					}
 				}				
-				if($k == 'tax_id')
+				if($k == 'tax_id'||$k == 'sso_id')
 				{
 					if($v == 'NULL')
 					{
@@ -1148,11 +1203,35 @@
 						$v = $v;
 					}
 				}
-		
+				if($k == 'same_tax'||$k == 'same_sso')
+				{   //echo $v.'greh';
+				    if($v == 'NULL')
+				    {
+				        $v = $getAllData[$val['emp_id']][$k];
+				    }
+				    else
+				    {
+				        $v=$v;
+				    }
+				    if($k=='same_tax'){
+				        if(isset($val['same_sso']))
+				        $v=serialize(array('same_tax'=>$v,'same_sso'=>$val['same_sso']));
+				        else $v=serialize(array('same_tax'=>$v,'same_sso'=>$getAllData[$val['emp_id']]['same_sso']));
+				    }
+				    if($k=='same_sso'){
+				        if(isset($val['same_tax']))
+				            $v=serialize(array('same_sso'=>$v,'same_tax'=>$val['same_tax']));
+				            else $v=serialize(array('same_sso'=>$v,'same_tax'=>$getAllData[$val['emp_id']]['same_tax']));
+				    }
+				    $k='same_as_id';
+				    $same_as_id=$v;
+				}
+		  
 
-
+                if($k!='same_as_id')
 				$sql .= "'".$dbc->real_escape_string($v)."', ";
 			}
+			$sql .= "'".$dbc->real_escape_string($same_as_id)."', ";
 			$sql = substr($sql,0,-2);
 			$sql .= '),(';
 		}
@@ -1164,11 +1243,12 @@
 		reset($data);
 		$sql .= " ON DUPLICATE KEY UPDATE ";
 		foreach($data[key($data)] as $key=>$val){
-
+		    if($key!='same_sso' && $key!='same_tax')
 			$sql .= $key." = VALUES(".$key."), ";
 		}
+		$sql .= "same_as_id = VALUES(same_as_id), ";
 		$sql = substr($sql,0,-2);
-		// echo $sql; exit;
+		//echo $sql; exit;
 		// exit;
 		
 		$res = $dbc->query($sql);

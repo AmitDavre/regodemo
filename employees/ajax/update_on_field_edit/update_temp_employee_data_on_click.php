@@ -155,9 +155,17 @@
 		  
 
 	}
-
-
-	$sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."' WHERE id = '".$_REQUEST['rowId']."'";
+	if($updateValue == 'tax_id' || $updateValue == 'sso_id'){
+	
+	        $sameasid = unserialize($getAllDataWithoutId[0]['same_as_id']);
+	        if($updateValue=='tax_id'){
+	            $sameasid=serialize(array('same_tax'=>$_REQUEST['same_check'],'same_sso'=>$sameasid['same_sso']));
+	        }else{
+	            $sameasid=serialize(array('same_sso'=>$_REQUEST['same_check'],'same_tax'=>$sameasid['same_tax']));
+	        }
+	    
+	    $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."',same_as_id='{$sameasid}' WHERE id = '".$_REQUEST['rowId']."'";
+	}else $sql= "UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$_REQUEST['fieldToUpdate']." = '".$_REQUEST['dataToUpdate']."' WHERE id = '".$_REQUEST['rowId']."'";
 	$dbc->query($sql);
     //echo $sql;
 	$sql1= "UPDATE ".$_SESSION['rego']['cid']."_sys_settings SET  common_save_check = '1' WHERE id = '1'";

@@ -187,8 +187,33 @@
 	    $postValue= $_REQUEST['modal_same_sso_value'];
 	}
     //echo $postValue.$updateValue;die();
-    
-	if($updateValue != 'same_tax' && $updateValue != 'same_sso')
+	if($updateValue=='tax_id'||$updateValue=='sso_id'){
+	    foreach ($getAllData as $key => $value){
+	        $same_as_id=unserialize($value['same_as_id']);
+	        if ($updateValue == 'tax_id')
+	        {
+	            //$postValue= $_REQUEST['modal_same_tax_value'];
+	            $postValue1=serialize(array('same_tax'=>$_REQUEST['check_same_tax'],'same_sso'=>$same_as_id['same_sso']));
+	            $updateValue1='same_as_id';
+	            if($_REQUEST['check_same_tax']=='on'){
+	                $updatesame='tax_id';
+	                $postsame=$value['idcard_nr'];
+	            }else $postsame=$postValue;
+	        }else if ($updateValue == 'sso_id')
+	        {
+	            //$postValue= $_REQUEST['modal_same_sso_value'];
+	            $postValue1=serialize(array('same_sso'=>$_REQUEST['check_same_sso'],'same_tax'=>$same_as_id['same_tax']));
+	            $updateValue1='same_as_id';
+	            if($_REQUEST['check_same_sso']=='on'){
+	                $updatesame='sso_id';
+	                $postsame=$value['idcard_nr'];
+	            }else $postsame=$postValue;
+	        }
+	        //echo $updatesame.$postsame;
+	        $dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue1." = '".$postValue1."',".$updatesame." = '".$postsame."' WHERE id='{$value['id']}'");
+	    }
+	}
+	else if($updateValue != 'same_tax' && $updateValue != 'same_sso')
 	$dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue." = '".$postValue."' ");
 	else{
 	    $updateValue1=$updateValue;
@@ -202,20 +227,20 @@
 	        $postValue1=serialize(array($updateValue=>$postValue,'same_sso'=>$same_as_id['same_sso']));
 	        $updateValue1='same_as_id';
 	        if($postValue=='on'){
-	            $updatesame='tax';
+	            $updatesame='tax_id';
 	            $postsame=$value['idcard_nr'];
-	        }
+	        }else $postsame=$postValue;
 	    }else if ($updateValue == 'same_sso')
 	    {
 	        //$postValue= $_REQUEST['modal_same_sso_value'];
 	        $postValue1=serialize(array($updateValue=>$postValue,'same_tax'=>$same_as_id['same_tax']));
 	        $updateValue1='same_as_id';
 	        if($postValue=='on'){
-	            $updatesame='sso';
+	            $updatesame='sso_id';
 	            $postsame=$value['idcard_nr'];
-	        }
+	        }else $postsame=$postValue;
 	    }
-	    //echo $postValue.$same_as_id['same_sso'];
+	    //echo $updatesame.$postsame;
 	    $dbc->query("UPDATE ".$_SESSION['rego']['cid']."_temp_employee_data SET  ".$updateValue1." = '".$postValue1."',".$updatesame." = '".$postsame."' WHERE id='{$value['id']}'");
 	}}
 	// make an entry in log table 

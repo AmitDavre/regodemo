@@ -4477,7 +4477,9 @@ function submitPopupModal(modal)
 	var modal_sso_id_value = $('#modal_sso_id_value').val();
 	var modal_same_sso_value = $('#modal_same_sso_value').val();
 	var modal_same_tax_value = $('#modal_same_tax_value').val();
-	if(modal=='modal_sso_id_value')
+	var check_same_sso = $('#check_same_sso').val();
+	var check_same_tax = $('#check_same_tax').val();
+	
 	var updateAnything= '1' ;
 
 	
@@ -4508,6 +4510,8 @@ function submitPopupModal(modal)
 			modal_same_sso_value:modal_same_sso_value,
 			modal_same_tax_value:modal_same_tax_value,
 			updateAnything:updateAnything,
+			check_same_sso:check_same_sso,
+			check_same_tax:check_same_tax,
 		},
 		success: function(result){
 			window.location.reload();
@@ -4865,7 +4869,14 @@ $(document).on("click", ".commonEditColumn", function(e){
 				$('#same_check').attr('checked',true);
 			}
 			else $('#same_check').attr('checked',false);
-
+			if($('#same_check').is(':checked'))
+			{
+				$('#modal_edit_text_value').attr('readonly',true);
+				var field1=row.find('.idcard_nr');
+				$('#modal_edit_text_value').val(field1.html());
+    		}else {
+    			$('#modal_edit_text_value').attr('readonly',false);
+    		}
 		 	$('#same_check').on('change',function(){
 			 	//console.log(row);
 				if(this.checked)
@@ -5067,6 +5078,7 @@ function submitPopupModalEdit(valueCheck){
 	if(valueCheck == 'text')
 	{
 		var dataToUpdate = $('#modal_edit_text_value').val();
+		var same_check = $('#same_check').val();
 	}	
 	else if(valueCheck == 'date')
 	{
@@ -5079,7 +5091,7 @@ function submitPopupModalEdit(valueCheck){
 	//console.log({rowId:rowId,fieldToUpdate:fieldToUpdate,dataToUpdate:dataToUpdate});
 	$.ajax({
 		url: "ajax/update_on_field_edit/update_temp_employee_data_on_click.php",
-		data:{rowId:rowId,fieldToUpdate:fieldToUpdate,dataToUpdate:dataToUpdate},
+		data:{rowId:rowId,fieldToUpdate:fieldToUpdate,dataToUpdate:dataToUpdate,same_check:same_check},
 		success: function(result){
 
 

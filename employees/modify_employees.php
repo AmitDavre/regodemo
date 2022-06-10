@@ -4818,7 +4818,10 @@ function saveTpEmpsTable()
 var row=null;
 $(document).on("click", ".commonEditColumn", function(e){
 
-	$('same_check').attr('hidden',true);
+	$('#same_check').attr('hidden',true);
+	$('#same_text').attr('hidden',true);
+	$('#modal_edit_text_value').attr('readonly',false);
+	
 	var textFieldArray = <?=json_encode($textFieldArray)?>;
 	var dateFieldArray = <?=json_encode($dateFieldArray)?>;
 	var dropdownFieldArray = <?=json_encode($dropdownFieldArray)?>;
@@ -4865,6 +4868,7 @@ $(document).on("click", ".commonEditColumn", function(e){
 			}
 			//console.log(field);
 			$('#same_check').attr('hidden',false);
+			$('#same_text').attr('hidden',false);
 			if(field.html()=='yes'){
 				$('#same_check').attr('checked',true);
 			}

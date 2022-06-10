@@ -282,6 +282,6 @@
 
 	
 	// die();
-	//ob_clean();
+	ob_clean();
 	echo 'success';
 ?>

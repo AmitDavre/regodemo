@@ -2521,22 +2521,22 @@
 <?php include('section_script/common_datatable_script.php'); ?>
 // ===============================  COMMON DATATABLE SECTION SCRIPT ===============================//
 	
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables11').show(function(){setTimeout(function(){
 		dtable.columns.adjust();dtable2.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables13').show(function(){setTimeout(function(){
 		dtable3.columns.adjust();dtable4.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables15').show(function(){setTimeout(function(){
 		dtable5.columns.adjust();dtable6.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables17').show(function(){setTimeout(function(){
 		dtable7.columns.adjust();dtable8.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables19').show(function(){setTimeout(function(){
 		dtable9.columns.adjust();dtable10.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables21').show(function(){setTimeout(function(){
 		dtable11.columns.adjust();dtable12.columns.adjust();
 	}, 1000); });
 	$('#datatables23').show(function(){setTimeout(function(){

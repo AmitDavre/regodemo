@@ -2191,8 +2191,8 @@
 	function getCOMPDataFromAllDatabase($database,$username){
 
 		$my_database = 'localhost';
-		$my_username = 'admin_regodemo';
-		$my_password = 'regodemo@1234';
+		$my_username = 'root';//'admin_regodemo';
+		$my_password = '';//'regodemo@1234';
 		$prefix = 'admin_';
 		$my_dbuname = $prefix.$database;
 
@@ -2209,10 +2209,10 @@
 
 	function getSYSDataFromAllDatabase($database,$username){
 
-		$my_database = 'localhost';
-		$my_username = 'admin_regodemo';
-		$my_password = 'regodemo@1234';
-		$prefix = 'admin_';
+	    $my_database = 'localhost';
+	    $my_username = 'root';//'admin_regodemo';
+	    $my_password = '';//'regodemo@1234';
+	    $prefix = 'admin_';
 		$my_dbuname = $prefix.$database;
 
 

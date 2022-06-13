@@ -328,7 +328,7 @@
 							if($_SESSION['rego']['leave_application']['view'] == '1' && $_SESSION['rego']['leave_application']['request'] == '1')
 							{ 
 					?>
-							<button id="addLeave" onclick="openmodal();" disabled type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Add Leave<? //=$lng['Taken']?></button>
+							<button id="addLeave" onclick="openmodal();" type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Add Leave<? //=$lng['Taken']?></button>
 
 					<?php 	}
 							

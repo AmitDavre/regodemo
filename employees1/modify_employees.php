@@ -2133,7 +2133,7 @@
 <?php include('popup_models.php'); ?>
 
 <script type="text/javascript">
-
+<?php include 'section/util_func.php'; ?>
 
 	$( document ).ready(function() {
 
@@ -2201,7 +2201,9 @@
 
  		var selectionSelectSectionData = '<?php echo $selectionSelectValue?>';
 
-		if(selectionSelectSectionData == '1')
+ 		hide_div_data(selectionSelectSectionData);
+		
+		/*if(selectionSelectSectionData == '1')
 		{
 			$('#personal_div_data').css('display','');
 			$('#country_div_data').css('display','none');
@@ -2306,7 +2308,7 @@
 		}
 
 		//======================================= GET SELECTED SECTION ON PAGE RELOAD =============================//
-
+		*/
 	});
 
 
@@ -2518,25 +2520,26 @@
 		
 		
 // ===============================  COMMON DATATABLE SECTION SCRIPT ===============================//
-<?php include('section_script/common_datatable_script.php'); ?>
+<?php include('section_script/common_datatable_script.php'); 
+include('section/util_func2.php');?>
 // ===============================  COMMON DATATABLE SECTION SCRIPT ===============================//
-	
-	$('#datatables25').show(function(){setTimeout(function(){
+	adjust_columns();
+	/*$('#datatables11').show(function(){setTimeout(function(){
 		dtable.columns.adjust();dtable2.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables13').show(function(){setTimeout(function(){
 		dtable3.columns.adjust();dtable4.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables15').show(function(){setTimeout(function(){
 		dtable5.columns.adjust();dtable6.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables17').show(function(){setTimeout(function(){
 		dtable7.columns.adjust();dtable8.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables19').show(function(){setTimeout(function(){
 		dtable9.columns.adjust();dtable10.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables21').show(function(){setTimeout(function(){
 		dtable11.columns.adjust();dtable12.columns.adjust();
 	}, 1000); });
 	$('#datatables23').show(function(){setTimeout(function(){
@@ -2544,7 +2547,7 @@
 	}, 1000); });
 	$('#datatables25').show(function(){setTimeout(function(){
 		dtable15.columns.adjust();dtable16.columns.adjust();
-	}, 1000); });
+	}, 1000); });*/
 	/*
 	$('#datatable11').show(function(){dtable.columns.adjust();dtable.columns.adjust();});
 	$('#datatable11').show(function(){dtable.columns.adjust();dtable.columns.adjust();});
@@ -3097,7 +3100,9 @@
 			
 
 		}		
-		else if(defaultSectionValue == '1')
+		else if(defaultSectionValue>0&&defaultSectionValue<9){
+			show_div_data(defaultSectionValue);
+			}/*if(defaultSectionValue == '1')
 		{
 
 			$('#showHideclm2').prop("disabled",false);
@@ -3457,7 +3462,7 @@
 			dtable14.columns.adjust();
 
 
-		}
+		}*/
 		else
 		{
 			$('#showHideclm2').prop("disabled",false);

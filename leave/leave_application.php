@@ -29,12 +29,19 @@
 	$sdepartments = str_replace(',', "','", $_SESSION['rego']['sel_departments']);
 	$steams = str_replace(',', "','", $_SESSION['rego']['sel_teams']);
 	
-	$where = "emp_group = '".$_SESSION['rego']['emp_group']."'";
-	$where .= " AND branch IN ('".$sbranches."')";
+// 	$where = "emp_group = '".$_SESSION['rego']['emp_group']."'";
+	$where = " branch IN ('".$sbranches."')";
 	$where .= " AND division IN ('".$sdivisions."')";
 	$where .= " AND department IN ('".$sdepartments."')";
 	$where .= " AND team IN ('".$steams."')";
+	   
+//     echo '<pre>';
+//     print_r($_SESSION['rego']);
+//     echo '</pre>';
 	
+// 	echo "SELECT * FROM ".$cid."_employees WHERE ".$where." ORDER BY emp_id ASC" ;
+	
+// 	die();
 	$res = $dbc->query("SELECT * FROM ".$cid."_employees WHERE ".$where." ORDER BY emp_id ASC");
 	if($res->num_rows > 0){
 		while($row = $res->fetch_assoc()){
@@ -90,7 +97,11 @@
 	}
 
 
-
+// 	echo '<pre>';
+// 	print_r($$emp_array);
+// 	echo '</pre>';
+	
+// 	die();
 
 
 
@@ -328,7 +339,7 @@
 							if($_SESSION['rego']['leave_application']['view'] == '1' && $_SESSION['rego']['leave_application']['request'] == '1')
 							{ 
 					?>
-							<button id="addLeave" onclick="openmodal();" type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Add Leave<? //=$lng['Taken']?></button>
+							<button id="addLeave" onclick="openmodal();" disabled type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Add Leave<? //=$lng['Taken']?></button>
 
 					<?php 	}
 							
@@ -857,7 +868,7 @@
 				refreshApp();
 			}
 			getSummary();
-
+			//getEmpAllholidays();
 			
 			
 			$(document).on('click', '#datatable tbody tr td a.selEmp', function () {
@@ -1047,7 +1058,6 @@
 					}
 				});
 			});
-			
 			var calendar = $('#calendar').calendar({ 
 				enableContextMenu: false,
 				enableRangeSelection: false,
@@ -1065,7 +1075,8 @@
 						url: ROOT+"leave/ajax/json_calendar_leave_events.php", 
 						dataType: "json",
 						data:{emp_id: emp_id},
-						success: function(response) {
+						success: function(response,status,xhr) {
+							
 							//alert(response.color);
 							 var myData = [];
 							 for (var i = 0; i < response.length; i++) {
@@ -1086,12 +1097,12 @@
 				},
 				customDayRenderer: function(element, date) {
 					//alert(date.getTime())
-					//mdata = jQuery.parseJSON(this.dataSource);
+					/* mdata = jQuery.parseJSON(this.dataSource);
 					//alert(myData)
-					//if(typeof (this.dataSource) != "undefined") {
-								//$(element).html('X') ;
-								//$(element).addClass(this.dataSource[i].color) ;
-					//}
+					if(typeof (this.dataSource) != "undefined") {
+						$(element).html('X') ;
+						$(element).addClass(this.dataSource[i].color) ;
+					} */
 				},
 				mouseOnDay: function(e) {
 					if(e.events.length != 0) {
@@ -1757,7 +1768,6 @@
 		
 	// A $( document ).ready() block.
 	$( document ).ready(function() {
-
 
 
 

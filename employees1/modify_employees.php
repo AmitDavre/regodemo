@@ -3474,7 +3474,9 @@ include('section/util_func2.php');?>
 				dtable2.column(val).visible(true);
 			});
 
-
+			for(let i=2;i<=9;i++)
+				$("#showHideclm"+(i+1)).closest("div").css('display','none');
+			/*
 			$("#showHideclm2").closest("div").css('display','none');
 			$("#showHideclm3").closest("div").css('display','none');
 			$("#showHideclm4").closest("div").css('display','none');
@@ -3482,7 +3484,7 @@ include('section/util_func2.php');?>
 			$("#showHideclm6").closest("div").css('display','none');
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
-			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm8").closest("div").css('display','none');*/
 			$(".commonhidebutton").css('display','');
 
 

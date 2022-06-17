@@ -4,5 +4,6 @@
 				div_data_id.forEach(function(idx){
 					$(idx).css('display','none');
 				});
-				if(g>0&&g<9)$(div_data_id[g]).css('display','');
+				//console.log(g);
+				if(g>0&&g<9)$(div_data_id[Number(g)-1]).css('display','');
 			}

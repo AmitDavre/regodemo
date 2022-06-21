@@ -147,7 +147,7 @@ $combineLogoHeadersArray =  array_merge($admin_login_screen_logo, $admin_login_s
 // fetch values for all buttons using loops  
 
 $lowEnd = '1';
-$highEnd = '66';
+$highEnd = '94';
 for($i = $lowEnd; $i<=$highEnd; $i++) {
 	$commonlayout[$i] = json_decode($buttons_tab_array['buttonLayout'.$i]);
 }

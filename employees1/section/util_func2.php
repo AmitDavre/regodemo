@@ -27,6 +27,7 @@
 				}
 			}
 			sections.forEach(function(element){
+				if(element=='benefits')$('#div_benfits').css("display","none");
 				$('#div_'+element).css("display","none");
 				$('#'+element+'_old_data').css("display","none");
 			});
@@ -54,4 +55,59 @@
 
 			datatables[(g-1)*2].columns.adjust();
 			datatables[(g-1)*2+1].columns.adjust();
+			}
+
+			var tablecols=[tableCols2,tableCols3,tableCols4,tableCols5,tableCols6,tableCols7];
+			function getDataDivClass(g){
+
+			sections.forEach(function(element){
+			if(element=='benefits')$('#div_benfits').css("display","none");
+			$('#div_'+element).css("display","none");
+			$('#'+element+'_old_data').css("display","none");
+			});
+			//console.log(sections[Number(g)-1]);
+			if(g==8)$('#div_benfits').css("display","");
+			$('#div_'+sections[Number(g)-1]).css("display","");
+			$('#'+sections[Number(g)-1]+'_old_data').css("display","");
+
+			if(g==1){
+					var hideAllcolumn = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+					$.each(hideAllcolumn, function(key,val) {    
+						datatables[0].column(val).visible(true);
+						datatables[1].column(val).visible(true);
+					});
+				}
+			}
+
+				$("select#showHideclm"+(Number(g)+1))[0].sumo.selectAll();	//2
+
+
+				var columns =[];
+				$('#showHideclm'+(Number(g)+1)+' option:selected').each(function(i) {
+			  
+			    	 columns.push($(this).val());
+
+			    });
+
+		    	var att_cols = [];
+				$.each(columns, function(index, item) {
+					att_cols.push({id:item, db:tableCols2[item][0], name:tableCols2[item][1]})
+				})
+
+		    	$.ajax({
+					url: "ajax/update_show_hide_clm2.php",
+					data: {cols: att_cols},
+					success: function(result){
+					},
+					error:function (xhr, ajaxOptions, thrownError){
+						$("body").overhang({
+							type: "error",
+							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+							duration: 4,
+						})
+					}
+				});
+				dtable.columns.adjust();
+				dtable2.columns.adjust();
+				
 			}

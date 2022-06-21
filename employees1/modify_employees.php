@@ -3628,13 +3628,6 @@ include('section/util_func2.php');?>
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
-
-
-
-
-
-
-
 				var hideAllcolumn = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 					$.each(hideAllcolumn, function(key,val) {    
 					 dtable.column(val).visible(true);

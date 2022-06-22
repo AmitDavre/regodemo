@@ -4467,11 +4467,13 @@ function getHooverColor(value)
    		if(button1JsonData[0].button_color)
    		{
 			$('#'+whereTochangeName).css({"background-color": button1JsonData[0].button_hoover_color,"border-color": button1JsonData[0].button_hoover_color});
-   		}
+			//console.log('if'+button1JsonData[0].button_hoover_color);
+	   	}
    		else
    		{
 			$('#'+whereTochangeName).css({"background-color": buttons_color_select_code,"border-color": buttons_color_select_code});
-   		}
+			//console.log('else');
+		}
 	}
 }
 
@@ -4494,11 +4496,13 @@ function removeHooverColor(value)
    		if(button1JsonData[0].button_color)
    		{
 			$('#'+whereTochangeName).css({"background-color": button1JsonData[0].button_color,"border-color": button1JsonData[0].button_color});
-   		}
+			////console.log('rem'+button1JsonData[0].button_color);
+	   	}
    		else
    		{
 			$('#'+whereTochangeName).css({"background-color": buttons_color_select_code,"border-color": buttons_color_select_code});	
-   		}
+			///console.log('remel');
+	   	}
 	}
 
 }

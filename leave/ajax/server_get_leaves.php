@@ -6,12 +6,11 @@
 	include(DIR.'leave/functions.php');
 	include(DIR.'files/arrays_'.$lang.'.php');
 
-
 	$sbranches = str_replace(',', "','", $_SESSION['rego']['sel_branches']);
 	$sdivisions = str_replace(',', "','", $_SESSION['rego']['sel_divisions']);
 	$sdepartments = str_replace(',', "','", $_SESSION['rego']['sel_departments']);
 	$steams = str_replace(',', "','", $_SESSION['rego']['sel_teams']);
-
+    //print_r($_SESSION);exit;
 
 	
 	updateLeaveDatabase($cid);
@@ -183,7 +182,7 @@
 
 		$where .= $_REQUEST['statFilter'];
 
-		$where .= " AND emp_group = '".$_SESSION['rego']['emp_group']."'";
+		//$where .= " AND emp_group = '".$_SESSION['rego']['emp_group']."'";
 		$where .= " AND branch IN ('".$sbranches."')";
 		$where .= " AND division IN ('".$sdivisions."')";
 		$where .= " AND department IN ('".$sdepartments."')";
@@ -193,18 +192,18 @@
 	}
 	else
 	{
-		$where = "  emp_group = '".$_SESSION['rego']['emp_group']."'";
-		$where .= " AND branch IN ('".$sbranches."')";
+		//$where = "  emp_group = '".$_SESSION['rego']['emp_group']."'";
+		$where .= "branch IN ('".$sbranches."')";
 		$where .= " AND division IN ('".$sdivisions."')";
 		$where .= " AND department IN ('".$sdepartments."')";
 		$where .= " AND team IN ('".$steams."')";
 
 	}
 
-
+	//echo $where;exit;
 	//$where = "";
 
-	// echo $where;
+	
 
 	
 
@@ -230,7 +229,7 @@
 	require(DIR.'ajax/ssp.class.php' );
 	
 	//var_dump(SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $where ));exit;
-	
+	//print_r($where);exit;
 	ob_clean();
 	echo json_encode(
 		SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $where)

@@ -21,6 +21,12 @@
 	$emps = getEmployees($cid,0);
 	$emp_array = getJsonIdsEmployees();
 	
+	echo '<pre>';
+	print_r($$emp_array);
+	echo '</pre>';
+	
+	die();
+	
 	//var_dump($leave_periods); exit;
 	
 ?>	

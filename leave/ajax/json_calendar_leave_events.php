@@ -63,7 +63,7 @@
 	}
 	//var_dump($json); exit;
 	$hd = getHolidays($_SESSION['rego']['cur_year']);
-	//var_dump($hd); //exit;
+	//var_dump($hd); exit;
 	foreach($hd as $k=>$v){
 		$json[] = array(
 			'id'=>$k,

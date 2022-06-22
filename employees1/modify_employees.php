@@ -3599,6 +3599,10 @@ include('section/util_func2.php');?>
 		
 
 			}
+			else if(this.value > 0 && this.value < 9 ){
+				
+			}
+			/*
 			else if(this.value  == '1')
 			{
 				// hide other table 
@@ -4096,7 +4100,7 @@ include('section/util_func2.php');?>
 
 				dtable13.columns.adjust();
 				dtable14.columns.adjust();
-			}
+			}*/
 			else
 			{
 				var hideAllcolumn = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];

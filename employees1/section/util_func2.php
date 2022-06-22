@@ -57,7 +57,8 @@
 			datatables[(g-1)*2+1].columns.adjust();
 			}
 
-			var tablecols=[tableCols2,tableCols3,tableCols4,tableCols5,tableCols6,tableCols7];
+			
+			var tablecols=[tableCols2,tableCols3,tableCols4,tableCols5,tableCols6,tableCols7,tableCols8];
 			function getDataDivClass(g){
 
 			sections.forEach(function(element){
@@ -77,13 +78,13 @@
 						datatables[1].column(val).visible(true);
 					});
 				}
-			}
+			
 
-				$("select#showHideclm"+(Number(g)+1))[0].sumo.selectAll();	//2
+				$("select#showHideclm"+(Number(g)))[0].sumo.selectAll();	//2
 
 
 				var columns =[];
-				$('#showHideclm'+(Number(g)+1)+' option:selected').each(function(i) {
+				$('#showHideclm'+(Number(g))+' option:selected').each(function(i) {
 			  
 			    	 columns.push($(this).val());
 
@@ -91,7 +92,7 @@
 
 		    	var att_cols = [];
 				$.each(columns, function(index, item) {
-					att_cols.push({id:item, db:tableCols2[item][0], name:tableCols2[item][1]})
+					att_cols.push({id:item, db:tableCols[g-1][item][0], name:tableCols[g-1][item][1]})
 				})
 
 		    	$.ajax({
@@ -107,7 +108,6 @@
 						})
 					}
 				});
-				dtable.columns.adjust();
-				dtable2.columns.adjust();
-				
+					datatables[(g-1)*2].columns.adjust();
+					datatables[(g-1)*2+1].columns.adjust();				
 			}

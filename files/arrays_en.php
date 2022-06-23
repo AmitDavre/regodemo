@@ -1,8 +1,8 @@
 <?php
 	
 	//$access = array('m'=>'Management','s'=>'Staff','x'=>'Management & Staff');
-	$select_logo_location_array = array('select'=>'Select','adminloginscreen' => 'Admin Login Screen Logo','adminloginscreentitle'=>'Admin Login Screen Title Logo','admindashboardbannerlogo' => 'Admin Dashboard Banner Logo','systemloginscreen' => 'System Login Screen Logo', 'systemloginscreentitle' => 'System Login Screen Title Logo', 'mobilescreenlogo' => 'Mobile Login Screen Logo');	
-	$select_banner_location_array = array('select'=>'Select','adminloginscreenbanner' => 'Admin Login Screen Banner','systemloginscreenbanner' => 'System Login Screen Banner','mobloginscreenbanner' => 'Mobile Login Screen Banner');	
+	$select_logo_location_array = array('select'=>'Select','adminloginscreen' => 'Admin Login Screen Logo','adminloginscreentitle'=>'Admin Login Screen Title Logo','admindashboardbannerlogo' => 'Admin Dashboard Banner Logo','systemloginscreen' => 'System Login Screen Logo', 'systemloginscreentitle' => 'System Login Screen Title Logo', 'mobilescreenlogo' => 'Mobile Login Screen Logo','scanscreenlogo' => 'Scan Screen Logo');	
+	$select_banner_location_array = array('select'=>'Select','adminloginscreenbanner' => 'Admin Login Screen Banner','systemloginscreenbanner' => 'System Login Screen Banner','mobloginscreenbanner' => 'Mobile Login Screen Banner','scanscreenbanner' => 'Scan Screen banner');	
 	$select_yesno_array = array('select'=>'Select','yes' => 'Yes','no'=>'No');	
 	$select_position_array = array('select'=>'Select','left' => 'Left','right'=>'Right','center'=>'Center');	
 	$login_screen_type = array('select'=>'Select','admin_login' => 'Admin Login','system_user'=>'System User Login','mobile_login'=>'Mobile Login','scan_login'=>'Scan Login');

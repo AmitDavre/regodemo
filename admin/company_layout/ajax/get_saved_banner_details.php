@@ -9,6 +9,7 @@
 		'adminloginscreenbanner' => 'admin_login_screen_banner_array',
 		'systemloginscreenbanner' => 'system_login_screen_banner_array',
 		'mobloginscreenbanner' => 'mob_login_screen_banner_array',
+	    'scanscreenbanner' => 'scan_screen_banner_array'
 	);
 
 	$defaultArray = array(

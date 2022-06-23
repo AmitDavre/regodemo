@@ -54,6 +54,12 @@ function increaseValue($id) {
 	        "height": value+'px',
 	    });	
   }
+  else if($id == 'scanscreenlogo')
+  {
+  		$('#scan_logo_selection_logo_and_headers').css({
+	        "height": value+'px',
+	    });	
+  }
 }
 
 function decreaseValue($id) {
@@ -90,6 +96,12 @@ function decreaseValue($id) {
   else if($id == 'systemloginscreentitle')
   {
   		$('#system_logo_image_select_logoandheaders_loginscreenlogo_title').css({
+	        "height": value+'px',
+	    });	
+  }
+  else if($id == 'scanscreenlogo')
+  {
+  		$('#scan_logo_selection_logo_and_headers').css({
 	        "height": value+'px',
 	    });	
   }
@@ -2958,7 +2970,7 @@ $( document ).ready(function() {
 
 			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
-
+			$('.rightTable_scan_login_screen_logo').css("display",'none'); //ON
 			
 		}		
 		else if(select_admin_logo_image_selection == 'adminloginscreentitle')
@@ -2975,7 +2987,7 @@ $( document ).ready(function() {
 
 			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
-
+			$('.rightTable_scan_login_screen_logo').css("display",'none'); //ON
 			
 		}			
 		else if(select_admin_logo_image_selection == 'admindashboardbannerlogo')
@@ -2992,6 +3004,7 @@ $( document ).ready(function() {
 
 			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display",'none'); //ON
 			
 		}		
 		else if(select_admin_logo_image_selection == 'systemloginscreen')
@@ -3008,6 +3021,7 @@ $( document ).ready(function() {
 
 			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display",'none'); //ON
 			
 		}			
 		else if(select_admin_logo_image_selection == 'systemloginscreentitle')
@@ -3024,6 +3038,7 @@ $( document ).ready(function() {
 
 			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display",'none'); //ON
 			
 		}		
 		else if(select_admin_logo_image_selection == 'mobilescreenlogo')
@@ -3039,7 +3054,24 @@ $( document ).ready(function() {
 
 			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display",'none'); //ON
+		}		
+		else if(select_admin_logo_image_selection == 'scanscreenlogo')
+		{
+			$('.rightTable_admin_login_screen_logo').css("display","none"); // ON
+			$('.rightTable_admin_login_screen_title_logo').css("display","none"); // ON
+			$('.rightTable_admindashboardbannerlogo').css("display","none"); // ON
+			$('.rightTable_system_login_screen_title_logo_logoandheaders').css("display","none"); // ON
+			$('.rightTable_system_login_screen_logo_logoandheaders').css("display","none"); // ON
+			$('.rightTable_mob_login_screen_logo').css("display","none"); // ON
 
+
+
+			// hide banner divs 
+
+			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
+			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display",''); //OFF
 		}		
 		else if(select_admin_logo_image_selection == 'select')
 		{
@@ -3056,7 +3088,7 @@ $( document ).ready(function() {
 
 			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
-
+			$('.rightTable_scan_login_screen_logo').css("display",'none'); //ON
 		}
 
 		$("#decrease").attr("onclick","decreaseValue('"+select_admin_logo_image_selection+"')");
@@ -3072,7 +3104,8 @@ $( document ).ready(function() {
 				data: {select_admin_logo_image_selection: select_admin_logo_image_selection},
 				success: function(ajaxresult){
 					var data = JSON.parse(ajaxresult);
-
+					console.log(data);
+					console.log('rgregrahtdf');
 					if(data['image_link']){
 						var imageurlroot= rootValue+data['image_link'];
 					}
@@ -3243,7 +3276,21 @@ $( document ).ready(function() {
 
 				}
 
-			}			
+			}else if(select_admin_logo_image_selection == 'scanscreenlogo')
+			{	
+				if(show_hide_logo_common_field == true)
+				{
+					// show
+					$('#scan_logo_selection_logo_and_headers').css({"display": ''});
+				}
+				else
+				{
+					// hide 
+					$('#scan_logo_selection_logo_and_headers').css({"display": 'none'});
+
+				}
+
+			}					
 
 
 		});
@@ -3880,7 +3927,7 @@ $( document ).ready(function() {
 			// show banner divs  
 			$('.rightTable_admin_login_screen_logo_banner').css("display",""); // OFF
 			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
-			$('.rightTable_mob_login_screen_banner_logo').css("display","none"); // ON
+			$('.rightTable_mob_login_screen_logo').css("display","none"); // ON
 
 			//Hide logo divs 
 			$('.rightTable_admin_login_screen_logo').css("display","none"); // ON
@@ -3889,6 +3936,8 @@ $( document ).ready(function() {
 			$('.rightTable_system_login_screen_title_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_system_login_screen_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_mob_login_screen_logo').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display","none"); // ON
+			
 		}		
 		else if(select_admin_banner_image_selection == 'systemloginscreenbanner')
 		{
@@ -3904,6 +3953,7 @@ $( document ).ready(function() {
 			$('.rightTable_system_login_screen_title_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_system_login_screen_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_mob_login_screen_logo').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display","none"); // ON
 		}
 		else if(select_admin_banner_image_selection == 'mobloginscreenbanner')
 		{
@@ -3919,6 +3969,22 @@ $( document ).ready(function() {
 			$('.rightTable_system_login_screen_title_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_system_login_screen_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_mob_login_screen_logo').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display","none"); // ON
+		}	else if(select_admin_banner_image_selection == 'scanscreenbanner')
+		{
+			// show banner divs  
+			$('.rightTable_admin_login_screen_logo_banner').css("display","none"); // ON
+			$('.rightTable_mob_login_screen_banner_logo').css("display","none"); // OFF
+			$('.rightTable_system_login_screen_title_logo_logoandheaders_banner').css("display","none"); // ON
+
+			//Hide logo divs 
+			$('.rightTable_admin_login_screen_logo').css("display","none"); // ON
+			$('.rightTable_admin_login_screen_title_logo').css("display","none"); // ON
+			$('.rightTable_admindashboardbannerlogo').css("display","none"); // ON
+			$('.rightTable_system_login_screen_title_logo_logoandheaders').css("display","none"); // ON
+			$('.rightTable_system_login_screen_logo_logoandheaders').css("display","none"); // ON
+			$('.rightTable_mob_login_screen_logo').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display",""); // OFF
 		}	
 		else if(select_admin_banner_image_selection == 'select')
 		{
@@ -3934,6 +4000,7 @@ $( document ).ready(function() {
 			$('.rightTable_system_login_screen_title_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_system_login_screen_logo_logoandheaders').css("display","none"); // ON
 			$('.rightTable_mob_login_screen_logo').css("display","none"); // ON
+			$('.rightTable_scan_login_screen_logo').css("display","none"); // ON
 		}
 
 		if(select_admin_banner_image_selection != 'select')
@@ -4037,7 +4104,21 @@ $( document ).ready(function() {
 				$('#mob_banner_selection_logo_and_headers').css({"display": 'none'});
 
 			}
-		}			
+		}
+		else if(select_admin_banner_image_selection == 'scanscreenbanner')
+		{	
+			if(show_hide_logo_common_field_banner == true)
+			{
+				// show
+				$('#scan_logo_banner').css({"display": ''});
+			}
+			else
+			{
+				// hide 
+				$('#scan_logo_banner').css({"display": 'none'});
+
+			}
+		}					
 
 	});
 

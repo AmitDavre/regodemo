@@ -130,7 +130,8 @@
 			$admin_login_screen_banner_array['admin_login_screen_banner_array'] = unserialize($row5['admin_login_screen_banner_array']);
 			$system_login_screen_banner_array['system_login_screen_banner_array'] = unserialize($row5['system_login_screen_banner_array']);
 			$mob_login_screen_banner_array['mob_login_screen_banner_array'] = unserialize($row5['mob_login_screen_banner_array']);
-
+			$scan_login_screen_logo['scan_login_screen_logo']=unserialize($row5['scan_login_screen_logo']);
+			$scan_screen_banner['scan_screen_banner_array']=unserialize($row5['scan_screen_banner_array']);
 		}
 	}
 
@@ -138,7 +139,7 @@
 
 
 
-$combineLogoHeadersArray =  array_merge($admin_login_screen_logo, $admin_login_screen_title_logo,$admin_dashboard_banner_logo,$system_login_screen_logo,$system_login_screen_title_logo,$admin_login_screen_banner_array,$system_login_screen_banner_array,$mob_login_screen_logo,$mob_login_screen_banner_array);
+$combineLogoHeadersArray =  array_merge($admin_login_screen_logo, $admin_login_screen_title_logo,$admin_dashboard_banner_logo,$system_login_screen_logo,$system_login_screen_title_logo,$admin_login_screen_banner_array,$system_login_screen_banner_array,$mob_login_screen_logo,$mob_login_screen_banner_array,$scan_login_screen_logo,$scan_screen_banner);
 
 
 

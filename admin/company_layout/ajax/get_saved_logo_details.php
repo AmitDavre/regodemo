@@ -12,7 +12,7 @@
 		'systemloginscreentitle' => 'system_login_screen_title_logo',
 		'admindashboardbannerlogo' => 'admin_dashboard_banner_logo',
 		'mobilescreenlogo' => 'mob_login_screen_logo_array',
-
+        'scanscreenlogo' => 'scan_login_screen_logo',
 	);
 
 	$defaultArray = array(

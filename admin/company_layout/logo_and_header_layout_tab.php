@@ -197,8 +197,7 @@ foreach ($select_banner_location_array as $key_filter2 => $value_filter2) {
 			
 			<div style="background:#0066b2!important; " class="log-title"><span style="font-family:Monospace!important;">Login to our secure server</span></div>
 			<!-- scan_logo_selection_logo_and_headers -->
-			<div id="logForm">	
-				<form id="log_form" style="padding:0 0 10px 0">
+			<div>	
 					
 					<label style='font-weight: 650;font-size: 20px;'>Username</label>
 					<input id="username" name="username" type="text" value="" style='width: 100%;padding: 4px 15px;border: 1px #ddd solid;margin: 3px 0 10px;line-height: normal;box-sizing: border-box;font-size: 24px;'>
@@ -208,8 +207,7 @@ foreach ($select_banner_location_array as $key_filter2 => $value_filter2) {
 					
 					<div id="logMsg"></div>
 					
-					<button style="margin-top:20px; font-weight:400; letter-spacing:1px;border-color:#0066b2!important;background:#0066b2!important; " id="logButton" type="submit" class="btn btn-success btn-lg btn-block tac"><span style="font-family:Monospace!important;">Log-in</span> &nbsp;<i class="fa fa-sign-in fa-lg"></i></button>
-				</form>
+					<button onclick='return false' style="margin-top:20px; font-weight:400; letter-spacing:1px;border-color:#0066b2!important;background:#0066b2!important; " class="btn btn-success btn-lg btn-block"><span style="font-family:Monospace!important;">Log-in</span> &nbsp;<i class="fa fa-sign-in fa-lg"></i></button>
 
 				
 				

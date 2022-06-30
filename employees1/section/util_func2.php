@@ -58,7 +58,7 @@
 			}
 
 			
-			var tablecols=[tableCols2,tableCols3,tableCols4,tableCols5,tableCols6,tableCols7,tableCols8];
+			var tableCols=[tableCols2,tableCols3,tableCols4,tableCols5,tableCols6,tableCols7,tableCols9,tableCols8];
 			function getDataDivClass(g){
 
 			sections.forEach(function(element){
@@ -78,17 +78,31 @@
 						datatables[1].column(val).visible(true);
 					});
 				}
-			
 
-				$("select#showHideclm"+(Number(g)))[0].sumo.selectAll();	//2
-
-
-				var columns =[];
-				$('#showHideclm'+(Number(g))+' option:selected').each(function(i) {
-			  
+			var columns =[];
+			if(g!=7&&g!=8)
+			{
+				$('#showHideclm'+(Number(g)+1))[0].sumo.selectAll();
+				$('#showHideclm'+(Number(g)+1)+' option:selected').each(function(i) {
 			    	 columns.push($(this).val());
-
 			    });
+			}
+			if(g==7)
+			{
+				$('#showHideclm9')[0].sumo.selectAll();
+				$('#showHideclm9 option:selected').each(function(i) {
+			    	 columns.push($(this).val());
+			    });
+			}
+			if(g==8){
+				$('#showHideclm8')[0].sumo.selectAll();
+				$('#showHideclm8 option:selected').each(function(i) {
+			    	 columns.push($(this).val());
+			    });
+			}
+				//$("select#showHideclm"+(Number(g)))[0].sumo.selectAll();	//2
+
+				
 
 		    	var att_cols = [];
 				$.each(columns, function(index, item) {
@@ -110,4 +124,26 @@
 				});
 					datatables[(g-1)*2].columns.adjust();
 					datatables[(g-1)*2+1].columns.adjust();				
+			}
+
+			function getDataDivUtilfun(g){
+				hideAllDataDivs();
+				showDataDiv(g);
+
+			}
+
+			function hideAllDataDivs(){
+				sections.forEach(function(element){
+				if(element=='benefits')$('#div_benfits').css("display","none");
+				$('#div_'+element).css("display","none");
+				$('#'+element+'_old_data').css("display","none");
+				});
+			}
+			function showDataDiv(g){
+				if(g==8)$('#div_benfits').css("display","");
+					$('#div_'+sections[Number(g)-1]).css("display","");
+				$('#'+sections[Number(g)-1]+'_old_data').css("display","");
+
+				for(let i=2;i<=9;i++)
+					$("#showHideclm"+(i+1))[0].sumo.unSelectAll();
 			}

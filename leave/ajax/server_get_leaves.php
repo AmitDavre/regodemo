@@ -197,12 +197,14 @@
 		$where .= " AND division IN ('".$sdivisions."')";
 		$where .= " AND department IN ('".$sdepartments."')";
 		$where .= " AND team IN ('".$steams."')";
-
 	}
-
+	if(!empty($_REQUEST['startDate'])&&!empty($_REQUEST['endDate']))
+    $where .= " AND ((start BETWEEN '{$_REQUEST['startDate']}' AND'{$_REQUEST['endDate']}') OR
+(end BETWEEN '{$_REQUEST['startDate']}' AND '{$_REQUEST['endDate']}') OR (('{$_REQUEST['startDate']}' BETWEEN start AND end) AND 
+('{$_REQUEST['endDate']}' BETWEEN start AND end)))";
 	//echo $where;exit;
 	//$where = "";
-
+    //echo $_REQUEST['startDate'];die();
 	
 
 	

@@ -3600,7 +3600,7 @@ include('section/util_func2.php');?>
 
 			}
 			else if(this.value > 0 && this.value < 9 ){
-				
+				getDataDivClass(this.value);
 			}
 			/*
 			else if(this.value  == '1')
@@ -4110,6 +4110,10 @@ include('section/util_func2.php');?>
 
 				});
 
+				for(let i=2;i<=9;i++)
+					$("#showHideclm"+(i+1))[0].sumo.unSelectAll();
+				
+				/*
 				$("select#showHideclm2")[0].sumo.unSelectAll();
 				$("select#showHideclm3")[0].sumo.unSelectAll();
 				$("select#showHideclm4")[0].sumo.unSelectAll();
@@ -4118,7 +4122,7 @@ include('section/util_func2.php');?>
 				$("select#showHideclm7")[0].sumo.unSelectAll();
 				$("select#showHideclm9")[0].sumo.unSelectAll();
 				$("select#showHideclm8")[0].sumo.unSelectAll();
-
+				*/
 
 			}
 		})

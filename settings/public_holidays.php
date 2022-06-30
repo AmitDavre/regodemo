@@ -19,7 +19,7 @@
 						echo ' value="'.$v.'">'.$lng['Holidays'].' '.$v.'</option>';
 					} ?>
 			</select>
-			<button disabled id="getHolidays" class="btn btn-primary" type="button"><i class="fa fa-download"></i>&nbsp; <?=$lng['Import holidays from REGO admin']?></button>
+			<button id="getHolidays" class="btn btn-primary" type="button"><i class="fa fa-download"></i>&nbsp; <?=$lng['Import holidays from REGO admin']?></button>
 			<button id="addHoliday" class="btn btn-primary" type="button"><i class="fa fa-plus"></i>&nbsp; <?=$lng['Add holiday']?></button>
 			<div style="clear:both"></div>
 
@@ -242,6 +242,61 @@
 			//endDate   : endYear
 		})
 
+		/////////////////
+		$('#getHolidays').on('click',function(){
+			/*
+			$('#import_holidays').click();
+		})
+		$(document).on("change", "#import_holidays", function(e){
+			e.preventDefault();
+			var cid = <?=json_encode($_SESSION['rego']['cid'])?>;
+		});
+		$(document).on("submit", "form#import", function(e){
+			e.preventDefault();*/
+			var data=new FormData();
+			data.append('year',$('#selYear').find(":selected").val());
+			for (var input of data.entries())
+			console.log(input[0]+' '+input[1]);
+			$.ajax({
+				url: 'ajax/import_holidays_from_admin.php',
+				type: 'POST',
+				data: data,
+				async: false,
+				cache: false,
+				contentType: false,
+				processData: false,
+				success: function(result){
+					if($.trim(result) == 'success'){
+						$("body").overhang({
+							type: "success",
+							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data imported successfuly. Please wait for page reload']?> . . .',
+							duration: 1,
+						})
+
+						setTimeout(function(){
+							location.reload();
+						}, 1000);
+					}else{
+						$("body").overhang({
+							type: "warn",
+							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;'+result,
+							closeConfirm: "true",
+							duration: 5,
+						})
+					}
+				},
+				error:function (xhr, ajaxOptions, thrownError){
+					$("body").overhang({
+						type: "error",
+						message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+						duration: 8,
+						closeConfirm: "true",
+					});
+				}
+			});
+		});
+		//////////////////
+		
 	});
 
 </script>	

@@ -289,9 +289,10 @@
 			$checkColsmf[] = $k;
 		}
 	}
-
+	
 	//FOR MANUAL FEED TAB
 	$manualFeedShowhide = manualFeedShowhide($dropdownArray,$outerArray);
+	//print_r($manualFeedShowhide);
 	$getEmployeeAllowDeductionFormonth = getEmployeeAllowDeductionFormonth();
 	$eColsMFd = '';
 
@@ -307,6 +308,7 @@
 	}else{
 		$eColsMFd = '';
 	}
+	
 	//=================== tab_mf ================//
 
 	/*echo '<pre>';
@@ -2044,7 +2046,6 @@
 		
 
 		//============== Tab ManualFeedDT ===============
-
 		
 		var dtmanual = $('#ManualFeedDT').DataTable({
 			scrollX: true,
@@ -2090,26 +2091,55 @@
 			triggerChangeCombined: true,
 		});
 
-		$("#mfeedsel .SumoSelect li").bind('click.check', function(event) {
-			//var nr = $(this).index()+3; //alert(nr);
-			var nr = $(this).index()+5; //alert(nr);
-			
-			if($(this).hasClass('selected') == true){
-				dtmanual.column(nr).visible(true);
+		var totl=$("#mfeedsel .SumoSelect li").length;
+		for(let i=5;i<totl+5;i++){
+			if($.inArray(i,eColsmf)==-1){  // && dtmanual.column(i+totl)!=-1
+				dtmanual.column(i+totl+1).visible(true);
+			}else if(dtmanual.column(i+totl+1).visible()!=undefined)
+			{
+				dtmanual.column(i+totl+1).visible(false);
+			}			
+		}
 
+		$("#mfeedsel .SumoSelect li").bind('click.check', function(event) {
+			var nr = $(this).index()+5; //alert(nr);
+			if($(this).hasClass('selected') == true){
+				try{dtmanual.column(nr).visible(true);}catch(error){console.log(error);}
+				try{dtmanual.column(nr+totl+1).visible(true);}catch(error){console.log(error);}
 			}else{
-				dtmanual.column(nr).visible(false);
+				try{dtmanual.column(nr).visible(false);}catch(error){console.log(error);}
+				removedata(nr);
+				try{dtmanual.column(nr+totl+1).visible(false);}catch(error){console.log(error);}
 			}
   		})
 
+  		function removedata(n){
+	  		let i1=0;
+	  		let data1=dtmanual.cell(0,n).data();
+			let nodes=$.parseHTML(data1);
+
+			console.log(dtmanual.cell(0,n).data());
+			let classes=nodes[0].className.split(' ');
+			let ph=$('.'+classes[1].);
+
+			nodes[0].removeAttribute('value');
+	  		while(i1<dtmanual.rows().count()){
+    			console.log($(ph)); 
+    			dtmanual.cell(i1,n).data(nodes[0].outerHTML).draw();
+    			console.log(i1);
+    			i1++;
+	  		}
+	  	}
+  		
   		$('select#showColsMF').on('sumo:closing', function(o) {
 			var columns = $(this).val();
 			var att_cols = [];
 			//console.log(columns);
 			//console.log(tableColsmf);
 			$.each(columns, function(index, item) {
-
-				att_cols.push({id:item, db:tableColsmf[item], name:tableColsmf[item]})
+				//console.log(tableColsmf[index+totl+4]);
+				att_cols.push({id:item, db:tableColsmf[item], name:tableColsmf[item]});
+				//att_cols.push({id:columns[index+totl], db:tableColsmf[columns[index+totl]], name:tableColsmf[columns[index+totl]]});
 			})
 			$.ajax({
 				url: "tabs/ajax/save_manualfeed_columns.php",

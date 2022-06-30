@@ -238,9 +238,9 @@ table#ManualFeedDT tbody tr td{
 				<th colspan="3" class="tac"><?=$lng['Employee']?></th>
 				<th colspan="<?=$countColumn + 2;?>" class="tac"><?=$lng['Attendance & Allowance Data']?></th>				
 				<!-- <th colspan="<?=$countOuter + 1;?>" class="tac"><?=$lng['Total allowance in THB']?></th> -->
-				<? if($checkValues > 0){ ?>
-					<th colspan="<?=$countOuter;?>" class="tac"><?=$lng['Total allowance in THB']?></th>
-				<? } ?>
+				<? //if($checkValues > 0){ ?>
+					<th colspan="<?=$countOuter+1;?>" class="tac"><?=$lng['Total allowance in THB']?></th>
+				<?// } ?>
 			</tr>
 			<tr>
 				<th class="tal"><?=$lng['Emp. ID']?></th>
@@ -253,11 +253,12 @@ table#ManualFeedDT tbody tr td{
 					<th class="tal"><?=$rows?></th>
 				<? } ?>
 
-				<!-- <th class="tac"><?=$lng['Basic salary']?></th> -->
-				<? if($checkValues > 0){
+				<th class="tac"><?=$lng['Basic salary']?></th>
+				<? //if($checkValues > 0){
+
 					 foreach($outerArray as $key => $val){ ?>
 						<th class="tac"><?=$val?></th>
-				<? } } ?>
+				<? }/// } ?>
 			</tr>
 		</thead>
 		<tbody>
@@ -315,17 +316,17 @@ table#ManualFeedDT tbody tr td{
 						<input style="width: 70px !important;" class="sel float72" type="hidden" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$rows[1]?>]" autocomplete="off" value="<?=$manual_feed_total[$rows[1]]?>">
 					<? } ?>
 
-					<!-- <td>
+					<td>
 						<input style="width: 70px !important;" class="sel float72" type="text" id="basicSal_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][basicSal]" autocomplete="off" value="<?=$row['basic_salary']?>">
-					</td> -->
-					<? if($checkValues > 0){
+					</td>
+					<? //if($checkValues > 0){
 						 foreach($outerArray as $key => $val){ 
 							$totalids = 'total_'.$key.'_'.$countRow;
 						?>
 						<td>
 							<input style="width: 70px !important;" class="sel float72" type="text" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$key?>]" autocomplete="off" value="<?=$manual_feed_total[$key]?>">
 						</td>
-					<? } } ?>
+					<? }// } ?>
 					
 				</tr>
 			<? } ?>

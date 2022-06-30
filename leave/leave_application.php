@@ -313,7 +313,12 @@
 
 </style>
 
-	<h2><i class="fa fa-plane"></i>&nbsp; <?=$lng['Leave application']?></h2>		
+	<h2><i class="fa fa-plane"></i>&nbsp; <?=$lng['Leave application']?> 
+	<input class="float-right mr-5 padding:0;" style="cursor:pointer; margin-right: 15% !important; height: 5%; text-align: center;font-size: 16px;margin-top: 0.2%;width:7%;" readonly="" type="text" id="enddate1">
+	<span class="float-right mr-2 pr-2" >Date End :</span> 
+	<input class="float-right mr-5" style="cursor:pointer; height: 5%; text-align: center;font-size: 16px;margin-top: 0.2%;width:7%;" readonly="" type="text" id="startdate1">
+	<span class="float-right mr-2 pr-2">Date Start :</span>
+	</h2>		
 		
 		<div class="main">
 			<div id="dump"></div>
@@ -1131,7 +1136,8 @@
 				},
 				dataSource: []
 			});
-
+			window.start=getDate($('#startdate1').datepicker('getDate'));
+			window.end=getDate($('#enddate1').datepicker('getDate'));
 			var dtable = $('#datatable').DataTable({
 				scrollY:        false,//scrY,//heights-260,
 				scrollX:        true,
@@ -1163,7 +1169,10 @@
 					data: function(d){
 						d.empFilter = $("#empFilter").val();
 						d.statFilter = $("#statFilter").val();
-
+						d.startDate =window.start;// $('#startdate1').val();
+						d.endDate =window.end;// $('#enddate').val();
+						console.log(d.endDate);
+						console.log(d.startDate);
 					}
 				},
 				initComplete : function( settings, json ) {
@@ -1654,6 +1663,61 @@
 			//var disabledDates = ["18-05-2021","19-05-2021"];
 			//var dateRange = ["18-05-2021","19-06-2021"];
 			
+			var startDate1 = $('#startdate1').datepicker({
+				format: "dd-mm-yyyy",
+				multidate: false,
+				keyboardNavigation: false,
+				autoclose: true,
+				startView: 'month',
+				orientation: "bottom left",
+				daysOfWeekDisabled: [0,6],
+				leftArrow: '<i class="fa fa-arrow-left"></i>',
+				rightArrow: '<i class="fa fa-arrow-right"></i>',
+				todayHighlight: true,
+				language: 'en',
+			}).on('changeDate', function(e){
+				$('.datepicker').hide();
+				if($('#enddate1').val() !== ''){
+					window.start=getDate($('#startdate1').datepicker('getDate'));
+					window.end=getDate($('#enddate1').datepicker('getDate'));
+					dtable.ajax.reload();
+				}else
+					$('#enddate1').datepicker('setDate', startDate1.val()).datepicker('setStartDate', startDate1.val()).focus();
+				
+				
+			});
+
+			var endDate1 = $('#enddate1').datepicker({
+				format: "dd-mm-yyyy",
+				multidate: false,
+				keyboardNavigation: false,
+				autoclose: true,
+				startView: 'month',
+				orientation: "bottom left",
+				startDate: new Date(),
+				daysOfWeekDisabled: [0,6],
+				leftArrow: '<i class="fa fa-arrow-left"></i>',
+				rightArrow: '<i class="fa fa-arrow-right"></i>',
+				todayHighlight: true,
+				language: 'en',
+			}).on('changeDate', function(e){
+				$('.datepicker').hide();
+				if($('#startdate1').val() !== ''){
+					window.start=getDate($('#startdate1').datepicker('getDate'));
+					window.end=getDate($('#enddate1').datepicker('getDate'));
+					dtable.ajax.reload();
+				}else{
+					$('#startdate1').datepicker('setDate', endDate1.val()).datepicker('setEndDate', endDate1.val()).focus();
+				}
+			})
+			
+			function getDate(jsDate){
+				if (jsDate !== null && jsDate instanceof Date) { // if any date selected in datepicker
+				    return +' '+jsDate.getFullYear()+':'+(jsDate.getMonth()+1)+':'+jsDate.getDate();
+				}
+				return null;
+			}
+			
 			var startDate = $('#startdate').datepicker({
 				format: "D dd-mm-yyyy",
 				multidate: false,
@@ -1671,7 +1735,6 @@
 			}).on('changeDate', function(e){
 				$('#enddate').datepicker('setDate', startDate.val()).datepicker('setStartDate', startDate.val()).focus();
 			});
-
 
 
 

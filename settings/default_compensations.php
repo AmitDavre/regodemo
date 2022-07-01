@@ -160,7 +160,7 @@
 					<tr>
 						<td class="tac vam" style="vertical-align:middle; width:1px">
 							<!--<input name="apply" type="hidden" value="0" />-->
-							<label><input <? if($val['apply'] == 1){echo 'checked';} ?> data-id="<?=$val['id']?>" type="checkbox" class="checkbox notxt applyItem" /></label>
+							<label><input <? if($val['apply'] == 1){echo 'checked';} ?> data-id="<?=$val['id']?>" type="checkbox" class="checkbox notxt applyItem checkbox-custom-blue-2" /></label>
 						</td>
 						<td><?=$val['code']?></td>
 						<td><a class="editItem" data-id="<?=$val['id']?>"><i class="fa fa-edit fa-lg"></i></a></td>
@@ -409,13 +409,13 @@
 											<tr>
 												<th colspan="2" class="tal vat">
 													<input name="allocation_employee" type="hidden" value="0" />
-													<label><input name="allocation_employee" type="checkbox" value="1" class="checkbox" /> <?=$lng['Per employee']?></label>
+													<label><input name="allocation_employee" type="checkbox" value="1" class="checkbox checkbox-custom-blue-2" /> <?=$lng['Per employee']?></label>
 												</th>
 											</tr>
 											<tr>
 												<th class="tal">
 													<input name="allocation_position" type="hidden" value="0" />
-													<label><input name="allocation_position" type="checkbox" value="1" class="checkbox" onclick="HideshowPos(this)"> <?=$lng['Per position']?></label>
+													<label><input name="allocation_position" type="checkbox" value="1" class="checkbox checkbox-custom-blue-2" onclick="HideshowPos(this)"> <?=$lng['Per position']?></label>
 												</th>
 												<td id="pos">
 													<select id="positionSelect" multiple="multiple" name="all_position" style="min-width:auto; width:100%; background:transparent">
@@ -434,7 +434,7 @@
 											<tr>
 												<th class="tal">
 													<input name="allocation_shedule" type="hidden" value="0" />
-													<label><input name="allocation_shedule" type="checkbox" value="1" class="checkbox" onclick="HideshowSeh(this)"> <?=$lng['Per HR schedule']?></label>
+													<label><input name="allocation_shedule" type="checkbox" value="1" class="checkbox checkbox-custom-blue-2" onclick="HideshowSeh(this)"> <?=$lng['Per HR schedule']?></label>
 												</th>
 												<td id="seh">
 													<select id="sheduleSelect" multiple="multiple" name="all_shedule" style="min-width:auto; width:100%; background:transparent">

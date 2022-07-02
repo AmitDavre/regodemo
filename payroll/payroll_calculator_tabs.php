@@ -2120,11 +2120,11 @@
 
 			console.log(dtmanual.cell(0,n).data());
 			let classes=nodes[0].className.split(' ');
-			let ph=$('.'+classes[1].);
+			//let ph=$('.'+classes[1].);
 
 			nodes[0].removeAttribute('value');
 	  		while(i1<dtmanual.rows().count()){
-    			console.log($(ph)); 
+    			//console.log($(ph)); 
     			dtmanual.cell(i1,n).data(nodes[0].outerHTML).draw();
     			console.log(i1);
     			i1++;

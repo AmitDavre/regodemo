@@ -71,6 +71,47 @@
 		return $data;
 	}
 
+	/*function payrollLogData($field, $message){
+		global $dbc;
+		global $cid;
+		
+		$sql = "INSERT INTO ".$cid."_payroll_log_".$_SESSION['rego']['cur_year']." (`payroll_model_id`, `emp_id`, `field`, `previous`, `current`, `date`, `changed_by_id`, `changed_by_name`) VALUES ()";
+		//return $sql;
+        if($dbc->query($sql)){
+			return 'ok';
+        }else{
+			return 'error : '.mysqli_error($dbx);
+		}
+    }*/
+
+
+	function getSysSettingsForPayroll(){
+		global $dbc;
+		global $cid;
+		$data = array();
+		$sql = "SELECT * FROM ".$cid."_sys_settings";
+		if($res = $dbc->query($sql)){
+			while($row = $res->fetch_assoc()){
+				$data = $row;
+			}
+		}
+		return $data;
+	}
+
+	function checkEmpsalaryForCalc($empid,$month){
+		global $dbc;
+		global $cid;
+
+		$data = 0;
+		$sql = "SELECT count(*) as totalrow FROM ".$cid."_employee_career WHERE emp_id = '".$empid."' AND month = '".$month."' ORDER BY id DESC";
+		if($res = $dbc->query($sql)){
+			$row = $res->fetch_assoc();
+			$data = $row['totalrow'];
+		}
+
+		return $data;
+	}
+
 	function getEmployeeAllowances($empid,$month){
 		global $dbc;
 		global $cid;
@@ -80,7 +121,7 @@
 		$eom = date('t-m-Y', strtotime($d));
 
 		$data = array();
-		$sql = "SELECT * FROM ".$cid."_employee_career WHERE emp_id = '".$empid."' AND DATE(start_date) >= '".$som."' AND month >= '".$month."' ORDER BY month DESC";
+		$sql = "SELECT * FROM ".$cid."_employee_career WHERE emp_id = '".$empid."' AND DATE(start_date) >= '".$som."' AND month >= '".$month."' ORDER BY id DESC";
 		if($res = $dbc->query($sql)){
 			while($row = $res->fetch_assoc()){
 				$data[] = $row;
@@ -348,6 +389,19 @@
 		return $info;
 	}
 
+	function getpayrollinfoModalWise($empid, $month, $modalid){
+		global $dbc;
+		global $cid;
+		$info = array();
+		$sql = "SELECT * FROM ".$cid."_payroll_".$_SESSION['rego']['cur_year']." WHERE emp_id='".$empid."' AND month = '".$month."' AND payroll_modal_id='".$modalid."'";
+		if($res = $dbc->query($sql)){
+			while($row = $res->fetch_assoc()){
+				$info[] = $row;
+			}
+		}
+		return $info;
+	}
+
 	function getallowadeductinfo($itemid, $month){
 		global $dbc;
 		global $cid;
@@ -365,6 +419,11 @@
 
 	function getMissingEmployeesFromPayroll($cid, $month){
 		global $dbc;
+
+		$d = $_SESSION['rego']['cur_year'].'-'.$_SESSION['rego']['curr_month'].'-01';
+		$som = date('Y-m-d', strtotime($d));
+		$eom = date('Y-m-t', strtotime($d));
+
 		$existing_emps = array();
 		$sql = "SELECT emp_id FROM ".$_SESSION['rego']['payroll_dbase']." WHERE month = '".$month."'";
 		if($res = $dbc->query($sql)){
@@ -374,7 +433,11 @@
 		}
 		//var_dump($existing_emps);
 		$missing_emps = array();
-		$sql = "SELECT emp_id, en_name, th_name FROM ".$cid."_employees WHERE emp_status = '1' AND emp_type < 4 ORDER BY emp_id ASC";
+		//$sql = "SELECT emp_id, en_name, th_name FROM ".$cid."_employees WHERE emp_status = '1' AND emp_type < 4 ORDER BY emp_id ASC";
+		$sql = "SELECT * FROM ".$cid."_employees WHERE 
+		joining_date <= '".$eom."' 
+		AND (resign_date >= '".$som."' AND resign_date <= '".$eom."' OR emp_status = '1') 
+		ORDER by resign_date DESC, emp_id ASC ";
 		if($res = $dbc->query($sql)){
 			while($row = $res->fetch_assoc()){
 				if(!in_array($row['emp_id'], $existing_emps)){
@@ -748,6 +811,101 @@
 			}
 
 			return $ecol;
+	}
+
+
+	function getSalaryOverviewEmptyColumns(){
+
+		global $dbc;
+		$ecol= array();
+		$sql = "
+			SELECT 
+			SUM(total_earnings)as total_earnings, 
+			SUM(total_deductions)as total_deductions, 
+			SUM(total_net_income)as total_net_income, 
+			SUM(total_net_pay)as total_net_pay, 
+			SUM(sso_employee)as sso_employee, 
+			SUM(tax_this_month)as tax_this_month, 
+			SUM(pvf_employee)as pvf_employee, 
+			SUM(psf_employee)as psf_employee, 
+			SUM(sso_by_company)as sso_by_company, 
+			SUM(tax_by_company)as tax_by_company, 
+			SUM(total_pvf)as total_pvf, 
+			SUM(total_psf)as total_psf, 
+			SUM(total_sso)as total_sso, 
+			SUM(total_pnd1)as total_pnd1 FROM ".$_SESSION['rego']['payroll_dbase']." WHERE month = ".$_SESSION['rego']['cur_month']." ";
+
+		 if($res = $dbc->query($sql)){
+			$row = $res->fetch_assoc();
+		}else{
+			echo mysqli_error($dbc);
+		}
+
+		$nr = 5;
+		if($row['total_earnings']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_deductions']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_net_income']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_net_pay']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['sso_employee']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['tax_this_month']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['pvf_employee']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['psf_employee']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['sso_by_company']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['tax_by_company']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_pvf']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_psf']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_sso']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_pnd1']==0){$ecol[$nr] = $nr;}; $nr++;
+
+		return $ecol;
+	}
+
+	function getPayrollResultOverviewEmptyColumns(){
+
+		global $dbc;
+		$ecol= array();
+		$sql = "
+			SELECT 
+			SUM(total_earnings)as total_earnings, 
+			SUM(total_deductions)as total_deductions, 
+			SUM(total_net_income)as total_net_income, 
+			SUM(total_net_pay)as total_net_pay, 
+			SUM(salary_group_total)as salary_group_total, 
+			SUM(fix_income_group_total)as fix_income_group_total, 
+			SUM(overtime_group_total)as overtime_group_total, 
+			SUM(var_income_group_total)as var_income_group_total, 
+			SUM(other_income_group_total)as other_income_group_total, 
+			SUM(absence_group_total)as absence_group_total, 
+			SUM(fix_ded_group_total)as fix_ded_group_total, 
+			SUM(var_ded_group_total)as var_ded_group_total, 
+			SUM(other_ded_group_total)as other_ded_group_total, 
+			SUM(legal_ded_group_total)as legal_ded_group_total, 
+			SUM(advance_pay_group_total)as advance_pay_group_total FROM ".$_SESSION['rego']['payroll_dbase']." WHERE month = ".$_SESSION['rego']['cur_month']." ";
+
+		 if($res = $dbc->query($sql)){
+			$row = $res->fetch_assoc();
+		}else{
+			echo mysqli_error($dbc);
+		}
+
+		$nr = 4;
+		if($row['total_earnings']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_deductions']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_net_income']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['total_net_pay']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['salary_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['fix_income_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['overtime_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['var_income_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['other_income_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['absence_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['fix_ded_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['var_ded_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['other_ded_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['legal_ded_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+		if($row['advance_pay_group_total']==0){$ecol[$nr] = $nr;}; $nr++;
+
+		return $ecol;
 	}
 
 	function getEmptyResultColumns($fix_allow, $var_allow){
@@ -1749,6 +1907,7 @@
 		$worked_days = (int)$workdays;
 		$calendar_days = cal_days_in_month(CAL_GREGORIAN, $_SESSION['rego']['cur_month'], $_SESSION['rego']['cur_year']);
 		$worked_days = $calendar_days;
+		
 
 		$first = date($_SESSION['rego']['cur_year'].'-'.$_SESSION['rego']['curr_month'].'-01');
 		$Ymd = $_SESSION['rego']['cur_year'].'-'.$_SESSION['rego']['curr_month'].'-10';
@@ -1784,6 +1943,63 @@
 		}
 		return array('worked_days'=>$worked_days, 'started'=>$started, 'resigned'=>$resigned, 'calendar_days'=>$calendar_days);
 	}
+
+
+	function getEmployeeWorkedDaysNew($start_date, $resign_date, $workdays, $paidDays){
+		$started = false;
+		$resigned = false;
+		$worked_days = (int)$workdays;
+		/*$calendar_days = cal_days_in_month(CAL_GREGORIAN, $_SESSION['rego']['cur_month'], $_SESSION['rego']['cur_year']);
+		$worked_days = $calendar_days;*/
+		$calendar_days = $worked_days;
+
+		$first = date($_SESSION['rego']['cur_year'].'-'.$_SESSION['rego']['curr_month'].'-01');
+		$Ymd = $_SESSION['rego']['cur_year'].'-'.$_SESSION['rego']['curr_month'].'-10';
+		$last = date("Y-m-t", strtotime(date($Ymd)));
+
+		$dFirst = new DateTime($first); 
+		$dLast = new DateTime($last);
+
+		$dStart  = new DateTime($start_date);
+		/*echo '<pre>';
+		print_r($dFirst);
+		print_r($dLast);
+		print_r($dStart);
+		echo '</pre>';
+		die();*/
+		
+		
+		$dResign  = false;
+		if(!empty($resign_date)){
+			$dResign  = new DateTime($resign_date);
+		}
+		
+		if(!$dResign || $dResign > $dLast){
+			if($dStart >= $dFirst){
+				$dDiff = $dStart->diff($dLast);
+				$worked_days = $dDiff->days+1;
+				$started = true;
+			}
+		}
+		if($dResign){
+			if($dResign >= $dFirst && $dResign <= $dLast){
+				$dDiff = $dFirst->diff($dResign);
+				$worked_days = $dDiff->days;
+				$resigned = true;
+			}
+			if($dStart >= $dFirst && $dResign >= $dFirst && $dResign <= $dLast){
+				$dDiff = $dStart->diff($dResign);
+				$worked_days = $dDiff->days;
+				$started = true;
+			}
+
+		}
+
+		if($paidDays == 2){$worked_days--;}
+		return array('worked_days'=>$worked_days, 'started'=>$started, 'resigned'=>$resigned, 'calendar_days'=>$calendar_days);
+	}
+
+	
 
 	function getEmptyPayrollColsOLD($f, $t){
 		global $dbc;

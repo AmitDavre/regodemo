@@ -147,3 +147,23 @@
 				for(let i=2;i<=9;i++)
 					$("#showHideclm"+(i+1))[0].sumo.unSelectAll();
 			}
+			
+			function getDataDiv(){
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			

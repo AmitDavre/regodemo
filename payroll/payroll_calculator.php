@@ -36,6 +36,10 @@
     	font-size: 9px;
     	border-radius: 2px;
 	}
+
+	.overhang-close{
+		display: none;
+	}
 </style>
 <h2 style="padding-right:60px">
 	<i class="fa fa-cog"></i>&nbsp; <?=$lng['Payroll overview']?>
@@ -95,7 +99,7 @@
 
 			<div class="row">
 				<div class="col-md-2" style="margin: -30px 0px 0px 0px;margin-left: auto;margin-right: auto;">
-					<select id="pageLengtht" class="button btn-fl">
+					<select id="pageLength" class="button btn-fl">
 						<option selected value="">Rows / page</option>
 						<option value="10">10 Rows / page</option>
 						<option value="15">15 Rows / page</option>
@@ -192,49 +196,60 @@
 
 		if(mdlid && month !=''){
 
-			$.ajax({
-				url: "ajax/remove_payroll_mdl.php",
-				type: 'POST',
-				data: {mdlid:mdlid, month: month},
-				success: function(result){
+			$("body").overhang({
+				type: "confirm",
+				primary: "#228B22",
+				//accent: "#27AE60",
+				yesColor: "#3498DB",
+				message: "Do you want to continue?",
+				overlay: true,
+				callback: function (value) {
+					if(value){
+						$.ajax({
+							url: "ajax/remove_payroll_mdl.php",
+							type: 'POST',
+							data: {mdlid:mdlid, month: month},
+							success: function(result){
 
-					if(result == 'success'){
+								if($.trim(result) == 'success'){
 
-						$("body").overhang({
-							type: "success",
-							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data removed successfully']?>',
-							duration: 3,
-							callback: function (value) {
-								window.location.reload();
+									$("body").overhang({
+										type: "success",
+										message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data removed successfully']?>',
+										duration: 3,
+										callback: function (value) {
+											window.location.reload();
+										}
+									})
+										
+								}else{
+
+									$("body").overhang({
+										type: "error",
+										message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: '+result,
+										duration: 3,
+										callback: function (value) {
+											window.location.reload();
+										}
+									})
+								}
+
+							},
+							error:function (xhr, ajaxOptions, thrownError){
+								$("body").overhang({
+									type: "error",
+									message: '<i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+									duration: 4,
+									callback: function (value) {
+										window.location.reload();
+									}
+								})
 							}
-						})
-							
-					}else{
 
-						$("body").overhang({
-							type: "error",
-							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: '+result,
-							duration: 3,
-							callback: function (value) {
-								window.location.reload();
-							}
-						})
+						});
 					}
-
-				},
-				error:function (xhr, ajaxOptions, thrownError){
-					$("body").overhang({
-						type: "error",
-						message: '<i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
-						duration: 4,
-						callback: function (value) {
-							window.location.reload();
-						}
-					})
 				}
-
 			});
-
 		}
 	}
 
@@ -279,16 +294,17 @@
 			url: "ajax/add_payroll_overview.php",
 			type: 'POST',
 			data: data,
-			success: function(result){
+			success: function(data){
 
-				if(result == 'success'){
+				var result = JSON.parse(data);
+				if(result.res == 'success'){
 
 					$("body").overhang({
 						type: "success",
 						message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Payroll model data saved successfully']?>',
-						duration: 3,
+						duration: 1,
 						callback: function (value) {
-							window.location.reload();
+							window.location.href='index.php?mn=413&mid='+result.mdl;
 						}
 					})
 						
@@ -297,7 +313,7 @@
 					$("body").overhang({
 						type: "error",
 						message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: '+result,
-						duration: 3,
+						duration: 2,
 						callback: function (value) {
 							window.location.reload();
 						}
@@ -309,7 +325,7 @@
 				$("body").overhang({
 					type: "error",
 					message: '<i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
-					duration: 4,
+					duration: 2,
 					callback: function (value) {
 						window.location.reload();
 					}

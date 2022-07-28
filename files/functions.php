@@ -1,4 +1,23 @@
 <?php
+
+	function explode_time($time) { //explode time and convert into seconds
+        $time = explode(':', $time);
+        $time = $time[0] * 3600 + $time[1] * 60;
+        return $time;
+	}
+
+	function second_to_hhmm($time) { //convert seconds to hh:mm
+        $hour = floor($time / 3600);
+        $minute = strval(floor(($time % 3600) / 60));
+        if ($minute == 0) {
+            $minute = "00";
+        } else {
+            $minute = $minute;
+        }
+        $time = $hour . ":" . $minute;
+        return $time;
+	}
+
 	
 	function getEntityData($entity){
 		global $dbc;
@@ -68,6 +87,18 @@
 			while($row = $res->fetch_assoc()){
 				$data[$row['groups']][] = $row;
 			}
+		}
+		return $data;
+	}
+
+	function getonlyapplyAllowDeductForThisMonth(){
+		global $dbc;
+		$data = array();
+		$month = $_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month'];
+		if($res = $dbc->query("SELECT * FROM ".$_SESSION['rego']['cid']."_payroll_months WHERE month = '$month'")){
+			$row = $res->fetch_assoc();
+			$data = unserialize($row['allowDeductEmpRegManual']);
+			//$data['end'] = $row['leave_end'];
 		}
 		return $data;
 	}
@@ -1282,6 +1313,19 @@
 		return $msg;
 	}
 	
+	function checkEmployeesCareer($cid,$emp_id){
+		global $dbc;
+		global $lng;
+		$data = array();
+		if($res = $dbc->query("SELECT * FROM ".$cid."_employee_career WHERE emp_id='".$emp_id."'")){
+			if($res->num_rows > 0){
+				$row = $res->fetch_assoc();
+				$data = $row;
+			}
+		}
+		return $data;
+	}
+
 	function checkEmployeesForPayroll($cid){
 		global $dbc;
 		global $lng;
@@ -1289,11 +1333,13 @@
 		$caret = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-caret-right"></i>&nbsp ';
 		//if($res = $dbc->query("SELECT emp_id, title, first_name, last_name, base_salary, idcard_nr, startdate FROM ".$cid."_employees WHERE pr_calculation = 'Y' AND emp_status = '1'")){
 		
-		$sql = "SELECT emp_id, title, firstname, en_name, th_name, lastname, base_salary, joining_date, emp_status, team FROM ".$cid."_employees WHERE emp_status = '1' ORDER BY emp_id ASC";
+		$sql = "SELECT emp_id, title, firstname, en_name, th_name, lastname, joining_date, emp_status, team FROM ".$cid."_employees WHERE emp_status = '1' ORDER BY emp_id ASC";
 		
 		if($res = $dbc->query($sql)){
 			if($res->num_rows > 0){
 				while($row = $res->fetch_assoc()){
+
+					$otherInfo = checkEmployeesCareer($cid, $row['emp_id']);
 					$missing = array();
 					$name = $row[$_SESSION['rego']['lang'].'_name'];
 					if($_SESSION['rego']['lang'] == 'en'){
@@ -1313,11 +1359,12 @@
 					if(empty($row['joining_date'])){
 						$missing[$row['emp_id']][] = $lng['Joining date'];
 					}
-					if(empty($row['base_salary'])){
-						$missing[$row['emp_id']][] = $lng['Basic salary'];
-					}
 					if(empty($row['team'])){
 						$missing[$row['emp_id']][] ='Team';// $lng['Team'];
+					}
+
+					if($otherInfo['salary'] <= 0){
+						$missing[$row['emp_id']][] = $lng['Basic salary'];
 					}
 					if($missing){
 						$msg .= '<b>&nbsp; <i class="fa fa-arrow-circle-right"></i>&nbsp; '.$row['emp_id'].' - <a href="employees/index.php?mn=1021&id='.$row['emp_id'].'#personal">'.$name.'</a></b><br>';
@@ -2191,8 +2238,8 @@
 	function getCOMPDataFromAllDatabase($database,$username){
 
 		$my_database = 'localhost';
-		$my_username = 'root';//'admin_regodemo';
-		$my_password = '';//'regodemo@1234';
+		$my_username = 'admin_regodemo';
+		$my_password = 'regodemo@1234';
 		$prefix = 'admin_';
 		$my_dbuname = $prefix.$database;
 
@@ -2209,10 +2256,10 @@
 
 	function getSYSDataFromAllDatabase($database,$username){
 
-	    $my_database = 'localhost';
-	    $my_username = 'root';//'admin_regodemo';
-	    $my_password = '';//'regodemo@1234';
-	    $prefix = 'admin_';
+		$my_database = 'localhost';
+		$my_username = 'admin_regodemo';
+		$my_password = 'regodemo@1234';
+		$prefix = 'admin_';
 		$my_dbuname = $prefix.$database;
 
 

@@ -9,6 +9,23 @@
 	// echo "<pre>";
 	// print_r($_REQUEST);
 	// echo "</pre>";
+	$periods = $_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month'];
+	$getPayrollPerMonthdata = getPayrollPerMonthdata($periods);
+	$paid = unserialize($getPayrollPerMonthdata[0]['paid']);
+	$paiddays = '';
+	if($paid['paid_days'] == 1){
+		$paiddays = $getPayrollPerMonthdata[0]['caldays'];
+	}elseif($paid['paid_days'] == 2){
+		$paiddays = $getPayrollPerMonthdata[0]['base30'];
+	}else{
+		$paiddays = $getPayrollPerMonthdata[0]['workdays'];
+	}
+
+	$d = $_SESSION['rego']['cur_year'].'-'.$_SESSION['rego']['curr_month'].'-01';
+	$som = date('Y-m-d', strtotime($d));
+	$eom = date('Y-m-t', strtotime($d));
+
+	$sessionpayrollDbase = $_SESSION['rego']['cid'].'_payroll_'.$_SESSION['rego']['cur_year'];
 
 	if(isset($_REQUEST['chooseMdl'][0])){
 
@@ -99,14 +116,61 @@
 				$allowDeductEmpRegFixed = serialize($getEmployeeFixedCalc);		
 				$allowDeductEmpRegManual = serialize($getEmployeeAllowDeduct);
 				
-				$upsql = "UPDATE ".$cid."_payroll_months SET payroll_opt='".$mdl_data['payroll_opt']."', salary_split= '".$mdl_data['salary_split']."', allowDeductEmpRegFixed='".$allowDeductEmpRegFixed."', allowDeductEmpRegManual= '".$allowDeductEmpRegManual."' WHERE month='".$_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month']."' ";
+				$upsql = "UPDATE ".$cid."_payroll_months SET payroll_opt='".$mdl_data['payroll_opt']."', salary_split= '".$mdl_data['salary_split']."', paid='".$rowED['tab_default']."', allowDeductEmpRegFixed='".$allowDeductEmpRegFixed."', allowDeductEmpRegManual= '".$allowDeductEmpRegManual."' WHERE month='".$_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month']."' ";
 				$dbc->query($upsql);
 			}
 			//====== save payroll parameters for month =======//
 
+			//====== Add emplyee in payroll =======//
+			$sqlEmployee = $dbc->query("SELECT * FROM ".$cid."_employees WHERE payroll_modal_value='".$_REQUEST['chooseMdl'][0]."' AND joining_date <= '".$eom."' AND (resign_date >= '".$som."' AND resign_date <= '".$eom."' OR emp_status = '1') ORDER by resign_date DESC, emp_id ASC ");
+			if($sqlEmployee->num_rows > 0){
+				while ($empdata = $sqlEmployee->fetch_assoc()) {
+					$dataEmp[] = $empdata;
+				}
+			}
+
+
+			if($dataEmp){
+
+				foreach($dataEmp as $k=>$v){
+
+					$workdays = $paiddays;
+					$tmp = getEmployeeWorkedDaysNew($v['joining_date'], $v['resign_date'], $workdays, $paid['paid_days']);
+					if(!$tmp['started'] && !$tmp['resigned']){
+						$calendar_days = $tmp['calendar_days'];
+					}else{
+						$calendar_days = $tmp['worked_days'];
+					}
+
+					$getMonthdata = $dbc->query("SELECT * FROM ".$sessionpayrollDbase." WHERE emp_id = '".$v['emp_id']."' AND month = '".$_SESSION['rego']['cur_month']."' ");
+					if($getMonthdata->num_rows > 0){
+
+						//nothing to do
+
+					}else{
+
+						$getSelmonPayrollData = getSelmonPayrollData($_SESSION['rego']['cur_month']);
+						$countEmpthismonth = count($getSelmonPayrollData);
+						if($countEmpthismonth == $_SESSION['rego']['max']){
+							ob_clean();
+							echo 'Max limit exceeded';
+							exit;
+						}
+
+						$addEmpdata = "INSERT INTO ".$sessionpayrollDbase." (emp_id, month, payroll_modal_id, entity, branch, division, department, team, position, emp_name_th, emp_name_en, paid_days, paid) VALUES ('".$v['emp_id']."', '".$_SESSION['rego']['cur_month']."', '".$v['payroll_modal_value']."', '".$v['entity']."', '".$v['branch']."', '".$v['division']."', '".$v['department']."', '".$v['team']."', '".$v['position']."', '".$v['th_name']."', '".$v['en_name']."', '', 'C')";
+						 $dbc->query($addEmpdata);
+					}
+				}				
+			}
+
+
+			//====== Add emplyee in payroll =======//
+
 
 			ob_clean();
-			echo 'success';
+			$datares['res'] = 'success';
+			$datares['mdl'] = $_REQUEST['chooseMdl'][0];
+			echo json_encode($datares);
 		}
 
 	}else{

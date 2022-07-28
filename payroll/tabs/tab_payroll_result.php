@@ -49,7 +49,18 @@
 			</tr>
 		</thead>
 		<tbody>
-			<? foreach($getSelmonPayrollDatass as $key => $row){ ?>
+			<? foreach($getSelmonPayrollDatass as $key => $row){ 
+					if($row['contract_type'] == 'month'){$pd=$row['paid_days'];}elseif($row['contract_type'] == 'day'){
+						$pdHrs = $row['mf_paid_hour'];
+						if($pdHrs !=''){
+							$pdHrstot = decimalHours($pdHrs);
+							$pds = $row['paid_days'] + ($pdHrstot/24);
+							$pd = round($pds,2);
+						}else{
+							$pd=$row['paid_days'];
+						}
+					}else{$pd='';}
+				?>
 
 				<tr data-empid="<?=$row['emp_id']?>">
 
@@ -58,24 +69,24 @@
 					<td>
 						<a onclick="payrollResultPopups(this)" id="<?=$row['emp_id']?>"><i class="fa fa-calculator fa-lg" ></i></a>
 					</td>
-					<td><?=$row['paid_days']?></td>
+					<td><?=$pd?></td>
 
-					<td><?=$row['total_earnings']?></td>
-					<td><?=$row['total_deductions']?></td>
-					<td></td>
-					<td></td>
+					<td class="tar"><?=number_format($row['total_earnings'],2);?></td>
+					<td class="tar"><?=number_format($row['total_deductions'],2);?></td>
+					<td class="tar"><?=number_format($row['total_net_income'],2);?></td>
+					<td class="tar"><?=number_format($row['total_net_pay'],2);?></td>
 
-					<td><?=$row['salary_group_total']?></td>
-					<td><?=$row['fix_income_group_total']?></td>
-					<td><?=$row['overtime_group_total']?></td>
-					<td><?=$row['var_income_group_total']?></td>
-					<td><?=$row['other_income_group_total']?></td>
-					<td><?=$row['absence_group_total']?></td>
-					<td><?=$row['fix_ded_group_total']?></td>
-					<td><?=$row['var_ded_group_total']?></td>
-					<td><?=$row['other_ded_group_total']?></td>
-					<td><?=$row['legal_ded_group_total']?></td>
-					<td><?=$row['advance_pay_group_total']?></td>
+					<td class="tar"><?=number_format($row['salary_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['fix_income_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['overtime_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['var_income_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['other_income_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['absence_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['fix_ded_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['var_ded_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['other_ded_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['legal_ded_group_total'],2);?></td>
+					<td class="tar"><?=number_format($row['advance_pay_group_total'],2);?></td>
 					
 				</tr>
 
@@ -265,21 +276,21 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<tr style="pointer-events: none;">
 									<th class="tal"><?=$lng['Net Income']?></th>
-									<td class="tar"></td>
-									<td class="tar"></td>
-									<td class="tar"></td>
-									<td class="tar"></td>
-									<td class="tar"></td>
+									<td class="tar" id="total_net_income_cur_cal"></td>
+									<td class="tar" ></td>
+									<td class="tar" id="total_net_income_cur_mnth"></td>
+									<td class="tar" id="total_net_income_prev_mnth"></td>
+									<td class="tar" id="total_net_income_fullyear"></td>
 								</tr>
-								<tr>
+								<tr style="pointer-events: none;">
 									<th class="tal"><?=$lng['Net pay']?></th>
-									<td class="tar"></td>
-									<td class="tar"></td>
-									<td class="tar"></td>
-									<td class="tar"></td>
-									<td class="tar"></td>
+									<td class="tar" id="total_net_pay_cur_cal"></td>
+									<td class="tar" ></td>
+									<td class="tar" id="total_net_pay_cur_mnth"></td>
+									<td class="tar" id="total_net_pay_prev_mnth"></td>
+									<td class="tar" id="total_net_pay_fullyear"></td>
 								</tr>
 							</tbody>
 							<thead>
@@ -288,7 +299,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<tr style="pointer-events: none;">
 									<th class="tal"><?=$lng['SSO Employer']?></th>
 									<td class="tar" id="pr_sso_emplyr_calc"></td>
 									<td class="tar"></td>
@@ -296,7 +307,7 @@
 									<td class="tar" id="pr_sso_emplyr_prev"></td>
 									<td class="tar" id="pr_sso_emplyr_full"></td>
 								</tr>
-								<tr>
+								<tr style="pointer-events: none;">
 									<th class="tal"><?=$lng['PVF Employer']?></th>
 									<td class="tar" id="pr_pvf_emplyr_calc"></td>
 									<td class="tar"></td>
@@ -304,7 +315,7 @@
 									<td class="tar" id="pr_pvf_emplyr_prev"></td>
 									<td class="tar" id="pr_pvf_emplyr_full"></td>
 								</tr>
-								<tr>
+								<tr style="pointer-events: none;">
 									<th class="tal"><?=$lng['PSF Employer']?></th>
 									<td class="tar" id="pr_psf_emplyr_calc"></td>
 									<td class="tar"></td>
@@ -363,7 +374,7 @@
 				}else{
 
 					var data = JSON.parse(result);
-					//console.log(data);
+					console.log(data);
 
 					//===================== Right side table data start (Allowances) ======================//
 					var eColsMdlA = <?=$eColsMdlA?>;
@@ -444,6 +455,7 @@
 											}else{
 												crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0.00; 
 											}
+											//alert(crmth_manual_feed);
 
 											//crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0.00; 
 											/*if(v['groups'] == 'inc_sal'){
@@ -457,7 +469,10 @@
 											if(k == 32){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].notice_payment); }
 											if(k == 33){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].paid_leave); }
 											
-											if(k == 56){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].salary); }
+											if(k == 56){ 
+												if(data[0].contract_type == 'day'){var dsaly=data[0].mf_salary;}else{var dsaly=data[0].salary;}
+												crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(dsaly); 
+											}
 
 											//crmth_manual_feed = crmth_manual_feed.toFixed(2);
 										
@@ -505,7 +520,10 @@
 												if(k == 31){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].remaining_salary); }
 												if(k == 32){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].notice_payment); }
 												if(k == 33){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].paid_leave); }
-												if(k == 56){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].salary); }
+												if(k == 56){ 
+													if(data[0].contract_type == 'day'){var dsaly=data[0].mf_salary;}else{var dsaly=data[0].salary;}
+													crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(dsaly); 
+												}
 
 
 												/*crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0.00; 
@@ -679,93 +697,104 @@
 					$('#PayrollRresultmdl #position_val').text(data.position);
 					$('#PayrollRresultmdl #calc_base').text(data.calc_base);
 
-					$('#PayrollRresultmdl #ear_curr_calc').text(data[0].total_earnings);
-					$('#PayrollRresultmdl #ear_curr_mnth').text(data[0].total_earnings);
-					$('#PayrollRresultmdl #ear_prev_mnth').text(data[0].total_earnings_prev);
-					$('#PayrollRresultmdl #ear_full_year').text(data[0].full_year_earnings);
+					$('#PayrollRresultmdl #ear_curr_calc').text(number_format(data[0].total_earnings));
+					$('#PayrollRresultmdl #ear_curr_mnth').text(number_format(data[0].total_earnings));
+					$('#PayrollRresultmdl #ear_prev_mnth').text(number_format(data[0].total_earnings_prev));
+					$('#PayrollRresultmdl #ear_full_year').text(number_format(data[0].full_year_earnings));
 
-					$('#PayrollRresultmdl #ded_curr_calc').text(data[0].total_deductions);
-					$('#PayrollRresultmdl #ded_curr_mnth').text(data[0].total_deductions);
-					$('#PayrollRresultmdl #ded_prev_mnth').text(data[0].total_deductions_prev);
-					$('#PayrollRresultmdl #ded_full_year').text(data[0].full_year_deductions);
+					$('#PayrollRresultmdl #ded_curr_calc').text(number_format(data[0].total_deductions));
+					$('#PayrollRresultmdl #ded_curr_mnth').text(number_format(data[0].total_deductions));
+					$('#PayrollRresultmdl #ded_prev_mnth').text(number_format(data[0].total_deductions_prev));
+					$('#PayrollRresultmdl #ded_full_year').text(number_format(data[0].full_year_deductions));
 
-					$('#PayrollRresultmdl #pnd_curr_calc').text(data[0].total_pnd1);
-					$('#PayrollRresultmdl #pnd_curr_mnth').text(data[0].total_pnd1);
-					$('#PayrollRresultmdl #pnd_prev_mnth').text(data[0].total_pnd1_prev);
-					$('#PayrollRresultmdl #pnd_full_year').text(data[0].full_year_pnd);
+					$('#PayrollRresultmdl #pnd_curr_calc').text(number_format(data[0].total_pnd1));
+					$('#PayrollRresultmdl #pnd_curr_mnth').text(number_format(data[0].total_pnd1));
+					$('#PayrollRresultmdl #pnd_prev_mnth').text(number_format(data[0].total_pnd1_prev));
+					$('#PayrollRresultmdl #pnd_full_year').text(number_format(data[0].full_year_pnd));
 
-					$('#PayrollRresultmdl #sso_curr_calc').text(data[0].total_sso);
-					$('#PayrollRresultmdl #sso_curr_mnth').text(data[0].total_sso);
-					$('#PayrollRresultmdl #sso_prev_mnth').text(data[0].total_sso_prev);
-					$('#PayrollRresultmdl #sso_full_year').text(data[0].full_year_sso);
+					$('#PayrollRresultmdl #sso_curr_calc').text(number_format(data[0].total_sso));
+					$('#PayrollRresultmdl #sso_curr_mnth').text(number_format(data[0].total_sso));
+					$('#PayrollRresultmdl #sso_prev_mnth').text(number_format(data[0].total_sso_prev));
+					$('#PayrollRresultmdl #sso_full_year').text(number_format(data[0].full_year_sso));
 
-					$('#PayrollRresultmdl #pvf_curr_calc').text(data[0].total_pvf);
-					$('#PayrollRresultmdl #pvf_curr_mnth').text(data[0].total_pvf);
-					$('#PayrollRresultmdl #pvf_prev_mnth').text(data[0].total_pvf_prev);
-					$('#PayrollRresultmdl #pvf_full_year').text(data[0].full_year_pvf);
+					$('#PayrollRresultmdl #pvf_curr_calc').text(number_format(data[0].total_pvf));
+					$('#PayrollRresultmdl #pvf_curr_mnth').text(number_format(data[0].total_pvf));
+					$('#PayrollRresultmdl #pvf_prev_mnth').text(number_format(data[0].total_pvf_prev));
+					$('#PayrollRresultmdl #pvf_full_year').text(number_format(data[0].full_year_pvf));
 
-					$('#PayrollRresultmdl #psf_curr_calc').text(data[0].total_psf);
-					$('#PayrollRresultmdl #psf_curr_mnth').text(data[0].total_psf);
-					$('#PayrollRresultmdl #psf_prev_mnth').text(data[0].total_psf_prev);
-					$('#PayrollRresultmdl #psf_full_year').text(data[0].full_year_psf);
+					$('#PayrollRresultmdl #psf_curr_calc').text(number_format(data[0].total_psf));
+					$('#PayrollRresultmdl #psf_curr_mnth').text(number_format(data[0].total_psf));
+					$('#PayrollRresultmdl #psf_prev_mnth').text(number_format(data[0].total_psf_prev));
+					$('#PayrollRresultmdl #psf_full_year').text(number_format(data[0].full_year_psf));
 
 
-					$('#PayrollRresultmdl #inc_sal_calc').text(data[0].salary_group_total);
-					$('#PayrollRresultmdl #inc_fix_calc').text(data[0].fix_income_group_total);
-					$('#PayrollRresultmdl #inc_ot_calc').text(data[0].overtime_group_total);
-					$('#PayrollRresultmdl #inc_var_calc').text(data[0].var_income_group_total);
-					$('#PayrollRresultmdl #inc_oth_calc').text(data[0].other_income_group_total);
-					$('#PayrollRresultmdl #ded_abs_calc').text(data[0].absence_group_total);
-					$('#PayrollRresultmdl #ded_fix_calc').text(data[0].fix_ded_group_total);
-					$('#PayrollRresultmdl #ded_var_calc').text(data[0].var_ded_group_total);
-					$('#PayrollRresultmdl #ded_oth_calc').text(data[0].other_ded_group_total);
-					$('#PayrollRresultmdl #ded_leg_calc').text(data[0].legal_ded_group_total);
-					$('#PayrollRresultmdl #ded_pay_calc').text(data[0].advance_pay_group_total);
+					$('#PayrollRresultmdl #inc_sal_calc').text(number_format(data[0].salary_group_total));
+					$('#PayrollRresultmdl #inc_fix_calc').text(number_format(data[0].fix_income_group_total));
+					$('#PayrollRresultmdl #inc_ot_calc').text(number_format(data[0].overtime_group_total));
+					$('#PayrollRresultmdl #inc_var_calc').text(number_format(data[0].var_income_group_total));
+					$('#PayrollRresultmdl #inc_oth_calc').text(number_format(data[0].other_income_group_total));
+					$('#PayrollRresultmdl #ded_abs_calc').text(number_format(data[0].absence_group_total));
+					$('#PayrollRresultmdl #ded_fix_calc').text(number_format(data[0].fix_ded_group_total));
+					$('#PayrollRresultmdl #ded_var_calc').text(number_format(data[0].var_ded_group_total));
+					$('#PayrollRresultmdl #ded_oth_calc').text(number_format(data[0].other_ded_group_total));
+					$('#PayrollRresultmdl #ded_leg_calc').text(number_format(data[0].legal_ded_group_total));
+					$('#PayrollRresultmdl #ded_pay_calc').text(number_format(data[0].advance_pay_group_total));
 
-					$('#PayrollRresultmdl #inc_sal').text(data[0].salary_group_total);
-					$('#PayrollRresultmdl #inc_fix').text(data[0].fix_income_group_total);
-					$('#PayrollRresultmdl #inc_ot').text(data[0].overtime_group_total);
-					$('#PayrollRresultmdl #inc_var').text(data[0].var_income_group_total);
-					$('#PayrollRresultmdl #inc_oth').text(data[0].other_income_group_total);
-					$('#PayrollRresultmdl #ded_abs').text(data[0].absence_group_total);
-					$('#PayrollRresultmdl #ded_fix').text(data[0].fix_ded_group_total);
-					$('#PayrollRresultmdl #ded_var').text(data[0].var_ded_group_total);
-					$('#PayrollRresultmdl #ded_oth').text(data[0].other_ded_group_total);
-					$('#PayrollRresultmdl #ded_leg').text(data[0].legal_ded_group_total);
-					$('#PayrollRresultmdl #ded_pay').text(data[0].advance_pay_group_total);
+					$('#PayrollRresultmdl #inc_sal').text(number_format(data[0].salary_group_total));
+					$('#PayrollRresultmdl #inc_fix').text(number_format(data[0].fix_income_group_total));
+					$('#PayrollRresultmdl #inc_ot').text(number_format(data[0].overtime_group_total));
+					$('#PayrollRresultmdl #inc_var').text(number_format(data[0].var_income_group_total));
+					$('#PayrollRresultmdl #inc_oth').text(number_format(data[0].other_income_group_total));
+					$('#PayrollRresultmdl #ded_abs').text(number_format(data[0].absence_group_total));
+					$('#PayrollRresultmdl #ded_fix').text(number_format(data[0].fix_ded_group_total));
+					$('#PayrollRresultmdl #ded_var').text(number_format(data[0].var_ded_group_total));
+					$('#PayrollRresultmdl #ded_oth').text(number_format(data[0].other_ded_group_total));
+					$('#PayrollRresultmdl #ded_leg').text(number_format(data[0].legal_ded_group_total));
+					$('#PayrollRresultmdl #ded_pay').text(number_format(data[0].advance_pay_group_total));
 
-					$('#PayrollRresultmdl #inc_sal_prev').text(data[0].salary_group_total_prev);
-					$('#PayrollRresultmdl #inc_fix_prev').text(data[0].fix_income_group_total_prev);
-					$('#PayrollRresultmdl #inc_ot_prev').text(data[0].overtime_group_total_prev);
-					$('#PayrollRresultmdl #inc_var_prev').text(data[0].var_income_group_total_prev);
-					$('#PayrollRresultmdl #inc_oth_prev').text(data[0].other_income_group_total_prev);
-					$('#PayrollRresultmdl #ded_abs_prev').text(data[0].absence_group_total_prev);
-					$('#PayrollRresultmdl #ded_fix_prev').text(data[0].fix_ded_group_total_prev);
-					$('#PayrollRresultmdl #ded_var_prev').text(data[0].var_ded_group_total_prev);
-					$('#PayrollRresultmdl #ded_oth_prev').text(data[0].other_ded_group_total_prev);
-					$('#PayrollRresultmdl #ded_leg_prev').text(data[0].legal_ded_group_total_prev);
-					$('#PayrollRresultmdl #ded_pay_prev').text(data[0].advance_pay_group_total_prev);
+					$('#PayrollRresultmdl #inc_sal_prev').text(number_format(data[0].salary_group_total_prev));
+					$('#PayrollRresultmdl #inc_fix_prev').text(number_format(data[0].fix_income_group_total_prev));
+					$('#PayrollRresultmdl #inc_ot_prev').text(number_format(data[0].overtime_group_total_prev));
+					$('#PayrollRresultmdl #inc_var_prev').text(number_format(data[0].var_income_group_total_prev));
+					$('#PayrollRresultmdl #inc_oth_prev').text(number_format(data[0].other_income_group_total_prev));
+					$('#PayrollRresultmdl #ded_abs_prev').text(number_format(data[0].absence_group_total_prev));
+					$('#PayrollRresultmdl #ded_fix_prev').text(number_format(data[0].fix_ded_group_total_prev));
+					$('#PayrollRresultmdl #ded_var_prev').text(number_format(data[0].var_ded_group_total_prev));
+					$('#PayrollRresultmdl #ded_oth_prev').text(number_format(data[0].other_ded_group_total_prev));
+					$('#PayrollRresultmdl #ded_leg_prev').text(number_format(data[0].legal_ded_group_total_prev));
+					$('#PayrollRresultmdl #ded_pay_prev').text(number_format(data[0].advance_pay_group_total_prev));
 
-					$('#PayrollRresultmdl #inc_sal_fullY').text(data[0].full_year_salary_grp);
-					$('#PayrollRresultmdl #inc_fix_fullY').text(data[0].full_year_fixincome_grp);
-					$('#PayrollRresultmdl #inc_ot_fullY').text(data[0].full_year_overtime_grp);
-					$('#PayrollRresultmdl #inc_var_fullY').text(data[0].full_year_varincome_grp);
-					$('#PayrollRresultmdl #inc_oth_fullY').text(data[0].full_year_othincome_grp);
-					$('#PayrollRresultmdl #ded_abs_fullY').text(data[0].full_year_absence_grp);
-					$('#PayrollRresultmdl #ded_fix_fullY').text(data[0].full_year_fixded_grp);
-					$('#PayrollRresultmdl #ded_var_fullY').text(data[0].full_year_varded_grp);
-					$('#PayrollRresultmdl #ded_oth_fullY').text(data[0].full_year_othded_grp);
-					$('#PayrollRresultmdl #ded_leg_fullY').text(data[0].full_year_legal_grp);
-					$('#PayrollRresultmdl #ded_pay_fullY').text(data[0].full_year_advpay_grp);
+					$('#PayrollRresultmdl #inc_sal_fullY').text(number_format(data[0].full_year_salary_grp));
+					$('#PayrollRresultmdl #inc_fix_fullY').text(number_format(data[0].full_year_fixincome_grp));
+					$('#PayrollRresultmdl #inc_ot_fullY').text(number_format(data[0].full_year_overtime_grp));
+					$('#PayrollRresultmdl #inc_var_fullY').text(number_format(data[0].full_year_varincome_grp));
+					$('#PayrollRresultmdl #inc_oth_fullY').text(number_format(data[0].full_year_othincome_grp));
+					$('#PayrollRresultmdl #ded_abs_fullY').text(number_format(data[0].full_year_absence_grp));
+					$('#PayrollRresultmdl #ded_fix_fullY').text(number_format(data[0].full_year_fixded_grp));
+					$('#PayrollRresultmdl #ded_var_fullY').text(number_format(data[0].full_year_varded_grp));
+					$('#PayrollRresultmdl #ded_oth_fullY').text(number_format(data[0].full_year_othded_grp));
+					$('#PayrollRresultmdl #ded_leg_fullY').text(number_format(data[0].full_year_legal_grp));
+					$('#PayrollRresultmdl #ded_pay_fullY').text(number_format(data[0].full_year_advpay_grp));
 
 					
-					$('#PayrollRresultmdl #pr_sso_emplyr_calc').text(data[0].sso_company);
-					$('#PayrollRresultmdl #pr_pvf_emplyr_calc').text(data[0].pvf_company);
-					$('#PayrollRresultmdl #pr_psf_emplyr_calc').text(data[0].psf_company);
+					$('#PayrollRresultmdl #pr_sso_emplyr_calc').text(number_format(data[0].sso_company));
+					$('#PayrollRresultmdl #pr_pvf_emplyr_calc').text(number_format(data[0].pvf_company));
+					$('#PayrollRresultmdl #pr_psf_emplyr_calc').text(number_format(data[0].psf_company));
 
-					$('#PayrollRresultmdl #pr_sso_emplyr').text(data[0].sso_company);
-					$('#PayrollRresultmdl #pr_pvf_emplyr').text(data[0].pvf_company);
-					$('#PayrollRresultmdl #pr_psf_emplyr').text(data[0].psf_company);
+					$('#PayrollRresultmdl #pr_sso_emplyr').text(number_format(data[0].sso_company));
+					$('#PayrollRresultmdl #pr_pvf_emplyr').text(number_format(data[0].pvf_company));
+					$('#PayrollRresultmdl #pr_psf_emplyr').text(number_format(data[0].psf_company));
+
+					$('#PayrollRresultmdl #total_net_income_cur_cal').text(number_format(data[0].total_net_income));
+					$('#PayrollRresultmdl #total_net_income_cur_mnth').text(number_format(data[0].total_net_income));
+					$('#PayrollRresultmdl #total_net_income_prev_mnth').text(number_format(data[0].total_net_income_prev));
+					$('#PayrollRresultmdl #total_net_income_fullyear').text(number_format(data[0].fullyear_net_income));
+
+
+					$('#PayrollRresultmdl #total_net_pay_cur_cal').text(number_format(data[0].total_net_pay));
+					$('#PayrollRresultmdl #total_net_pay_cur_mnth').text(number_format(data[0].total_net_pay));
+					$('#PayrollRresultmdl #total_net_pay_prev_mnth').text(number_format(data[0].total_net_pay_prev));
+					$('#PayrollRresultmdl #total_net_pay_fullyear').text(number_format(data[0].fullyear_net_pay));
 
 					$('#PayrollRresultmdl').modal('toggle');
 
@@ -1107,14 +1136,16 @@
 
 			//========== Check total both side ===========//
 			var lhs = $(this).text();
-			checkTotalsBothSide(lhs);
+			var lhss = lhs.replace("-", "");
+			var lhsss = lhss.replace(",", "");
+			checkTotalsBothSide(lhsss);
 
 		});
 
 		function checkTotalsBothSide(lhs){
 
-			var currTot = 0;
-			var currTotD = 0;
+			var currTot = 0.00;
+			var currTotD = 0.00;
 			$('#linkedcolumns tbody td.borderCls').each(function(){
 				var currVal = $(this).text();
 				currVal = currVal.replace(/,/g, "");
@@ -1135,7 +1166,7 @@
 			if(lhs != rhs){
 				$("body").overhang({
 					type: "error",
-					message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: Both side totals are not equal',
+					message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: Both side totals are not equal<br> LHS = '+lhs+'<br> RHS = '+rhs+'',
 					duration: 1,
 				})
 			}

@@ -51,7 +51,7 @@
 	color:#000;
 }
 
-input[type=text]:hover {
+#datatables11 input[type=text]:hover {
     width: 184px!important;
 }
 
@@ -59,22 +59,12 @@ input[type=text]:hover {
 
 <div style="height:100%; border:0px solid red; position:relative;">
 	<div>
-<!-- 	<?php 
-
-	//echo '<pre>';
-	//print_r($section_cols);
-	//echo '</pre>';
-
-	?>  -->
 		<div class="smallNav">
 			<ul>
-	<!-- 			<li>
-					<a class="font-weight-bold" style="color:#005588;"><?=$lng['Employee'].' '.$lng['Data'];?></a>
-				</li> -->
-
+	
 				<li>
 					<div class="searchFiltered ml-3" style="margin:0 0 8px 0;margin-left: 0px!important;">
-						<input placeholder="Search filter..." class="sFilter" id="searchFiltered" type="text" style="margin:0;border: 1px #ddd solid; background: #ffffff;" autocomplete="off">
+						<input placeholder="Search filter..." class="sFilter" id="searchFiltered" type="text" style="margin:0;border: 1px #ddd solid; background: #ffffff;width: auto;" autocomplete="off">
 					</div>
 				</li>
 				<li style="position: absolute;">
@@ -206,6 +196,7 @@ input[type=text]:hover {
 				//$GetAllowDeductdata = getEmployeeAllowances($row['emp_id'],$_SESSION['rego']['curr_month']);
 				$GetAllowDeductfix = unserialize($row['fix_allow_from_emp']);
 				$GetAllowDeductded = unserialize($row['fix_deduct_from_emp']);
+				$incomeCalc_total = unserialize($row['incomeCalc_total']);
 
 				$ssoBy = '';
 				if($row['sso_by'] == '0'){ $ssoBy = 'Employee';}elseif($row['sso_by'] == '1'){ $ssoBy = 'Company';}
@@ -213,7 +204,18 @@ input[type=text]:hover {
 				$empinfo = getEmployeeInfo($_SESSION['rego']['cid'], $row['emp_id']);
 				$legal_deductions = $row['gov_house_banking'] + $row['savings'] + $row['legal_execution'] + $row['kor_yor_sor'];
 
-				$calclinkIcon='';
+				$paiddaysval = '';
+				$empSalary = '';
+				if($row['contract_type'] == 'month'){
+					$paiddaysval = $row['paid_days'];
+					$empSalary = isset($incomeCalc_total[56]) ? remove_comma($incomeCalc_total[56]) : $row['salary'];
+					$empSalary = number_format($empSalary,2);
+				}elseif($row['contract_type'] == 'day'){
+					$paiddaysval = 'Day';
+					$empSalary = 'Daily wage';
+				}
+
+				/*$calclinkIcon='';
 				if(date('m', strtotime($empinfo['joining_date'])) < $_SESSION['rego']['curr_month'] && date('m', strtotime($empinfo['resign_date'])) > $_SESSION['rego']['curr_month'] && date('m', strtotime($GetAllowDeductdata[0]['start_date'])) < $_SESSION['rego']['curr_month']){
 
 					$calclinkIcon = '<i class="fa fa-calculator fa-lg" onclick="opencalculator(this,1)" data-id="'.$row['emp_id'].'" style="cursor: pointer;"></i>';
@@ -222,45 +224,47 @@ input[type=text]:hover {
 
 					$calclinkIcon = '<a onclick="opencalculator(this,2)" data-id="'.$row['emp_id'].'"><i class="fa fa-calculator fa-lg"></i></a>';
 				}else{
-					//$calclinkIcon = '<i class="fa fa-calculator fa-lg" onclick="opencalculator(this,2)" data-id="'.$row['emp_id'].'" style="cursor: pointer;"></i>';
-				}
+					
+				}*/
 
 			?>
 				<tr>	
-					<td><?=$row['emp_id']?></td>
+					<!-- <td><?=$empinfo['emp_id_editable']?></td> --><td><?=$row['emp_id']?></td>
 					<td><?=$row['emp_name_'.$lang]?></td>
 					<td class="tac">
-						<input type="checkbox" name="chkget[]" class="empchkboxData emp_<?=$row['emp_id']?>" id="<?=$row['emp_id']?>" onclick="CHeckEmpChkboc(this)">
+						<input type="checkbox" name="chkget[]" class="checkbox-custom-blue empchkboxData emp_<?=$row['emp_id']?>" id="<?=$row['emp_id']?>" onclick="CHeckEmpChkboc(this)" style="left:0px !important;">
 					</td>
-					<td class="tal">
-						<? if($row['contract_type'] == 'month'){ ?>
+					<!--<td class="tal">
+						<?/* if($row['contract_type'] == 'month'){ ?>
 							<?=$calclinkIcon;?>
+						<? } */?>
+					</td>-->
+					<td class="tac">
+						<? if($row['salary']){ ?>
+							<a onclick="opencalculator(this,1,'<?=$row['emp_id']?>')" data-id="<?=$row['emp_id']?>"><i class="fa fa-calculator fa-lg"></i></a>
 						<? } ?>
 					</td>
-					<td class="tal">
-						<? if($row['contract_type'] == 'month'){ ?>
-							<?=$row['paid_days']?>
-						<? }else{ echo 'DAY'; }?>
-					</td>
 
-					<td><?=$row['salary']?></td>
+					<td class="tar"><?=$paiddaysval;?></td>
+					<td class="tar"><?=$empSalary;?></td>
 
 					<? if(!empty($GetAllowDeductfix)){ ?>
 
 						<? foreach($GetAllowDeductfix as $k => $v){?>
-							<td><?=$v?></td>
+							<td><?=isset($incomeCalc_total[$k]) ? remove_comma($incomeCalc_total[$k]) : $v?></td>
 						<? } ?>
 						<? foreach($GetAllowDeductded as $k => $v){?>
-							<td><?=$v?></td>
+							<td><?=isset($incomeCalc_total[$k]) ? remove_comma($incomeCalc_total[$k]) : $v?></td>
 						<? } ?>
 
-					<? }else{ ?>
+					<?  }else{ ?>
 
 						<?foreach($getonlyapplyAllowDeduct as $d){ ?>
 							<td></td>
 						<? } ?>
 
-					<? } ?>
+					<? }  ?>
+					
 
 				
 					<td><?=$noyes01[$row['calc_tax']]?></td>
@@ -269,7 +273,7 @@ input[type=text]:hover {
 					<td><?=$noyes01[$row['calc_psf']]?></td>
 					<td><?=$row['calc_method']?></td>
 
-					<td><?=$row['modify_tax']?></td>
+					<td class="tar"><?=number_format($row['modify_tax'],2)?></td>
 					<td><?=$per_or_thb[$row['perc_thb_pvf']]?></td>
 					<td><?=$per_or_thb[$row['perc_thb_psf']]?></td>
 
@@ -290,19 +294,19 @@ input[type=text]:hover {
 					<td><?=$tpa?></td>
 					<td><?=$tpf?></td>
 					<td><?=$tsf?></td>
-					<td><?=$row['total_other_tax_deductions']?></td>
+					<td class="tar"><?=number_format($row['total_other_tax_deductions'],2)?></td>
 
-					<td><?=$row['gov_house_banking']?></td>
-					<td><?=$row['savings']?></td>
-					<td><?=$row['legal_execution']?></td>
-					<td><?=$row['kor_yor_sor']?></td>
+					<td class="tar"><?=number_format($row['gov_house_banking'],2)?></td>
+					<td class="tar"><?=number_format($row['savings'],2)?></td>
+					<td class="tar"><?=number_format($row['legal_execution'],2)?></td>
+					<td class="tar"><?=number_format($row['kor_yor_sor'],2)?></td>
 
-					<td><?=$row['remaining_salary']?></td>
-					<td><?=$row['notice_payment']?></td>
-					<td><?=$row['paid_leave']?></td>
-					<td><?=$row['severance']?></td>
-					<td><?=$legal_deductions?></td>
-					<td><?=$row['other_income']?></td>
+					<td class="tar"><?=number_format($row['remaining_salary'],2)?></td>
+					<td class="tar"><?=number_format($row['notice_payment'],2)?></td>
+					<td class="tar"><?=number_format($row['paid_leave'],2)?></td>
+					<td class="tar"><?=number_format($row['severance'],2)?></td>
+					<td class="tar"><?=number_format($legal_deductions,2)?></td>
+					<td class="tar"><?=number_format($row['other_income'],2)?></td>
 
 					<td><?=$positions[$row['position']][$lang]?></td>
 					<td><?=$entities[$row['entity']][$lang]?></td>
@@ -310,8 +314,12 @@ input[type=text]:hover {
 					<td><?=$divisions[$row['division']][$lang]?></td>
 					<td><?=$departments[$row['department']][$lang]?></td>
 					<td><?=$teams[$row['team']][$lang]?></td>
-					<td><?=$empinfo['joining_date']?></td>
-					<td><?=$empinfo['resign_date']?></td>
+					<td>
+						<? if($row['salary']){ ?>
+							<?=date('d-m-Y', strtotime($empinfo['joining_date']))?>
+						<? } ?>
+					</td>
+					<td><? if($empinfo['resign_date'] !=''){ ?><?=date('d-m-Y', strtotime($empinfo['resign_date']))?> <? } ?></td>
 					
 				</tr>
 			<? } ?>

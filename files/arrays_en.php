@@ -1,8 +1,8 @@
 <?php
 	
 	//$access = array('m'=>'Management','s'=>'Staff','x'=>'Management & Staff');
-	$select_logo_location_array = array('select'=>'Select','adminloginscreen' => 'Admin Login Screen Logo','adminloginscreentitle'=>'Admin Login Screen Title Logo','admindashboardbannerlogo' => 'Admin Dashboard Banner Logo','systemloginscreen' => 'System Login Screen Logo', 'systemloginscreentitle' => 'System Login Screen Title Logo', 'mobilescreenlogo' => 'Mobile Login Screen Logo','scanscreenlogo' => 'Scan Screen Logo');	
-	$select_banner_location_array = array('select'=>'Select','adminloginscreenbanner' => 'Admin Login Screen Banner','systemloginscreenbanner' => 'System Login Screen Banner','mobloginscreenbanner' => 'Mobile Login Screen Banner','scanscreenbanner' => 'Scan Screen banner');	
+	$select_logo_location_array = array('select'=>'Select','adminloginscreen' => 'Admin Login Screen Logo','adminloginscreentitle'=>'Admin Login Screen Title Logo','admindashboardbannerlogo' => 'Admin Dashboard Banner Logo','systemloginscreen' => 'System Login Screen Logo', 'systemloginscreentitle' => 'System Login Screen Title Logo', 'mobilescreenlogo' => 'Mobile Login Screen Logo');	
+	$select_banner_location_array = array('select'=>'Select','adminloginscreenbanner' => 'Admin Login Screen Banner','systemloginscreenbanner' => 'System Login Screen Banner','mobloginscreenbanner' => 'Mobile Login Screen Banner');	
 	$select_yesno_array = array('select'=>'Select','yes' => 'Yes','no'=>'No');	
 	$select_position_array = array('select'=>'Select','left' => 'Left','right'=>'Right','center'=>'Center');	
 	$login_screen_type = array('select'=>'Select','admin_login' => 'Admin Login','system_user'=>'System User Login','mobile_login'=>'Mobile Login','scan_login'=>'Scan Login');
@@ -15,6 +15,8 @@
 	$paiddaycalc = array(1=>'Calender days',2=>'Base = 30',3=>'Working days');
 	$fieldopt = array(1=>'Manual model',2=>'Calculated model',3=>'Both models');
 
+	$work_days_per_week = array(4=>'4 days per week',5=>'5 days per week',6=>'6 days per week',7=>'7 days per week');
+
 	$classification = array(0=>'Allowances',1=>'Deductions');
 	$sso_paidby = array(0=>'Employee',1=>'Company');
 
@@ -22,7 +24,7 @@
 	
 	$months = array(1=>"January", 2=>"February", 3=>"March", 4=>"April", 5=>"May", 6=>"June", 7=>"July", 8=>"August", 9=>"September", 10=>"October", 11=>"November", 12=>"December");
 	$short_months = array(1=>"Jan", 2=>"Feb", 3=>"Mar", 4=>"Apr", 5=>"May", 6=>"Jun", 7=>"Jul", 8=>"Aug", 9=>"Sep", 10=>"Oct", 11=>"Nov", 12=>"Dec");
-	$weekdays = array(1=>"Monday", 2=>"Tuesday", 3=>"Wednesday", 4=>"Thursday", 5=>"Friday", 6=>"Saterday", 7=>"Sunday");
+	$weekdays = array(1=>"Monday", 2=>"Tuesday", 3=>"Wednesday", 4=>"Thursday", 5=>"Friday", 6=>"Saturday", 7=>"Sunday");
 	$user_status = array(1=>'Active',2=>'Postponed');
 	//$permissions = array(1=>'None',2=>'Member',3=>'Author',4=>'Administrator',5=>'Developer');
 	$language = array('en'=>'English','th'=>'Thai');

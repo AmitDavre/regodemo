@@ -1,3 +1,4 @@
+			/////////////////////////////////utility functions2/////////////////////////////////////////
 			var datatables=[dtable,dtable2,dtable3,dtable4,dtable5,dtable6,dtable7,dtable8,dtable9,dtable10,dtable11,dtable12,dtable15,dtable16,dtable13,dtable14];
 			function adjust_columns(){
 				datatables.forEach(function(v1,idx){
@@ -151,6 +152,7 @@
 			function getDataDiv(){
 				
 			}
+			/////////////////////////////////utility functions2/////////////////////////////////////////
 			
 			
 			

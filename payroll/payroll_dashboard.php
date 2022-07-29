@@ -39,7 +39,7 @@
 
 
 	// echo '<pre>';
-	// print_r($savedMainDashboardlayout);
+	// print_r($myaccess);
 	// echo '</pre>';
 
 
@@ -140,6 +140,17 @@
 				<div class="parent">
 					<div class="child">
 						<p <?php echo "style=font-family:".$savedDefaultFonts[$savedMainDashboardlayout['main_font_settings']]."!important;color:".$savedAdminColors[$savedMainDashboardlayout['mainfontColor']]['code']."!important"; ?>><?=$lng['Historical data']?></p>
+					</div>
+				</div>						
+			</div>
+		</div>
+
+		<div class="dashbox <? if($myaccess['rego']['payroll']['access']){}else{echo 'disabled';} ?>" >
+			<div class="inner" onclick="window.location.href='index.php?mn=414';" <? if($myaccess['rego']['payroll_historical']['view']){echo "style=background:".$savedAdminColors[$savedMainDashboardlayout['maincolorSelect8']]['code']."";}else{ echo "style=background:#d2cbcb";}?>>
+				<i class="fa fa-history"></i>
+				<div class="parent">
+					<div class="child">
+						<p <?php echo "style=font-family:".$savedDefaultFonts[$savedMainDashboardlayout['main_font_settings']]."!important;color:".$savedAdminColors[$savedMainDashboardlayout['mainfontColor']]['code']."!important"; ?>><?=$lng['Payroll log history']?></p>
 					</div>
 				</div>						
 			</div>

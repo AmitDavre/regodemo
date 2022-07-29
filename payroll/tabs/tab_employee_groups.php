@@ -228,13 +228,13 @@
 						<?if(count($entities) > 1){ ?>
 							<td style="padding:0">
 								<select name="entities" multiple="multiple" id="userEntities">
-								<? /*foreach($entities as $k=>$v){ ?>
+								<? foreach($entities as $k=>$v){ ?>
 									<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }*/ ?>
+								<? } ?>
 								
-								<? foreach($entities as $k=>$v){if(in_array($k, explode(',', $_SESSION['rego']['sel_entities']))){ ?>
+								<? /*foreach($entities as $k=>$v){if(in_array($k, explode(',', $_SESSION['rego']['sel_entities']))){ ?>
 								<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? } } ?>
+								<? } }*/ ?>
 								</select>
 								
 							</td>
@@ -242,12 +242,12 @@
 						<? if($parameters[1]['apply_param'] == 1 && count($branches) > 1){ ?>
 							<td style="padding:0">
 								<select name="branches" multiple="multiple" id="userBranches">
-								<? /*foreach($branches as $k=>$v){ ?>
+								<? foreach($branches as $k=>$v){ ?>
 									<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }*/ ?>
-								<? foreach($branches as $k=>$v){if(in_array($k, explode(',', $_SESSION['rego']['sel_branches']))){ ?>
+								<? } ?>
+								<? /*foreach($branches as $k=>$v){if(in_array($k, explode(',', $_SESSION['rego']['sel_branches']))){ ?>
 								<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }} ?>
+								<? }}*/ ?>
 								</select>	
 								
 							</td>
@@ -255,12 +255,12 @@
 						<? if($parameters[2]['apply_param'] == 1 && count($divisions) > 1){ ?>
 							<td style="padding:0">
 								<select name="divisions" multiple="multiple" id="userDivisions">
-								<? /*foreach($divisions as $k=>$v){ ?>
+								<? foreach($divisions as $k=>$v){ ?>
 									<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }*/ ?>
-								<? foreach($divisions as $k=>$v){if(in_array($k, explode(',', $_SESSION['rego']['sel_divisions']))){ ?>
+								<? } ?>
+								<? /*foreach($divisions as $k=>$v){if(in_array($k, explode(',', $_SESSION['rego']['sel_divisions']))){ ?>
 								<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }} ?>
+								<? }}*/ ?>
 								</select>	
 								
 							</td>
@@ -268,12 +268,12 @@
 						<? if($parameters[3]['apply_param'] == 1 && count($departments) > 1){ ?>
 							<td style="padding:0">
 								<select name="departments" multiple="multiple" id="userDepartments">
-								<? /*foreach($departments as $k=>$v){ ?>
+								<? foreach($departments as $k=>$v){ ?>
 									<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }*/ ?>
-								<? foreach($departments as $k=>$v){if(in_array($k, explode(',',$_SESSION['rego']['sel_departments']))){ ?>
+								<? } ?>
+								<? /*foreach($departments as $k=>$v){if(in_array($k, explode(',',$_SESSION['rego']['sel_departments']))){ ?>
 								<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }} ?>
+								<? }}*/ ?>
 								</select>	
 								
 							</td>
@@ -281,12 +281,12 @@
 						<? if($parameters[4]['apply_param'] == 1 && count($teams) > 1){ ?>
 							<td style="padding:0">
 								<select name="teams" multiple="multiple" id="userTeams">
-								<? /*foreach($teams as $k=>$v){ ?>
+								<? foreach($teams as $k=>$v){ ?>
 									<option value="<?=$k?>"><?=$v['code']?></option>
-								<? } */?>
-								<? foreach($teams as $k=>$v){if(in_array($k, explode(',',$_SESSION['rego']['sel_teams']))){ ?>
+								<? } ?>
+								<? /*foreach($teams as $k=>$v){if(in_array($k, explode(',',$_SESSION['rego']['sel_teams']))){ ?>
 								<option value="<?=$k?>"><?=$v[$lang]?></option>
-								<? }} ?>
+								<? }}*/ ?>
 								</select>	
 							</td>
 						<? } ?>
@@ -321,9 +321,10 @@
 			<ul style="display: flex !important;">
 				<li>
 					<div class="searchFilterd ml-3" style="margin: 0 0 8px 0;margin-left: 0px!important;">
-						<input placeholder="Search filter..." class="sFilter" id="searchFilterd" type="text" style="margin:0;border: 1px #ddd solid; background: #ffffff;" autocomplete="off">
+						<input placeholder="Search filter..." class="sFilter" id="searchFilterd" type="text" style="margin:0;border: 1px #ddd solid; background: #ffffff;width: auto;" autocomplete="off">
 						<!-- <button id="clearSearchboxd" type="button" class="clearFilter"><i class="fa fa-times"></i></button> -->
 					</div>
+					
 				</li>
 				<li>
 					<button style="border: 0;padding: 3px 11px !important;line-height: 26px !important;margin: 0;color: #ccc;border-radius: 0 !important;background: #eee;" id="clearSearchbox" type="button" class="clearFilter"><i class="fa fa-times"></i></button>
@@ -332,9 +333,8 @@
 				<li style="padding-right:5px!important;padding-left: 2px!important;">
 					<select class="select2 customSelectcss ml-1 button" onchange="addTopayrollemp(this.value)" name="emp_name" style="background: #ffffff;font-weight: 600;">
 						<option selected disabled value=""><?=$lng['Select employees']?></option>
-						<!-- <option value="all"><?=$lng['Add all employees']?></option> -->
+						<option value="all"><?=$lng['Add all employees']?></option>
 						<? if(!empty($missing_emps)){ foreach($missing_emps as $k=>$v){
-								
 									echo '<option value="'.$k.'" />'.$k.' - '.$v.'</option>';
 						 		} } ?>
 					</select>
@@ -461,13 +461,25 @@
 
 	function removeRowemp(that){
 
-		$.ajax({
-			url: "ajax/remove_emp_from_payroll.php",
-			data: {row_id: that.id},
-			success: function(result){
+		$("body").overhang({
+			type: "confirm",
+			primary: "#228B22",
+			//accent: "#27AE60",
+			yesColor: "#3498DB",
+			message: "Do you want to continue?",
+			overlay: true,
+			callback: function (value) {
+				if(value){
+					$.ajax({
+						url: "ajax/remove_emp_from_payroll.php",
+						data: {row_id: that.id},
+						success: function(result){
 
-				$('#datatableEmppp tr#relatedata'+that.id).remove();
-				window.location.reload();
+							$('#datatableEmppp tr#relatedata'+that.id).remove();
+							window.location.reload();
+						}
+					});
+				}
 			}
 		});
 	}

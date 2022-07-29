@@ -327,6 +327,11 @@
 					//$helpfile = getHelpfile(411);
 					include('payroll_approval.php'); 
 					break;
+
+				case 414: 
+					//$helpfile = getHelpfile(411);
+					include('payroll_logs.php'); 
+					break;
 				
 				case 430: 
 					//$helpfile = getHelpfile(430);
@@ -487,12 +492,23 @@
 
 	});
 
-	function number_format(n) { //
+	/*function replace_comma(n)
+	{
+		var a = n.toString().replace(',', '');
+		var b = a.toString().replace(',', '');
+		var b = b.toString().replace(',', '');
+		var b = b.toString().replace(',', '');
+		var b = b.toString().replace(',', '');
+		return b;
+	}*/
+
+	/*function number_format(n1) { //
 		
-		if($.isNumeric(n) && n > 0){ 
+		if($.isNumeric(n1) && n1 > 0){ 
+			n = replace_comma(n1);
 			if(n.toString().indexOf('.') == -1){ 
 				
-				return parseFloat(n).toFixed(2).replace(/./g, function(c, i, a) {
+				return parseFloat(n).toFixed(2).replace(/./g, function(c, i, a) { 
 			        return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
 			    });
 				
@@ -505,6 +521,48 @@
 			var vv = 0.00;
 			return vv;
 		}
+	}*/
+
+	function number_format(inval){
+		let resform=parseInt(inval)/1000,aftdec=(inval + "").split(".");
+		if(aftdec[1]==undefined)aftdec[1]='00';
+		for(let i2=0;i2<aftdec[1].length-2;i2++)
+			if(aftdec[1]%10>4)
+				aftdec[1]=parseInt(aftdec[0].slice(0,aftdec[0].length-1))+1;
+			else aftdec[1]= aftdec[0].slice(0,aftdec[0].length-1);
+		if(aftdec[1]==100){
+			aftdec[1]='00';
+			aftdec[0]=parseInt(aftdec[0])+1;
+		}
+		
+		let str=padafter(aftdec[1],2);
+		if(parseInt(aftdec[0])>0){
+			if(parseInt(aftdec[0])<1000){
+				str=pad(aftdec[0],3)+'.'+str;
+			}else{
+				resform=aftdec[0];
+				str=pad(aftdec[0]%1000,3)+'.'+str;
+			}
+		}else str=0+'.'+str;
+		for(let i1=0;parseInt(resform)>=1000;i1+=3){
+			resform=parseInt(parseInt(resform)/1000);
+			str=pad(parseInt(resform),3)+','+str;
+		}
+		//console.log(str);
+		if(str.length>6)
+		str=parseInt(str.slice(0,3))+str.slice(3,str.length);
+		//console.log(str);
+		return str;
+	}
+
+	function pad(num, size) {
+	    var s = "0000000000000000000000" + num;
+	    return s.substr(s.length-size);
+	}
+	
+	function padafter(num,size){
+		var s =  num+"0000000000000000000000" ;
+	    return s.substr(0,size);
 	}
 	
 </script>

@@ -83,7 +83,7 @@
 		$allowDeductEmpRegFixed = serialize($getEmployeeFixedCalc);		
 		$allowDeductEmpRegManual = serialize($getEmployeeAllowDeduct);
 		
-		$upsql = "UPDATE ".$cid."_payroll_months SET payroll_opt='".$mdl_data['payroll_opt']."', salary_split= '".$mdl_data['salary_split']."', allowDeductEmpRegFixed='".$allowDeductEmpRegFixed."', allowDeductEmpRegManual= '".$allowDeductEmpRegManual."' WHERE month='".$_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month']."' ";
+		$upsql = "UPDATE ".$cid."_payroll_months SET payroll_opt='".$mdl_data['payroll_opt']."', salary_split= '".$mdl_data['salary_split']."', paid='".$rowED['tab_default']."', allowDeductEmpRegFixed='".$allowDeductEmpRegFixed."', allowDeductEmpRegManual= '".$allowDeductEmpRegManual."' WHERE month='".$_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month']."' ";
 		$dbc->query($upsql);
 	}
 	//============== Save data in Payroll Month table ======================//

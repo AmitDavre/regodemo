@@ -15,6 +15,8 @@
 	$paiddaycalc = array(1=>'วันปฏิทิน',2=>'ฐาน = 30',3=>'วันทำงาน');
 	$fieldopt = array(1=>'Manual model',2=>'Calculated model',3=>'Both models');
 
+	$work_days_per_week = array(4=>'4 วันต่อสัปดาห์',5=>'5 วันต่อสัปดาห์',6=>'6 วันต่อสัปดาห์',7=>'7 วันต่อสัปดาห์');
+
 	$classification = array(0=>'Allowances',1=>'Deductions');
 	$sso_paidby = array(0=>'Employee',1=>'Company');
 

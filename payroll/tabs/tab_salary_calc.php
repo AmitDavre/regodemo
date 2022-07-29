@@ -5,7 +5,7 @@
 		padding: 3px !important;
 	}
 
-	#modalTAXDeduction input[type=text], input[type=text]:hover {
+	#modalTAXDeduction input[type=text], #modalTAXDeduction input[type=text]:hover {
 	    width: 80px!important;
 	}
 
@@ -84,34 +84,45 @@
 			</tr>
 		</thead>
 		<tbody>
-			<? foreach($getSelmonPayrollDatass as $key => $row){ ?>
+			<? foreach($getSelmonPayrollDatass as $key => $row){
+					if($row['contract_type'] == 'month'){$pd=$row['paid_days'];}elseif($row['contract_type'] == 'day'){
+						$pdHrs = $row['mf_paid_hour'];
+						if($pdHrs !=''){
+							$pdHrstot = decimalHours($pdHrs);
+							$pds = $row['paid_days'] + ($pdHrstot/24);
+							$pd = round($pds,2);
+						}else{
+							$pd=$row['paid_days'];
+						}
+					}else{$pd='';}
+			?>
 
 				<tr data-empid="<?=$row['emp_id']?>">
 					<td class="pad010 pl-2 font-weight-bold" style="cursor: pointer;color:#900"><?=$row['emp_id']?></td>
 					<td class="pad010 pl-2 font-weight-bold" style="cursor: pointer;color:#900"><?=$row['emp_name_'.$lang]?></td>
 					<td class="tac">
-						<input type="checkbox" class="empchkbox" name="sel_all[]" value="<?=$row['emp_id']?>">
+						<input type="checkbox" class="checkbox-custom-blue empchkbox" name="sel_all[]" value="<?=$row['emp_id']?>" style="left:0px !important;">
 					</td>
 					<td>
 						<a onclick="Opencalculationpopups(this)" id="<?=$row['emp_id']?>"><i class="fa fa-calculator fa-lg" ></i></a>
 					</td>
-					<td><?=$row['paid_days']?></td>
-					<td><?=$row['total_earnings']?></td>
-					<td><?=$row['total_deductions']?></td>
-					<td><?=$row['total_net_income']?></td>
-					<td><?=$row['total_net_pay']?></td>
+					<td><?=$pd?></td>
+					<td class="tar"><?=number_format($row['total_earnings'],2);?></td>
+					<td class="tar"><?=number_format($row['total_deductions'],2);?></td>
+					<td class="tar"><?=number_format($row['total_net_income'],2);?></td>
+					<td class="tar"><?=number_format($row['total_net_pay'],2);?></td>
 
-					<td><?=$row['sso_employee']?></td>
-					<td><?=$row['tax_this_month']?></td>
-					<td><?=$row['pvf_employee']?></td>
-					<td><?=$row['psf_employee']?></td>
-					<td><?=$row['sso_by_company']?></td>
-					<td><?=$row['tax_by_company']?></td>
+					<td class="tar"><?=number_format($row['sso_employee'],2);?></td>
+					<td class="tar"><?=number_format($row['tax_this_month'],2);?></td>
+					<td class="tar"><?=number_format($row['pvf_employee'],2);?></td>
+					<td class="tar"><?=number_format($row['psf_employee'],2);?></td>
+					<td class="tar"><?=number_format($row['sso_by_company'],2);?></td>
+					<td class="tar"><?=number_format($row['tax_by_company'],2);?></td>
 
-					<td><?=$row['total_pvf']?></td>
-					<td><?=$row['total_psf']?></td>
-					<td><?=$row['total_sso']?></td>
-					<td><?=$row['total_pnd1']?></td>
+					<td class="tar"><?=number_format($row['total_pvf'],2);?></td>
+					<td class="tar"><?=number_format($row['total_psf'],2);?></td>
+					<td class="tar"><?=number_format($row['total_sso'],2);?></td>
+					<td class="tar"><?=number_format($row['total_pnd1'],2);?></td>
 					
 				</tr>
 
@@ -1398,8 +1409,10 @@
 											if(k == 32){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].notice_payment); }
 											if(k == 33){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].paid_leave); }
 											
-											if(k == 56){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].salary); }
-
+											if(k == 56){ 
+												if(data[0].contract_type == 'day'){var dsaly=data[0].mf_salary;}else{var dsaly=data[0].salary;}
+												crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(dsaly); 
+											}
 
 										
 											if(v['pnd'] == 1){ pnd1 = 'pnd1';}else{ pnd1 = '';}
@@ -1459,7 +1472,10 @@
 												if(k == 31){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].remaining_salary); }
 												if(k == 32){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].notice_payment); }
 												if(k == 33){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].paid_leave); }
-												if(k == 56){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].salary); }
+												if(k == 56){ 
+													if(data[0].contract_type == 'day'){var dsaly=data[0].mf_salary;}else{var dsaly=data[0].salary;}
+													crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(dsaly); 
+												}
 												//crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0; 
 												/*if(v['groups'] == 'inc_sal'){
 													crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].salary);
@@ -1647,106 +1663,106 @@
 					$('#Salarycalculator #calc_base').text(data.calc_base);
 
 					
-					$('#Salarycalculator #ear_curr_calc').text(data[0].total_earnings);
-					$('#Salarycalculator #ear_curr_mnth').text(data[0].total_earnings);
-					$('#Salarycalculator #ear_prev_mnth').text(data[0].total_earnings_prev);
-					$('#Salarycalculator #ear_full_year').text(data[0].full_year_earnings);
+					$('#Salarycalculator #ear_curr_calc').text(number_format(data[0].total_earnings));
+					$('#Salarycalculator #ear_curr_mnth').text(number_format(data[0].total_earnings));
+					$('#Salarycalculator #ear_prev_mnth').text(number_format(data[0].total_earnings_prev));
+					$('#Salarycalculator #ear_full_year').text(number_format(data[0].full_year_earnings));
 
-					$('#Salarycalculator #ded_curr_calc').text(data[0].total_deductions);
-					$('#Salarycalculator #ded_curr_mnth').text(data[0].total_deductions);
-					$('#Salarycalculator #ded_prev_mnth').text(data[0].total_deductions_prev);
-					$('#Salarycalculator #ded_full_year').text(data[0].full_year_deductions);
+					$('#Salarycalculator #ded_curr_calc').text(number_format(data[0].total_deductions));
+					$('#Salarycalculator #ded_curr_mnth').text(number_format(data[0].total_deductions));
+					$('#Salarycalculator #ded_prev_mnth').text(number_format(data[0].total_deductions_prev));
+					$('#Salarycalculator #ded_full_year').text(number_format(data[0].full_year_deductions));
 
-					$('#Salarycalculator #pnd_curr_calc').text(data[0].total_pnd1);
-					$('#Salarycalculator #pnd_curr_mnth').text(data[0].total_pnd1);
-					$('#Salarycalculator #pnd_prev_mnth').text(data[0].total_pnd1_prev);
-					$('#Salarycalculator #pnd_full_year').text(data[0].full_year_pnd);
+					$('#Salarycalculator #pnd_curr_calc').text(number_format(data[0].total_pnd1));
+					$('#Salarycalculator #pnd_curr_mnth').text(number_format(data[0].total_pnd1));
+					$('#Salarycalculator #pnd_prev_mnth').text(number_format(data[0].total_pnd1_prev));
+					$('#Salarycalculator #pnd_full_year').text(number_format(data[0].full_year_pnd));
 
-					$('#Salarycalculator #sso_curr_calc').text(data[0].total_sso);
-					$('#Salarycalculator #sso_curr_mnth').text(data[0].total_sso);
-					$('#Salarycalculator #sso_prev_mnth').text(data[0].total_sso_prev);
-					$('#Salarycalculator #sso_full_year').text(data[0].full_year_sso);
+					$('#Salarycalculator #sso_curr_calc').text(number_format(data[0].total_sso));
+					$('#Salarycalculator #sso_curr_mnth').text(number_format(data[0].total_sso));
+					$('#Salarycalculator #sso_prev_mnth').text(number_format(data[0].total_sso_prev));
+					$('#Salarycalculator #sso_full_year').text(number_format(data[0].full_year_sso));
 
-					$('#Salarycalculator #pvf_curr_calc').text(data[0].total_pvf);
-					$('#Salarycalculator #pvf_curr_mnth').text(data[0].total_pvf);
-					$('#Salarycalculator #pvf_prev_mnth').text(data[0].total_pvf_prev);
-					$('#Salarycalculator #pvf_full_year').text(data[0].full_year_pvf);
+					$('#Salarycalculator #pvf_curr_calc').text(number_format(data[0].total_pvf));
+					$('#Salarycalculator #pvf_curr_mnth').text(number_format(data[0].total_pvf));
+					$('#Salarycalculator #pvf_prev_mnth').text(number_format(data[0].total_pvf_prev));
+					$('#Salarycalculator #pvf_full_year').text(number_format(data[0].full_year_pvf));
 
-					$('#Salarycalculator #psf_curr_calc').text(data[0].total_psf);
-					$('#Salarycalculator #psf_curr_mnth').text(data[0].total_psf);
-					$('#Salarycalculator #psf_prev_mnth').text(data[0].total_psf_prev);
-					$('#Salarycalculator #psf_full_year').text(data[0].full_year_psf);
+					$('#Salarycalculator #psf_curr_calc').text(number_format(data[0].total_psf));
+					$('#Salarycalculator #psf_curr_mnth').text(number_format(data[0].total_psf));
+					$('#Salarycalculator #psf_prev_mnth').text(number_format(data[0].total_psf_prev));
+					$('#Salarycalculator #psf_full_year').text(number_format(data[0].full_year_psf));
 
-					$('#Salarycalculator #fixpro_curr_calc').text(data[0].total_tax_fixpro);
-					$('#Salarycalculator #fixpro_curr_mnth').text(data[0].total_tax_fixpro);
-					$('#Salarycalculator #fixpro_prev_mnth').text(data[0].total_tax_fixpro_prev);
-					$('#Salarycalculator #fixpro_full_year').text(data[0].full_year_fixprorated);
+					$('#Salarycalculator #fixpro_curr_calc').text(number_format(data[0].total_tax_fixpro));
+					$('#Salarycalculator #fixpro_curr_mnth').text(number_format(data[0].total_tax_fixpro));
+					$('#Salarycalculator #fixpro_prev_mnth').text(number_format(data[0].total_tax_fixpro_prev));
+					$('#Salarycalculator #fixpro_full_year').text(number_format(data[0].full_year_fixprorated));
 
-					$('#Salarycalculator #fix_curr_calc').text(data[0].total_tax_fix);
-					$('#Salarycalculator #fix_curr_mnth').text(data[0].total_tax_fix);
-					$('#Salarycalculator #fix_prev_mnth').text(data[0].total_tax_fix_prev);
-					$('#Salarycalculator #fix_full_year').text(data[0].full_year_fixed);
+					$('#Salarycalculator #fix_curr_calc').text(number_format(data[0].total_tax_fix));
+					$('#Salarycalculator #fix_curr_mnth').text(number_format(data[0].total_tax_fix));
+					$('#Salarycalculator #fix_prev_mnth').text(number_format(data[0].total_tax_fix_prev));
+					$('#Salarycalculator #fix_full_year').text(number_format(data[0].full_year_fixed));
 
-					$('#Salarycalculator #var_curr_calc').text(data[0].total_tax_var);
-					$('#Salarycalculator #var_curr_mnth').text(data[0].total_tax_var);
-					$('#Salarycalculator #var_prev_mnth').text(data[0].total_tax_var_prev);
-					$('#Salarycalculator #var_full_year').text(data[0].full_year_var);
+					$('#Salarycalculator #var_curr_calc').text(number_format(data[0].total_tax_var));
+					$('#Salarycalculator #var_curr_mnth').text(number_format(data[0].total_tax_var));
+					$('#Salarycalculator #var_prev_mnth').text(number_format(data[0].total_tax_var_prev));
+					$('#Salarycalculator #var_full_year').text(number_format(data[0].full_year_var));
 
-					$('#Salarycalculator #totalffv_curr_calc').text(data[0].total_of_alltax);
-					$('#Salarycalculator #totalffv_curr_mnth').text(data[0].total_of_alltax);
-					$('#Salarycalculator #totalffv_prev_mnth').text(data[0].total_of_alltax_prev);
-					$('#Salarycalculator #totalffv_full_year').text(data[0].full_year_taxableincome);
+					$('#Salarycalculator #totalffv_curr_calc').text(number_format(data[0].total_of_alltax));
+					$('#Salarycalculator #totalffv_curr_mnth').text(number_format(data[0].total_of_alltax));
+					$('#Salarycalculator #totalffv_prev_mnth').text(number_format(data[0].total_of_alltax_prev));
+					$('#Salarycalculator #totalffv_full_year').text(number_format(data[0].full_year_taxableincome));
 
-					$('#Salarycalculator #nontax_curr_calc').text(data[0].total_tax_nontax);
-					$('#Salarycalculator #nontax_curr_mnth').text(data[0].total_tax_nontax);
-					$('#Salarycalculator #nontax_prev_mnth').text(data[0].total_tax_nontax_prev);
-					$('#Salarycalculator #nontax_full_year').text(data[0].full_year_non_taxable);
+					$('#Salarycalculator #nontax_curr_calc').text(number_format(data[0].total_tax_nontax));
+					$('#Salarycalculator #nontax_curr_mnth').text(number_format(data[0].total_tax_nontax));
+					$('#Salarycalculator #nontax_prev_mnth').text(number_format(data[0].total_tax_nontax_prev));
+					$('#Salarycalculator #nontax_full_year').text(number_format(data[0].full_year_non_taxable));
 
-					$('#Salarycalculator #sso_emp_curr_calc').text(data[0].sso_employee);
-					$('#Salarycalculator #sso_emp_curr_mnth').text(data[0].sso_employee);
-					$('#Salarycalculator #sso_emp_prev_mnth').text(data[0].sso_employee_prev);
-					$('#Salarycalculator #sso_emp_full_year').text(data[0].full_year_sso_employee);
+					$('#Salarycalculator #sso_emp_curr_calc').text(number_format(data[0].sso_employee));
+					$('#Salarycalculator #sso_emp_curr_mnth').text(number_format(data[0].sso_employee));
+					$('#Salarycalculator #sso_emp_prev_mnth').text(number_format(data[0].sso_employee_prev));
+					$('#Salarycalculator #sso_emp_full_year').text(number_format(data[0].full_year_sso_employee));
 
-					$('#Salarycalculator #pvf_emp_curr_calc').text(data[0].pvf_employee);
-					$('#Salarycalculator #pvf_emp_curr_mnth').text(data[0].pvf_employee);
-					$('#Salarycalculator #pvf_emp_prev_mnth').text(data[0].pvf_employee_prev);
-					$('#Salarycalculator #pvf_emp_full_year').text(data[0].full_year_pvf_employee);
+					$('#Salarycalculator #pvf_emp_curr_calc').text(number_format(data[0].pvf_employee));
+					$('#Salarycalculator #pvf_emp_curr_mnth').text(number_format(data[0].pvf_employee));
+					$('#Salarycalculator #pvf_emp_prev_mnth').text(number_format(data[0].pvf_employee_prev));
+					$('#Salarycalculator #pvf_emp_full_year').text(number_format(data[0].full_year_pvf_employee));
 
-					$('#Salarycalculator #psf_emp_curr_calc').text(data[0].psf_employee);
-					$('#Salarycalculator #psf_emp_curr_mnth').text(data[0].psf_employee);
-					$('#Salarycalculator #psf_emp_prev_mnth').text(data[0].psf_employee_prev);
-					$('#Salarycalculator #psf_emp_full_year').text(data[0].full_year_psf_employee);
+					$('#Salarycalculator #psf_emp_curr_calc').text(number_format(data[0].psf_employee));
+					$('#Salarycalculator #psf_emp_curr_mnth').text(number_format(data[0].psf_employee));
+					$('#Salarycalculator #psf_emp_prev_mnth').text(number_format(data[0].psf_employee_prev));
+					$('#Salarycalculator #psf_emp_full_year').text(number_format(data[0].full_year_psf_employee));
 
-					$('#Salarycalculator #tax_emp_curr_calc').text(data[0].tax_this_month);
-					$('#Salarycalculator #tax_emp_curr_mnth').text(data[0].tax_this_month);
-					$('#Salarycalculator #tax_emp_prev_mnth').text(data[0].tax_previous);
-					$('#Salarycalculator #tax_emp_full_year').text(data[0].full_year_psf_employee);
+					$('#Salarycalculator #tax_emp_curr_calc').text(number_format(data[0].tax_this_month));
+					$('#Salarycalculator #tax_emp_curr_mnth').text(number_format(data[0].tax_this_month));
+					$('#Salarycalculator #tax_emp_prev_mnth').text(number_format(data[0].tax_previous));
+					$('#Salarycalculator #tax_emp_full_year').text(number_format(data[0].full_year_psf_employee));
 
 					$('#Salarycalculator #td_emp_curr_calc').text(0);
 					$('#Salarycalculator #td_emp_curr_mnth').text(0);
 					$('#Salarycalculator #td_emp_prev_mnth').text(0);
 					$('#Salarycalculator #td_emp_full_year').text(0);
 
-					$('#Salarycalculator #ssobycom_curr_calc').text(data[0].sso_by_company);
-					$('#Salarycalculator #ssobycom_curr_mnth').text(data[0].sso_by_company);
-					$('#Salarycalculator #ssobycom_prev_mnth').text(data[0].sso_by_company_prev);
-					$('#Salarycalculator #ssobycom_full_year').text(data[0].total_tax_year);
+					$('#Salarycalculator #ssobycom_curr_calc').text(number_format(data[0].sso_by_company));
+					$('#Salarycalculator #ssobycom_curr_mnth').text(number_format(data[0].sso_by_company));
+					$('#Salarycalculator #ssobycom_prev_mnth').text(number_format(data[0].sso_by_company_prev));
+					$('#Salarycalculator #ssobycom_full_year').text(number_format(data[0].total_tax_year));
 
-					$('#Salarycalculator #taxbycom_curr_calc').text(data[0].tax_by_company);
-					$('#Salarycalculator #taxbycom_curr_mnth').text(data[0].tax_by_company);
-					$('#Salarycalculator #taxbycom_prev_mnth').text(data[0].tax_by_company_prev);
-					$('#Salarycalculator #taxbycom_full_year').text(data[0].total_tax_year);
+					$('#Salarycalculator #taxbycom_curr_calc').text(number_format(data[0].tax_by_company));
+					$('#Salarycalculator #taxbycom_curr_mnth').text(number_format(data[0].tax_by_company));
+					$('#Salarycalculator #taxbycom_prev_mnth').text(number_format(data[0].tax_previous));
+					$('#Salarycalculator #taxbycom_full_year').text(number_format(data[0].total_tax_year));
 
-					$('#Salarycalculator #total_net_income_cur_cal').text(data[0].total_net_income);
-					$('#Salarycalculator #total_net_income_cur_mnth').text(data[0].total_net_income);
-					$('#Salarycalculator #total_net_income_prev_mnth').text(data[0].total_net_income_prev);
-					$('#Salarycalculator #total_net_income_fullyear').text(data[0].fullyear_net_income);
+					$('#Salarycalculator #total_net_income_cur_cal').text(number_format(data[0].total_net_income));
+					$('#Salarycalculator #total_net_income_cur_mnth').text(number_format(data[0].total_net_income));
+					$('#Salarycalculator #total_net_income_prev_mnth').text(number_format(data[0].total_net_income_prev));
+					$('#Salarycalculator #total_net_income_fullyear').text(number_format(data[0].fullyear_net_income));
 
 
-					$('#Salarycalculator #total_net_pay_cur_cal').text(data[0].total_net_pay);
-					$('#Salarycalculator #total_net_pay_cur_mnth').text(data[0].total_net_pay);
-					$('#Salarycalculator #total_net_pay_prev_mnth').text(data[0].total_net_pay_prev);
-					$('#Salarycalculator #total_net_pay_fullyear').text(data[0].fullyear_net_pay);
+					$('#Salarycalculator #total_net_pay_cur_cal').text(number_format(data[0].total_net_pay));
+					$('#Salarycalculator #total_net_pay_cur_mnth').text(number_format(data[0].total_net_pay));
+					$('#Salarycalculator #total_net_pay_prev_mnth').text(number_format(data[0].total_net_pay_prev));
+					$('#Salarycalculator #total_net_pay_fullyear').text(number_format(data[0].fullyear_net_pay));
 
 				
 					$('#Salarycalculator').modal('toggle');
@@ -3341,8 +3357,9 @@
 				//========== Check total both side ===========//
 				var lhs = $(this).text();
 				var lhss = lhs.replace("-", "");
+				var lhsss = lhss.replace(",", "");
 				//setTimeout(function() { checkTotalsBothSideSC(lhs) }, 1000);
-				checkTotalsBothSideSC(lhss);
+				checkTotalsBothSideSC(lhsss);
 				
 			}
 

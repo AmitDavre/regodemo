@@ -72,8 +72,7 @@ table#ManualFeedDT tbody tr td{
 	padding: 2px !important;
 }
 
-#manualfeedmdlss input[type=text], input[type=text]:hover {
-
+#manualfeedmdlss input[type=text], #manualfeedmdlss input[type=text]:hover {
 	border: none;
 	width: 80px;
 }
@@ -92,57 +91,34 @@ table#ManualFeedDT tbody tr td{
 	
 		<div class="smallNav">
 			<ul>
-				<li>
+				<!-- <li>
 					<a class="font-weight-bold" style="color:#005588;border-right: none;"><?=$lng['Monthly attendance']?> 
 
 						<span class="hide-480 ml-2"><i class="fa fa-arrow-circle-right"></i>&nbsp;&nbsp;<?=$months[$_SESSION['rego']['cur_month']].' '.$_SESSION['rego']['year_'.$lang]?>&nbsp;&nbsp;</span>
 					</a>
-				</li>
+				</li> -->
 
 				<li>
 					<div class="searchFilterm ml-3" style="margin: 0 0 8px 0;margin-left: 0px!important;">
-						<input placeholder="Search filter..." id="searchFilterm" class="sFilter" type="text" style="margin:0;border: 1px #ddd solid; background: #ffffff;" autocomplete="off">
+						<input placeholder="Search filter..." id="searchFilterm" class="sFilter" type="text" style="margin:0;border: 1px #ddd solid; background: #ffffff;width: auto;" autocomplete="off">
 					</div>
 				</li>		
-				<li>
-					<li>
-						<button style="border: 0;padding: 3px 11px !important;line-height: 26px !important;margin: 0;color: #ccc;border-radius: 0 !important;background: #eee;" id="clearSearchboxm" type="button" class="clearFilter"><i class="fa fa-times"></i></button>
-					</li>
+				<li style="position: absolute;">
+					
+					<button style="border: 0;padding: 3px 11px !important;line-height: 26px !important;margin: 0;color: #ccc;border-radius: 0 !important;background: #eee;" id="clearSearchboxm" type="button" class="clearFilter"><i class="fa fa-times"></i></button>
+					
 				</li>
 
-	<!-- 			<li class="flr"><a onclick="history.back()"><i class="fa fa-arrow-left"></i> <?=$lng['Go back']?></a></li>
-								
-
-				<li class="flr"><a class="text-white bg-success">
-					<i class="fa fa-download fa-lg mr-2"></i><?=$lng['Export']?></a>
-				</li>
-				
-				<li class="flr"><a class="text-white bg-success">
-					<i class="fa fa-upload fa-lg mr-2"></i><?=$lng['Import']?></a>
-				</li>
-
-				<li class="flr" id="saveManualfeedData"><a class="text-white bg-success">
-					<i class="fa fa-save fa-lg mr-2" ></i><?=$lng['Save']?></a>
-				</li>
- -->
-				<li class="flr" id="mfeedsel" style="position: absolute;left: 527px;">
+				<li class="flr" id="mfeedsel" style="position: absolute;left: 230px;">
 					<select multiple="multiple" id="showColsMF" style="background: #ffffff;font-weight: 600;padding: 1px !important;">
-					<?	
-					/*$mfcount = 0;
-					foreach($getAttendAllowDeduct as $k=>$v1){
-						$mfcount++;
-						$val = $mfcount + 2;
-							echo '<option class="optCol" value="'.$val.'" ';
-							if(in_array($val, $shColsmf)){echo 'selected ';}
-							echo '>'.$v1[$lang].'</option>';
-					}*/
+					<?
 
 					foreach($dropdownArray as $k=>$v1){
-						echo '<option class="optCol" value="'.$k.'" ';
+						if($k == 21){ $defsel="ddefsel";}else{$defsel="";}
+						echo '<option class="optCol '.$defsel.'" value="'.$k.'" ';
 						if(in_array($k, $shColsmf)){echo 'selected ';}
 						echo '>'.$v1.'</option>';
 					} 
-
 
 					?>
 					</select>
@@ -153,94 +129,16 @@ table#ManualFeedDT tbody tr td{
 		</div>
 	</div>
 
-	<!--<table id="ManualFeedDT" class="dataTable hoverable selectable nowrap">
-		<thead>
-			<?php
-			$colspan = count($mfarray['inc_ot']) + count($mfarray['inc_fix']) + count($mfarray['ded_abs']);
-
-			?>
-			<tr>
-				<th colspan="3" class="tac"><?=$lng['Employee']?></th>
-				<th colspan="<?=$colspan?>" class="tac"><?=$lng['Attendance & Allowance Data']?></th>				
-				<th colspan="<?=$colspan?>" class="tac"><?=$lng['Total allowance in THB']?></th>
-				
-			</tr>
-			<tr>
-				<th class="tal"><?=$lng['Emp. ID']?></th>
-				<th class="tal"><?=$lng['Employee name']?></th>
-				<th class="tal"><?=$lng['Calc']?></th>
-
-
-				<?foreach($mfarray['inc_ot'] as $k => $v){ ?>
-					<th class="tac"><?=$v[$lang]?></th>
-				<? } ?>
-				<?foreach($mfarray['inc_fix'] as $k => $v){ ?>
-					<th class="tal"><?=$v[$lang]?></th>
-				<? } ?>
-				<?foreach($mfarray['ded_abs'] as $k => $v){ ?>
-					<th class="tal" ><?=$v[$lang]?></th>
-				<? } ?>	
-
-				
-				<?foreach($mfarray['inc_ot'] as $k => $v){ ?>
-					<th class="tac"><?=$v[$lang]?></th>
-				<? } ?>
-				<?foreach($mfarray['inc_fix'] as $k => $v){ ?>
-					<th class="tal"><?=$v[$lang]?></th>
-				<? } ?>
-				<?foreach($mfarray['ded_abs'] as $k => $v){ ?>
-					<th class="tal" ><?=$v[$lang]?></th>
-				<? } ?>		
-			</tr>
-			
-		</thead>
-		<tbody>
-		<? foreach($getSelmonPayrollDatass as $key => $row){ ?>
-			<tr>
-				<td class="pad010 pl-2"><?=$row['emp_id']?></td>
-				<td class="pad010 pl-2"><?=$row['emp_name_'.$lang]?></td>
-				<td class="pad010 tac">
-					<a class="manualfeedmdl"><i class="fa fa-calculator fa-lg" ></i></a>
-				</td>
-			
-				<?foreach($mfarray['inc_ot'] as $k => $v){ ?>
-					<td class="mw65"><input class="sel hourFormat" name="inc_ot[<?=$v['id']?>]" type="text"></td>
-					
-				<? } ?>
-				<?foreach($mfarray['inc_fix'] as $k => $v){ ?>
-					<td class="mw65"><input class="sel float72" name="inc_fix[<?=$v['id']?>]" type="text"></td>
-				<? } ?>
-				<?foreach($mfarray['ded_abs'] as $k => $v){ ?>
-					<td class="mw65"><input class="sel float72" name="ded_abs[<?=$v['id']?>]" type="text"></td>
-				<? } ?>
-
-				
-
-				<?foreach($mfarray['inc_ot'] as $k => $v){ ?>
-					<td class="mw65"><input class="sel float72" name="inc_ot[<?=$v['id']?>]" type="text"></td>
-				<? } ?>
-				<?foreach($mfarray['inc_fix'] as $k => $v){ ?>
-					<td class="mw65"><input class="sel float72" name="inc_fix[<?=$v['id']?>]" type="text"></td>
-				<? } ?>
-				<?foreach($mfarray['ded_abs'] as $k => $v){ ?>
-					<td class="mw65"><input class="sel float72" name="ded_abs[<?=$v['id']?>]" type="text"></td>
-				<? } ?>
-				
-			</tr>
-		<? } ?>	
-		</tbody>
-	</table>-->
-
 	<form id="manualfeedData" method="post">
-	<table id="ManualFeedDT" class="dataTable hoverable selectable">
+	<input type="hidden" name="payroll_mdl_id" value="<?=$_GET['mid']?>">
+	<table id="ManualFeedDT" class="dataTable">
 		<thead>
 			<tr>
 				<th colspan="3" class="tac"><?=$lng['Employee']?></th>
 				<th colspan="<?=$countColumn + 2;?>" class="tac"><?=$lng['Attendance & Allowance Data']?></th>				
-				<!-- <th colspan="<?=$countOuter + 1;?>" class="tac"><?=$lng['Total allowance in THB']?></th> -->
-				<? //if($checkValues > 0){ ?>
-					<th colspan="<?=$countOuter+1;?>" class="tac"><?=$lng['Total allowance in THB']?></th>
-				<?// } ?>
+				
+				<th colspan="<?=$countOuter+1;?>" class="tac"><?=$lng['Total allowance in THB']?></th>
+				
 			</tr>
 			<tr>
 				<th class="tal"><?=$lng['Emp. ID']?></th>
@@ -255,84 +153,137 @@ table#ManualFeedDT tbody tr td{
 
 				<th class="tac"><?=$lng['Basic salary']?></th>
 				<? //if($checkValues > 0){
-
 					 foreach($outerArray as $key => $val){ ?>
 						<th class="tac"><?=$val?></th>
-				<? }/// } ?>
+				<? } //} ?>
 			</tr>
 		</thead>
 		<tbody>
 			<? 
-			/*$getpayrollinfo = getpayrollinfo('0100000001',1);
-			$getallowadeductinfo = getallowadeductinfo(47,1);*/
 
-			/*echo '<pre>';
-			print_r($dropdownArray);
-			print_r($outerArray);
-			print_r($dropdownArrayNew);*/
-			//echo '</pre>';
+			$contract_type_check = array();
+			$checkEmpsalary_check = array();
 			$countRow = 0;
 			foreach($getSelmonPayrollDatass as $key => $row){ $countRow++; 
 					$manual_feed_data = unserialize($row['manual_feed_data']);
 					$manual_feed_total = unserialize($row['manual_feed_total']);
+
+					$checkEmpsalary = checkEmpsalaryForCalc($row['emp_id'],$_SESSION['rego']['curr_month']);
+					$checkEmpsalary_check[] = $checkEmpsalary;
+
+					if($row['contract_type'] == 'month'){
+						$clmroy='readonly'; $adcls='';
+						$empSalary = '';
+						$empPaid_day = '';
+						$hourFormat='';
+					}elseif($row['contract_type'] == 'day'){
+						$clmroy=''; $adcls='background: #f9f9e2 !important;';
+						$empSalary = number_format($row['mf_salary'],2);
+						$empPaid_day = $row['paid_days'];
+						$hourFormat = 'hourFormat';
+						$contract_type_check[] = 1;
+					}else{
+						$clmroy=''; $adcls=''; $hourFormat='';
+						$empSalary = '';
+						$empPaid_day = '';
+					}
 				?>
 				<tr data-eid="<?=$row['emp_id']?>" data-sal="<?=$row['salary']?>">
 					<td class="pad010 pl-2 font-weight-bold"><?=$row['emp_id']?></td>
 					<td class="pad010 pl-2 font-weight-bold"><?=$row['emp_name_'.$lang]?></td>
 					<td class="pad010 tac">
-						<a class="manualfeedmdl" id="<?=$countRow;?>"><i class="fa fa-calculator fa-lg" ></i></a>
+						<? if($checkEmpsalary > 1){ ?>
+							<a class="manualfeedmdl" id="<?=$countRow;?>"><i class="fa fa-calculator fa-lg" ></i></a> 
+						<? } ?>
 					</td>
 
-					<td>
-						<input style="width: 70px !important;" class="sel float72" type="text" id="paidDays_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidDays]" autocomplete="off" value="<?=$row['paid_days']?>">
+					<td style="<?=$adcls?>">
+						<input style="float: right;width:70px !important;<?=$adcls?>" class="tar float72" type="text" id="paidDays_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidDays]" autocomplete="off" value="<?=$empPaid_day?>" <?=$clmroy?>>
 					</td>
-					<td>
-						<input style="width: 70px !important;" class="sel hourFormat" type="text" id="paidHours_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidHours]" autocomplete="off" value="<?=$row['paid_hours']?>">
+					<td style="<?=$adcls?>">
+						<input style="float: right;width:70px !important;<?=$adcls?>" class="tar <?=$hourFormat?>" type="text" id="paidHours_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidHours]" autocomplete="off" value="<?=$row['mf_paid_hour']?>" <?=$clmroy?>>
 					</td>
 
 					<?  foreach($dropdownArrayNew as $key => $rows){ 
 
 							if($position = stripos($rows[0],"hrs", 3) == true){
 								$ids = 'hrs_'.$rows[1].'_'.$countRow;
-								echo '<td><input style="width: 60px !important;" class="sel hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hrs]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hrs'][$rows[1]].'"></td>';
+								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hrs]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hrs'][$rows[1]].'"></td>';
 							}elseif($position = stripos($rows[0],"hours", 5) == true){
 								//$newClass = 'float72';
 								//if($payrollparametersformonth[$rows[1]]['unitarr'] == 4){ $newClass = 'hourFormat';}
 								$ids = 'hours_'.$rows[1].'_'.$countRow;
-								echo '<td><input style="width: 60px !important;" class="sel hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hours]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hours'][$rows[1]].'"></td>';
+								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hours]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hours'][$rows[1]].'"></td>';
 							}elseif($position = stripos($rows[0],"times", 5) == true){
 								//$newClass = 'float72';
 								//if($payrollparametersformonth[$rows[1]]['unitarr'] == 4){ $newClass = 'hourFormat';}
 								$ids = 'times_'.$rows[1].'_'.$countRow;
-								echo '<td><input style="width: 60px !important;" class="sel float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][times]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['times'][$rows[1]].'"></td>';
+								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][times]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['times'][$rows[1]].'"></td>';
 							}elseif($position = stripos($rows[0],"thb", 3) == true){
 								$ids = 'thb_'.$rows[1].'_'.$countRow;
-								echo '<td><input style="width: 60px !important;" class="sel float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][thb]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['thb'][$rows[1]].'"></td>';
+								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][thb]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['thb'][$rows[1]].'"></td>';
 							}else{
-								echo '<td><input style="width: 60px !important;" class="sel float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][other]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['other'][$rows[1]].'"></td>';
+								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][other]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['other'][$rows[1]].'"></td>';
 							}
 						?>
 						<? $totalids = 'total_'.$rows[1].'_'.$countRow;?>
-						<input style="width: 70px !important;" class="sel float72" type="hidden" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$rows[1]?>]" autocomplete="off" value="<?=$manual_feed_total[$rows[1]]?>">
+						<input style="width: 70px !important;" class="float72" type="hidden" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$rows[1]?>]" autocomplete="off" value="<?=$manual_feed_total[$rows[1]]?>">
 					<? } ?>
 
 					<td>
-						<input style="width: 70px !important;" class="sel float72" type="text" id="basicSal_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][basicSal]" autocomplete="off" value="<?=$row['basic_salary']?>">
+						<input style="float: right;width: 100% !important;" class="tar float72" type="text" id="basicSal_<?=$countRow?>" autocomplete="off" value="<?=$empSalary?>" readonly>
 					</td>
 					<? //if($checkValues > 0){
 						 foreach($outerArray as $key => $val){ 
 							$totalids = 'total_'.$key.'_'.$countRow;
 						?>
 						<td>
-							<input style="width: 70px !important;" class="sel float72" type="text" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$key?>]" autocomplete="off" value="<?=$manual_feed_total[$key]?>">
+							<input style="float: right;width: 100% !important;" class="tar float72" type="text" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$key?>]" autocomplete="off" value="<?=number_format($manual_feed_total[$key],2)?>">
 						</td>
-					<? }// } ?>
+					<? } //} ?>
 					
 				</tr>
 			<? } ?>
 		</tbody>
 	</table>
 	</form>
+
+	<?php
+	if(in_array(2, $checkEmpsalary_check)){
+		$hide2='{"targets": [2], "visible": true, "searchable": true}';
+	}else{
+		$hide2='{"targets": [2], "visible": false, "searchable": false}';
+	}
+
+	$array_slice=false;
+	if(in_array(1, $contract_type_check)){
+		$eColsMFd11='{"targets": [3,4], "visible": true, "searchable": true},';
+		$array_slice=true;
+	}else{
+		$darr = count($dropdownArray) + 5;
+		$eColsMFd11='{"targets": [3,4,'.$darr.'], "visible": false, "searchable": false},';
+	}
+
+
+	if($array_slice){
+		array_shift($manualFeedShowhide);
+		array_shift($manualFeedShowhide);
+	}
+
+
+	// echo '<pre>';
+	// print_r($manualFeedShowhide);
+	// echo '</pre>';
+
+	if(count($manualFeedShowhide) > 0){
+		foreach($manualFeedShowhide as $v){$eColsMFd .= $v.',';}
+		$eColsMFd = '['.substr($eColsMFd,0,-1).']';
+		$eColsMFd = '{"targets": '.$eColsMFd.', "visible": false, "searchable": false},';
+	}else{
+		$eColsMFd = '';
+	}
+
+	?>
 
 	<div class="row">
 		<div class="col-md-2" style="margin: -30px 0px 0px 0px;margin-left: auto;margin-right: auto;">
@@ -361,12 +312,7 @@ table#ManualFeedDT tbody tr td{
 				</button>
 			</div>
 			<div class="modal-body">
-				<?php
-				/*echo '<pre>';
-				print_r($pperiods);
-				echo '</pre>';*/
-
-				?>
+				
 				<table class="basicTable inputs table-responsive" border="0" style="width: 100%;">
 					<thead>
 						<tr>
@@ -593,9 +539,11 @@ table#ManualFeedDT tbody tr td{
 						$("body").overhang({
 							type: "success",
 							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
-							duration: 3,
+							duration: 1,
 							callback: function(v){
 								window.location.reload();
+
+								//dtcalcfeed.columns.adjust().draw();
 							}
 						})
 					}else{
@@ -612,52 +560,23 @@ table#ManualFeedDT tbody tr td{
 			})
 		})
 
-		/*$('#saveManualfeedData').confirmation({
-			container: 'body',
-			rootSelector: '#saveManualfeedData',
-			singleton: true,
-			animated: 'fade',
-			placement: 'left',
-			popout: true,
-			html: true,
-			title: 'Are you sure ?',
-			//btnOkIcon: '',
-			//btnCancelIcon: '',
-			btnOkLabel: 'Save to Payroll',
-			btnCancelLabel: 'Cancel',
-			onConfirm: function() { 
-				var frm = $('form#manualfeedData');
-				var datas = frm.serialize();
-
-				$.ajax({
-					type : 'post',
-					url : 'tabs/ajax/save_manual_feed.php',
-					data : datas,
-					success : function(result){
-						if(result == 'success'){
-							$("body").overhang({
-								type: "success",
-								message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
-								duration: 3,
-								callback: function(v){
-									window.location.reload();
-								}
-							})
-						}else{
-							$("body").overhang({
-								type: "error",
-								message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: '+ result,
-								duration: 3,
-								callback: function(v){
-									window.location.reload();
-								}
-							})
-						}
-					} 
-				})
-			}
-		});*/
-
+		$("#export_manual_excel").click(function() {
+			//first calculate manual feed then export
+			var frm = $('form#manualfeedData');
+			var datas = frm.serialize();
+			$.ajax({
+				type : 'post',
+				url : 'tabs/ajax/save_manual_feed.php',
+				data : datas,
+				success : function(result){
+					setTimeout(function(){
+					 	window.location.reload();
+					}, 2000);
+					window.location.href='<?=ROOT?>payroll/export_attendance_excel.php';
+					
+				}
+			});
+		})
 
 		$(".manualfeedmdl").click(function() {
 
@@ -850,25 +769,30 @@ table#ManualFeedDT tbody tr td{
 					}, 800);
 					setTimeout(function(){
 						if($.trim(result) == 'success'){
-							//setTimeout(function(){$(".overhang").slideUp(200)}, 800);
-							//setTimeout(function(){
-							$("body").overhang({
-								type: "success",
-								message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data imported successfully. Calculating payroll, please wait']?> . . .',
-								duration: 2,
-								callback: function(v){
-									window.location.reload();
-								}
-							})
-							//}, 1000);
-							//$("form#import").trigger('reset');
+							
+							//after import calculate manual feed again
+							/*var frm = $('form#manualfeedData');
+							var datas = frm.serialize();
+							$.ajax({
+								type : 'post',
+								url : 'tabs/ajax/save_manual_feed.php',
+								data : datas,
+								success : function(result){*/
+									$("body").overhang({
+										type: "success",
+										message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data imported successfully. Calculating payroll, please wait']?> . . .',
+										duration: 2,
+										callback: function(v){
+											window.location.reload();
+										}
+									})
+								/*}
+							})*/
+							
 							$("#import_attendance").val('');
 							$("#saveManualfeedData a").addClass('flash');
 							$("#sAlert").fadeIn(200);
-							//dtable.ajax.reload(null, false);
-							//bindHourformat();
-							//setTimeout(function(){location.reload();}, 2000);
-							//return false;
+							
 						}else{
 							$("body").overhang({
 								type: "error",

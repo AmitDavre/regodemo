@@ -31,15 +31,27 @@
 	} 
 	//die();
 
+	$periods = $_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month'];
+	$getPayrollPerMonthdata = getPayrollPerMonthdata($periods);
+
+	$paid = unserialize($getPayrollPerMonthdata[0]['paid']);
+
+	$paiddays = '';
+	if($paid['paid_days'] == 1){
+		$paiddays = $getPayrollPerMonthdata[0]['caldays'];
+	}elseif($paid['paid_days'] == 2){
+		$paiddays = $getPayrollPerMonthdata[0]['base30'];
+	}else{
+		$paiddays = $getPayrollPerMonthdata[0]['workdays'];
+	}
+
 	
-
-
 	if($data){
 
 		foreach($data as $k=>$v){
 
-			$workdays = ($rego_settings['days_month'] == 0 ? 30 : $rego_settings['days_month']);
-			$tmp = getEmployeeWorkedDays($v['joining_date'], $v['resign_date'], $workdays);
+			$workdays = $paiddays;
+			$tmp = getEmployeeWorkedDaysNew($v['joining_date'], $v['resign_date'], $workdays, $paid['paid_days']);
 			if(!$tmp['started'] && !$tmp['resigned']){
 				$calendar_days = $tmp['calendar_days'];
 			}else{

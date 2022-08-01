@@ -53,7 +53,7 @@
 			$(".commonhidebutton").css('display','none');
 			else $(".commonhidebutton").css('display','');
 			
-
+			//datatables[(g-1)*2].columns.adjust();
 			datatables[(g-1)*2].columns.adjust();
 			datatables[(g-1)*2+1].columns.adjust();
 			}

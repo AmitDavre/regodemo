@@ -33,6 +33,7 @@
 				$('#'+element+'_old_data').css("display","none");
 			});
 			//console.log(sections[Number(g)-1]);
+			//htrhrehrereer rerrrhrhngd errhhr
 			if(g==8)$('#div_benfits').css("display","");
 			$('#div_'+sections[Number(g)-1]).css("display","");
 			$('#'+sections[Number(g)-1]+'_old_data').css("display","");

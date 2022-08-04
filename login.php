@@ -104,6 +104,8 @@
 
 
 
+
+	// die();
 ?>
 
 <!DOCTYPE html>
@@ -135,13 +137,13 @@
 
 			/*background: url('../../images/admin_uploads/<?php echo $savedAdminLoginlayout['bg_image_link'] ?>');*/
 
-		    background: url('images/admin_uploads/<?php echo $scanLoginSystemDataValue['bg_image_link'] ?>') no-repeat center center!important;
+		    background: url('../../images/admin_uploads/<?php echo $scanLoginSystemDataValue['bg_image_link'] ?>') no-repeat center center!important;
 		    background-size: cover!important;
 		}
 
 		@font-face {
 		    font-family: 'ETHNOCENTRIC';
-		    src: url('assets/fonts/ethnocentric-rg.ttf');
+		    src: url('../../assets/fonts/ethnocentric-rg.ttf');
 		}
 	</style>
 	<body>
@@ -160,9 +162,9 @@
 		
 		<div id="brand_logo">
 			<? if($lang=='en'){ ?>
-				<a style="margin:0px 0 0 0" data-lng="th" class="langbutton <? if($lang=='th'){echo 'activ';} ?>"><img src="images/flag_th.png"></a>
+				<a style="margin:0px 0 0 0" data-lng="th" class="langbutton <? if($lang=='th'){echo 'activ';} ?>"><img src="../images/flag_th.png"></a>
 			<? }else{ ?>
-				<a style="margin:0px 0 0 0" data-lng="en" class="langbutton <? if($lang=='en'){echo 'activ';} ?>"><img src="images/flag_en.png"></a>
+				<a style="margin:0px 0 0 0" data-lng="en" class="langbutton <? if($lang=='en'){echo 'activ';} ?>"><img src="../images/flag_en.png"></a>
 			</td>
 			<? } ?>
 		</div>
@@ -171,7 +173,7 @@
 
 			<?php if($mergeArray['system_login_screen_title_logo']['show_hide_logo_common_field'] == '1') { ?>
 
-				<img style="height:<?php echo $mergeArray['system_login_screen_title_logo']['admin_login_screen_logo_size'].'px';?>;position:relative; left:20px;top: 20px;" src="images/admin_uploads/<?php echo $mergeArray['system_login_screen_title_logo']['image_link'];?>"><b style="font-family:ETHNOCENTRIC; font-weight:400; font-size:30px; color:#333;position: absolute;top: 25px;left:221px"> <span>HR</span><span> I</span><span style="font-size: 22px;">ntegrated</span> <span>S</span><span style="font-size: 22px;">ystem</span></b> 
+				<img style="height:<?php echo $mergeArray['system_login_screen_title_logo']['admin_login_screen_logo_size'].'px';?>;position:relative; left:20px;top: 20px;" src="../images/admin_uploads/<?php echo $mergeArray['system_login_screen_title_logo']['image_link'];?>"><b style="font-family:ETHNOCENTRIC; font-weight:400; font-size:30px; color:#333;position: absolute;top: 25px;left:221px"> <span>HR</span><span> I</span><span style="font-size: 22px;">ntegrated</span> <span>S</span><span style="font-size: 22px;">ystem</span></b> 
 
 			<?php }else {?>
 			

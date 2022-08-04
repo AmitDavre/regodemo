@@ -89,7 +89,81 @@
 	//unset($positions['en'][2]);
 	//unset($positions['th'][2]);
 	//var_dump($positions); exit;
+
+
+	$workingdays = 5;
+	/*$res = $dba->query("SELECT * FROM rego_default_leave_time_settings");
+	if(mysqli_error($dba)){ echo 'Error : '.mysqli_error($dba);}else{
+		if($row = $res->fetch_assoc()){
+			$workingdays = $row['workingdays'];
+		}
+	}*/
+
+	$holidays = array();
+	$res = $dba->query("SELECT * FROM rego_default_holidays WHERE apply='1' AND year = '".$_SESSION['RGadmin']['cur_year']."'");
+	while($row = $res->fetch_assoc()){
+		$holidays[] = $row;
+	}
+
+	function xdate_range($first, $last, $step = '+1 day', $output_format = 'd-m-Y' ) {
+		$dates = array();
+		$current = strtotime($first);
+		$last = strtotime($last);
+		while( $current <= $last ) {
+			$dates[$current]['tts'] = $current;
+			$dates[$current]['date'] = date($output_format, $current);
+			$dates[$current]['m'] = date('m', $current);
+			$dates[$current]['d'] = date('w', $current);
+			$current = strtotime($step, $current);
+		}
+		return $dates;
+	}
 	
+	$days = xdate_range('01-01-'.$_SESSION['RGadmin']['cur_year'],'31-12-'.$_SESSION['RGadmin']['cur_year']);
+	for($i=1;$i<=12;$i++){
+		$nw[$i]=0;
+		$wd[$i]=0;
+		$hd[$i]=0;
+	}
+
+	foreach($holidays as $k=>$v){
+		if($workingdays == 6){
+			$weekdays = date('N', strtotime($v['cdate']));
+			if($weekdays == 7){
+
+			}else{
+				$hd[date('n', strtotime($v['cdate']))]++;
+			}
+		}else{
+			$weekdays = date('N', strtotime($v['cdate']));
+			if($weekdays >= 6){
+
+			}else{
+				$hd[date('n', strtotime($v['cdate']))]++;
+			}
+		}
+	}
+
+	foreach($days as $k=>$v){
+		if($workingdays == 6){
+			if($v['d']==0){
+				$nw[(int)$v['m']]++;
+			}else{
+				$wd[(int)$v['m']]++;
+			}
+		}else{
+			if($v['d']==6 || $v['d']==0){
+				$nw[(int)$v['m']]++;
+			}else{
+				$wd[(int)$v['m']]++;
+			}
+		}
+	}
+
+	foreach($nw as $k=>$v){
+		//$nw[$k] += $hd[$k];
+		$wd[$k] -= $hd[$k];
+	}
 
 	//echo '<pre>';
 	//print_r($settings);
@@ -307,12 +381,12 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
+									<!-- <tr>
 										<th class="tal"><?=$lng['Multiplicator']?></th>
 										<td>
 											<input type="text" name="tab_default[multiplicator]" value="<?= isset($tab_default['multiplicator']) ? $tab_default['multiplicator'] : '';?>">
 										</td>
-									</tr>
+									</tr> -->
 									<tr>
 										<th class="tal"><?=$lng['Paid days']?></th>
 										<td>
@@ -348,13 +422,13 @@
 											</select>
 										</td>
 									</tr>
-									<tr>
+									<!-- <tr>
 										<th class="tal"><?=$lng['THB'].'/'.$lng['Unit']?></th>
 										<td>
 											<input type="text" name="tab_default[thb]" value="<?= isset($tab_default['thb']) ? $tab_default['thb'] : '';?>">
 										</td>
-									</tr>
-									<tr>
+									</tr> -->
+									<!-- <tr>
 										<th class="tal"><?=$lng['Unit']?></th>
 										<td>
 											<select name="tab_default[unit]" style="width: 100%;">
@@ -364,7 +438,7 @@
 												<? } ?>
 											</select>
 										</td>
-									</tr>
+									</tr> -->
 								</tbody>
 							</table>
 						</div>
@@ -568,7 +642,8 @@
 										<input class="sel numeric tar" type="text" name="periods[caldays][<?=$id?>]" readonly value="<?=isset($periods_defaults['caldays'][$id]) ? $periods_defaults['caldays'][$id] : $daysCalc;?>"/>
 									</td>
 									<td style="background: #f9f7dd !important;">
-										<input class="numeric tar" type="text" name="periods[workdays][<?=$id?>]" value="<?=isset($periods_defaults['workdays'][$id]) ? $periods_defaults['workdays'][$id] : 22;?>" />
+										<!-- <input class="numeric tar" type="text" name="periods[workdays][<?=$id?>]" value="<?=isset($periods_defaults['workdays'][$id]) ? $periods_defaults['workdays'][$id] : 22;?>" /> -->
+										<input class="numeric tar" type="text" name="periods[workdays][<?=$id?>]" value="<?=$wd[$k];?>" />
 									</td>
 
 									<td></td>

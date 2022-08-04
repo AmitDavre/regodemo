@@ -5,6 +5,8 @@
 	include(DIR.'files/functions.php');
 	include(DIR.'files/payroll_functions.php');
 
+	$getSSOEmpRateForMonths = getSSOEmpRateForMonths();
+
 	$resED = $dbc->query("SELECT * FROM ".$_SESSION['rego']['cid']."_sys_settings");
 	$rowED = $resED->fetch_assoc();
 
@@ -24,6 +26,11 @@
 	$getEmployeeFixedCalc = getEmployeeFixedCalc();
 	$getEmployeeAllowDeduct = getEmployeeAllowDeduct();
 
+	/*echo '<pre>';
+	print_r($getAttendAllowDeduct);
+	print_r($manualrates_default);
+	echo '</pre>';
+	die('fd');*/
 
 	//=== Fixed allowances & Deductions Employee Register Fixed
 	if(isset($getAttendAllowDeduct) && is_array($getAttendAllowDeduct)){ 
@@ -82,8 +89,9 @@
 
 		$allowDeductEmpRegFixed = serialize($getEmployeeFixedCalc);		
 		$allowDeductEmpRegManual = serialize($getEmployeeAllowDeduct);
+		$sso_rates_for_month = serialize($getSSOEmpRateForMonths);
 		
-		$upsql = "UPDATE ".$cid."_payroll_months SET payroll_opt='".$mdl_data['payroll_opt']."', salary_split= '".$mdl_data['salary_split']."', paid='".$rowED['tab_default']."', allowDeductEmpRegFixed='".$allowDeductEmpRegFixed."', allowDeductEmpRegManual= '".$allowDeductEmpRegManual."' WHERE month='".$_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month']."' ";
+		$upsql = "UPDATE ".$cid."_payroll_months SET payroll_opt='".$mdl_data['payroll_opt']."', salary_split= '".$mdl_data['salary_split']."', paid='".$rowED['tab_default']."', allowDeductEmpRegFixed='".$allowDeductEmpRegFixed."', allowDeductEmpRegManual= '".$allowDeductEmpRegManual."', sso_rates_for_month='".$sso_rates_for_month."' WHERE month='".$_SESSION['rego']['cur_year'].'_'.$_SESSION['rego']['cur_month']."' ";
 		$dbc->query($upsql);
 	}
 	//============== Save data in Payroll Month table ======================//

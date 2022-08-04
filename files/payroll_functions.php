@@ -366,7 +366,7 @@
 	function getSelmonPayrollData($month){
 		global $dbc;
 		$existing_emps = array();
-		$sql = "SELECT * FROM ".$_SESSION['rego']['payroll_dbase']." WHERE month = '".$month."'";
+		$sql = "SELECT * FROM ".$_SESSION['rego']['payroll_dbase']." WHERE month = '".$month."' ORDER BY emp_id ASC";
 		if($res = $dbc->query($sql)){
 			while($row = $res->fetch_assoc()){
 				$existing_emps[] = $row;
@@ -1244,9 +1244,106 @@
 		return $data;
 	}
 
+	function calculateAnualTaxOld($taxable, $calc, $sso, $pvf){
+		global $rego_settings;
+		$rules = unserialize($rego_settings['taxrules']);	
+		if($calc == 'gross'){ // Tax from GROSS /////////////////////////////////////
+			foreach($rules as $k=>$v){
+				$from[$k] = $v['from'];
+				$to[$k] = $v['to'];
+				$per[$k] = 	$v['percent'];
+				$net[$k] = 0;
+			}
+			$last = max(array_keys($net));
+			$pgross = 0;
+			foreach($to as $k=>$v){
+				if($k == 0){
+					if($taxable > $v){
+						$gross[$k] = (int)$v;
+					}else{
+						$gross[$k] = $taxable;
+					}
+					$pgross += $gross[$k];
+				}else if($k == $last){
+					if($taxable > $from[$k]){
+						$gross[$k] = $taxable - $pgross;
+					}else{
+						$gross[$k] = 0;
+					}
+				}else{
+					if($taxable < $from[$k]){
+						$gross[$k] = 0;
+					}else if($taxable > $v){
+						$gross[$k] = $v - $pgross;
+					}else{
+						$gross[$k] = $taxable - $pgross;
+					}
+					$pgross += $gross[$k];
+				}
+			}
+			$tax_year = 0;
+			foreach($gross as $k=>$v){
+				$tax[$k] = $gross[$k] * ($per[$k]/100);
+				$tax_year += $tax[$k];
+			}
+		}else{ // Tax from NET ///////////////////////////////////////
+			foreach($rules as $k=>$v){
+				$from[$k] = $v['net_from'];
+				$to[$k] = $v['net_to'];
+				$per[$k] = 	$v['percent'];
+				$net[$k] = 0;
+			}
+			$last = max(array_keys($net));
+			$pnet = 0;
+			$taxable += $sso;
+			//$taxable += $pvf;
+			foreach($to as $k=>$v){
+				if($k == 0){
+					if($taxable > $v){
+						$net[$k] = (int)$v;
+					}else{
+						$net[$k] = $taxable;
+					}
+					$pnet += $net[$k];
+				}else if($k == $last){
+					if($taxable > $from[$k]){
+						$net[$k] = $taxable - $pnet;
+					}else{
+						$net[$k] = 0;
+					}
+				}else{
+					if($taxable < $from[$k]){
+						$net[$k] = 0;
+					}else if($taxable > $v){
+						$net[$k] = $v-$pnet;
+					}else{
+						$net[$k] = $taxable - $pnet;
+					}
+					$pnet += $net[$k];
+				}
+			}
+			$gross_year = 0;
+			foreach($net as $k=>$v){
+				$rate = 100 - $per[$k];
+				$gross[$k] = $net[$k] / ($rate/100);
+				$gross_year += $gross[$k];
+			}
+			
+			$tax_year = 0;
+			foreach($gross as $k=>$v){
+				$tax[$k] = $gross[$k] * ($per[$k]/100);
+				$tax_year += $tax[$k];
+			}
+		}
+		
+		return $tax_year;
+	}
+
+
 	function calculateAnualTax($taxable, $calc, $sso, $pvf){
 		global $rego_settings;
 		$rules = unserialize($rego_settings['taxrules']);	
+
 		if($calc == 'gross'){ // Tax from GROSS /////////////////////////////////////
 			foreach($rules as $k=>$v){
 				$from[$k] = $v['from'];
@@ -1732,6 +1829,30 @@
 								"crate" => $row['sso_cRate'],
 								"cmax" => $row['sso_cMax'],
 								"cmin" => $row['sso_cMin'],
+							);
+			}
+		}
+		
+		return $data;
+	}
+
+	function getSSOEmpRateForMonths(){
+		global $dbc;
+		global $cid;
+		$data = array();
+		$sql = "SELECT month, sso_eRate, sso_eMax, sso_eMin, sso_cRate, sso_cMax, sso_cMin, wht FROM ".$cid."_payroll_months";
+		if($res = $dbc->query($sql)){
+			while($row = $res->fetch_assoc()){
+
+				$data[$row['month']] = array(
+								"month" => $row['month'],
+								"rate" => $row['sso_eRate'],
+								"max" => $row['sso_eMax'],
+								"min" => $row['sso_eMin'],
+								"crate" => $row['sso_cRate'],
+								"cmax" => $row['sso_cMax'],
+								"cmin" => $row['sso_cMin'],
+								"wht" => $row['wht'],
 							);
 			}
 		}

@@ -404,7 +404,7 @@
 								<td><?=$departments[$row['department']][$lang]?></td>
 								<td><?=$teams[$row['team']][$lang]?></td>
 								<td>
-									<a title="Remove" id="<?=$row['id']?>" onclick="removeRowemp(this)">
+									<a title="Remove" id="<?=$row['emp_id']?>" onclick="removeRowemp(this)">
 										<i class="fa fa-trash text-danger fa-lg"></i>
 									</a>
 								</td>
@@ -461,6 +461,8 @@
 
 	function removeRowemp(that){
 
+		var mid = '<?=$_GET['mid']?>';
+
 		$("body").overhang({
 			type: "confirm",
 			primary: "#228B22",
@@ -472,7 +474,7 @@
 				if(value){
 					$.ajax({
 						url: "ajax/remove_emp_from_payroll.php",
-						data: {row_id: that.id},
+						data: {emp_id: that.id, mid:mid},
 						success: function(result){
 
 							$('#datatableEmppp tr#relatedata'+that.id).remove();

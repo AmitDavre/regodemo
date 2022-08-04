@@ -170,21 +170,19 @@
 	
 	//for admin user only...
 	if(is_array($_SESSION['RGadmin']['access'])){
-
 		if($_SESSION['rego']['sel_teams'] == ''){
 
 			$getTeams = getActiveTeams();
+			
 			foreach ($getTeams as $key => $value) {
 				$Teamarr[] = $key;
 			}
 			$implodeTeam = implode(',', $Teamarr);
 
-
 			$_SESSION['rego']['mn_teams'] 	= $implodeTeam;
 			$_SESSION['rego']['sel_teams'] 	= $implodeTeam;
 		}
 	}
-
 	
 	
 

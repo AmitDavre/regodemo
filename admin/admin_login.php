@@ -75,14 +75,14 @@
 
 			/*background: url('../../images/admin_uploads/<?php echo $savedAdminLoginlayout['bg_image_link'] ?>');*/
 
-		    background: url('../images/admin_uploads/<?php echo $savedAdminLoginlayout['bg_image_link'] ?>') no-repeat center center!important;
+		    background: url('../../images/admin_uploads/<?php echo $savedAdminLoginlayout['bg_image_link'] ?>') no-repeat center center!important;
 		    background-size: cover!important;
 		}
 
 
 		@font-face {
 		    font-family: 'ETHNOCENTRIC';
-		    src: url('../assets/fonts/ethnocentric-rg.ttf');
+		    src: url('../../assets/fonts/ethnocentric-rg.ttf');
 		}
 
 	</style>

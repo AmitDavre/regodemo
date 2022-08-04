@@ -5,6 +5,7 @@
 
 
 
+
 <h2><i class="fa fa-industry"></i>&nbsp; <?=$lng['Layout Settings']?> <span style="float:right; display:none; font-style:italic; color:#b00" id="sAlert"><?=$lng['Data is not updated to last changes made']?></span></h2>	
 <div class="main">
 	

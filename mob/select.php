@@ -269,7 +269,7 @@ foreach ($EMP_ACCESS_ARRAY as $key_system => $value_employee)
 					success:function(result){
 
 						// redirect to system dashboard 
-						location.href = 'index.php?mn=2';
+						location.href = 'index.php?mn=21';
 
 					},
 					error:function (xhr, ajaxOptions, thrownError){

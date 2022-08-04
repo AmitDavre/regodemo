@@ -10,6 +10,9 @@
 	//Remove payroll
 	$result = $dbc->query("DELETE FROM ".$_SESSION['rego']['cid']."_payroll_".$_SESSION['rego']['cur_year']." WHERE payroll_modal_id='".$mdlid."' AND month='".$month."'");
 
+	//Remove payroll data
+	$result0 = $dbc->query("DELETE FROM ".$_SESSION['rego']['cid']."_payroll_data_".$_SESSION['rego']['cur_year']." WHERE payroll_modal_ids='".$mdlid."' AND months='".$month."'");
+
 	//Remove payroll_overview
 	$result1 = $dbc->query("DELETE FROM ".$_SESSION['rego']['cid']."_payroll_overview_".$_SESSION['rego']['cur_year']." WHERE payroll_model_id='".$mdlid."' AND month='".$month."'");
 

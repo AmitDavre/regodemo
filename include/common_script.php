@@ -172,25 +172,8 @@
 
 		$(document).ready(function () {
 
-    		$(".preloader").fadeOut();
+		 $(".preloader").fadeOut();
 
-    		 $("input[type=checkbox]").each(function(index,item){
-        		if(!$(item).hasClass('disableStyle')&&!$(item).hasClass('checkbox-custom-black-2')&&!$(item).hasClass('checkbox-custom-blue-2')
-                		&&!$(item).hasClass('checkbox-custom-black')&&!$(item).hasClass('checkbox-custom-blue')){
-        			if($(item).attr('readonly')==true || $(item).attr('disabled')==true ){
-            			//console.log("rttbrb");
-                		$(item).addClass('checkbox-custom-black-2');
-            			$(item).css({'cssText':'background:white !important;'});
-            			$(item).css({'cssText':$(item).attr('style')+';border:none !important;'});
-            		}else{ 
-                		//console.log('trhtbeav');
-            			$(item).css({'cssText':'background:white !important;'});
-            			$(item).css({'cssText':$(item).attr('style')+';border:none !important;'});
-            			$(item).addClass('checkbox-custom-blue-2');
-            		}
-            		//console.log(item);
-        		}
-    		}); 
 		});
 
 

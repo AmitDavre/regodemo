@@ -396,11 +396,11 @@
 							<tr>
 								<th style="width:5px"><?=$lng['Payslip fields']?></th>
 								<td class="pad410">
-									<label><input <? if(isset($payslip['ytd1'])){echo 'checked';} ?> name="payslip_field[ytd1]" type="checkbox" value="1" class="checkbox style-0 payslip_field[ytd1] checkbox-custom-blue-2" /><span><?=$lng['YTD. Income']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
-									<label><input <? if(isset($payslip['ytd2'])){echo 'checked';} ?> name="payslip_field[ytd2]" type="checkbox" value="1" class="checkbox style-0 payslip_field[ytd1] checkbox-custom-blue-2" /><span><?=$lng['YTD. Tax']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
-									<label><input <? if(isset($payslip['ytd3'])){echo 'checked';} ?> name="payslip_field[ytd3]" type="checkbox" value="1" class="checkbox style-0 payslip_field[ytd1] checkbox-custom-blue-2" /><span><?=$lng['YTD. Prov. Fund']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
-									<label><input <? if(isset($payslip['ytd4'])){echo 'checked';} ?> name="payslip_field[ytd4]" type="checkbox" value="1" class="checkbox style-0 payslip_field[ytd1] checkbox-custom-blue-2" /><span><?=$lng['YTD. Social SF']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
-									<label><input <? if(isset($payslip['ytd5'])){echo 'checked';} ?> name="payslip_field[ytd5]" type="checkbox" value="1" class="checkbox style-0 payslip_field[ytd1] checkbox-custom-blue-2" /><span><?=$lng['YTD. Other allowance']?></span></label>
+									<label><input <? if(isset($payslip['ytd1'])){echo 'checked';} ?> name="payslip_field[ytd1]" type="checkbox" value="1" class="checkbox style-0" /><span><?=$lng['YTD. Income']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
+									<label><input <? if(isset($payslip['ytd2'])){echo 'checked';} ?> name="payslip_field[ytd2]" type="checkbox" value="1" class="checkbox style-0" /><span><?=$lng['YTD. Tax']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
+									<label><input <? if(isset($payslip['ytd3'])){echo 'checked';} ?> name="payslip_field[ytd3]" type="checkbox" value="1" class="checkbox style-0" /><span><?=$lng['YTD. Prov. Fund']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
+									<label><input <? if(isset($payslip['ytd4'])){echo 'checked';} ?> name="payslip_field[ytd4]" type="checkbox" value="1" class="checkbox style-0" /><span><?=$lng['YTD. Social SF']?></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
+									<label><input <? if(isset($payslip['ytd5'])){echo 'checked';} ?> name="payslip_field[ytd5]" type="checkbox" value="1" class="checkbox style-0" /><span><?=$lng['YTD. Other allowance']?></span></label>
 								</td>
 							</tr>
 							<tr>
@@ -668,22 +668,22 @@
 								</td>
 								<td style="padding:0 10px !important" class="tac"><a href="#"><i class="fa fa-unlock fa-lg"></i></a></td>
 								<td>
-									<input class="sel numeric tac" type="text" name="periods[sso_eRate][<?=$id?>]" value="<?=$v['sso_eRate']?>" />
+									<input class="sel numeric tac" type="text" name="periods[sso_eRate][<?=$id?>]" value="<?=number_format($v['sso_eRate'],2,'.','')?>" />
 								</td>
 								<td>
-									<input class="sel numeric tar" type="text" name="periods[sso_eMax][<?=$id?>]" value="<?=$v['sso_eMax']?>" />
+									<input class="sel numeric tar" type="text" name="periods[sso_eMax][<?=$id?>]" value="<?=number_format($v['sso_eMax'],2,'.','')?>" />
 								</td>
 								<td>
-									<input class="sel numeric tar" type="text" name="periods[sso_eMin][<?=$id?>]" value="<?=$v['sso_eMin']?>" />
+									<input class="sel numeric tar" type="text" name="periods[sso_eMin][<?=$id?>]" value="<?=number_format($v['sso_eMin'],2,'.','')?>" />
 								</td>
 								<td>
-									<input class="sel numeric tac" type="text" name="periods[sso_cRate][<?=$id?>]" value="<?=$v['sso_cRate']?>" />
+									<input class="sel numeric tac" type="text" name="periods[sso_cRate][<?=$id?>]" value="<?=number_format($v['sso_cRate'],2,'.','')?>" />
 								</td>
 								<td>
-									<input class="sel numeric tar" type="text" name="periods[sso_cMax][<?=$id?>]" value="<?=$v['sso_cMax']?>" />
+									<input class="sel numeric tar" type="text" name="periods[sso_cMax][<?=$id?>]" value="<?=number_format($v['sso_cMax'],2,'.','')?>" />
 								</td>
 								<td>
-									<input class="sel numeric tar" type="text" name="periods[sso_cMin][<?=$id?>]" value="<?=$v['sso_cMin']?>" />
+									<input class="sel numeric tar" type="text" name="periods[sso_cMin][<?=$id?>]" value="<?=number_format($v['sso_cMin'],2,'.','')?>" />
 								</td>
 								<td>
 									<input class="sel numeric tar" type="text" name="periods[wht][<?=$id?>]" value="<?=$v['wht']?>" />
@@ -750,12 +750,12 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
+									<!-- <tr>
 										<th class="tal"><?=$lng['Multiplicator']?></th>
 										<td>
 											<input type="text" name="tab_default[multiplicator]" value="<?= isset($tab_default['multiplicator']) ? $tab_default['multiplicator'] : '';?>">
 										</td>
-									</tr>
+									</tr> -->
 									<tr>
 										<th class="tal"><?=$lng['Paid days']?></th>
 										<td>
@@ -790,13 +790,13 @@
 											</select>
 										</td>
 									</tr>
-									<tr>
+									<!-- <tr>
 										<th class="tal"><?=$lng['THB'].'/'.$lng['Unit']?></th>
 										<td>
 											<input type="text" name="tab_default[thb]" value="<?= isset($tab_default['thb']) ? $tab_default['thb'] : '';?>">
 										</td>
-									</tr>
-									<tr>
+									</tr> -->
+									<!-- <tr>
 										<th class="tal"><?=$lng['Unit']?></th>
 										<td>
 											<select name="tab_default[unit]" style="width: 100%;">
@@ -806,7 +806,7 @@
 												<? } ?>
 											</select>
 										</td>
-									</tr>
+									</tr> -->
 								</tbody>
 							</table>
 						</div>
@@ -1147,9 +1147,9 @@ $(document).ready(function() {
 		csvDispCount:1,
 		outputAsCSV: true,
 		selectAll:true,
-		okCancelInMulti:true, 
+		okCancelInMulti:false, 
 		showTitle : false,
-		triggerChangeCombined: true,
+		triggerChangeCombined: false,
 	});
 			
 	$('.xdatepick').datepicker({
@@ -1222,6 +1222,9 @@ $(document).ready(function() {
 						type: "success",
 						message: '<i class="fa fa-check"></i>&nbsp;&nbsp;Data updated successfuly',
 						duration: 2,
+						callback: function(v){
+							window.location.reload();
+						}
 					})
 					//setTimeout(function(){location.reload();},2000);
 				}else{
@@ -1252,9 +1255,9 @@ $(document).ready(function() {
 				csvDispCount:1,
 				outputAsCSV: true,
 				selectAll:true,
-				okCancelInMulti:true, 
+				okCancelInMulti:false, 
 				showTitle : false,
-				triggerChangeCombined: true,
+				triggerChangeCombined: false,
 			});
 		}
 	})

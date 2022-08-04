@@ -472,6 +472,9 @@
 			  `idcard_nr` varchar(30) COLLATE utf8_bin DEFAULT NULL,
 			  `idcard_exp` varchar(20) COLLATE utf8_bin DEFAULT NULL,
 			  `tax_id` varchar(30) COLLATE utf8_bin DEFAULT NULL,
+			  `tax_id_check` varchar(30) COLLATE utf8_bin DEFAULT NULL,
+			  `sso_id` varchar(30) COLLATE utf8_bin DEFAULT NULL,
+			  `sso_id_check` varchar(30) COLLATE utf8_bin DEFAULT NULL,
 			  `reg_address` varchar(50) COLLATE utf8_bin DEFAULT NULL,
 			  `cur_address` varchar(50) COLLATE utf8_bin DEFAULT NULL,
 			  `sub_district` varchar(50) COLLATE utf8_bin DEFAULT NULL,
@@ -662,7 +665,7 @@
 			  `workFromHome` varchar(255) COLLATE utf8_bin DEFAULT NULL,  
 			  `ping_expire` varchar(255) COLLATE utf8_bin DEFAULT NULL,  
 			  `same_as_id` varchar(55) COLLATE utf8_bin DEFAULT NULL,
-              `sso_id` varchar(15) COLLATE utf8_bin DEFAULT NULL,
+              
             PRIMARY KEY (`emp_id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 		if(!$dbc->query($sql)){
@@ -852,6 +855,7 @@
 			`user_id` varchar(255) COLLATE utf8_bin DEFAULT NULL,
 			`date` datetime NOT NULL DEFAULT current_timestamp(),
 			`import_type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+			`invalid_value` varchar(50) COLLATE utf8_bin DEFAULT NULL,
 			`no_change` varchar(50) COLLATE utf8_bin DEFAULT NULL,
 			`updated_to_empreg` varchar(50) COLLATE utf8_bin DEFAULT NULL,
 			`missing_info` varchar(50) COLLATE utf8_bin DEFAULT NULL,
@@ -1215,7 +1219,8 @@
 	}else{
 		$err_msg .= '<i class="fa fa-check-square-o"></i>&nbsp; Database <b>Monthly shiftplans</b> exists already.<br>';
 	}
-	
+
+
 	$db_name = $cid."_payroll_".$year;
 	if(!$dbc->query("DESCRIBE `$db_name`")) { 
 		$sql = "CREATE TABLE IF NOT EXISTS `$db_name` (
@@ -1235,8 +1240,23 @@
 		  `salary` varchar(20) COLLATE utf8_bin DEFAULT NULL,
 		  `fix_allow_from_emp` longtext COLLATE utf8_bin DEFAULT NULL,
 		  `fix_deduct_from_emp` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `incomeCalc_yesno` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `incomeCalc_manual` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `incomeCalc_total` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `hrs_curr_wages` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `hrs_prev_wages` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `times_curr_wages` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `rate_wages` longtext COLLATE utf8_bin DEFAULT NULL,
+		  `thb_wages` longtext COLLATE utf8_bin DEFAULT NULL,
 		  `paid_days` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+		  `paid_days_manual` varchar(11) COLLATE utf8_bin DEFAULT NULL,
+		  `paid_days_curr` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `paid_days_prev` varchar(55) COLLATE utf8_bin DEFAULT NULL,
 		  `paid_hours` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `day_daily_wage` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `rate_hr` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `mf_paid_hour` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `mf_salary` varchar(55) COLLATE utf8_bin DEFAULT NULL,
 		  `manual_feed_data` text COLLATE utf8_bin DEFAULT NULL,
 		  `manual_feed_total` text COLLATE utf8_bin DEFAULT NULL,
 		  `salary_group_total` varchar(55) COLLATE utf8_bin DEFAULT NULL,
@@ -1408,6 +1428,12 @@
 		  `tax_this_month` varchar(55) COLLATE utf8_bin DEFAULT NULL,
 		  `tax_next_month` varchar(55) COLLATE utf8_bin DEFAULT NULL,
 		  `tax_tot_next_month` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `total_net_income` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `total_net_income_prev` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `fullyear_net_income` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `total_net_pay` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `total_net_pay_prev` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+		  `fullyear_net_pay` varchar(55) COLLATE utf8_bin DEFAULT NULL,
 		  PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 		if(!$dbc->query($sql)){
@@ -1419,6 +1445,52 @@
 	}else{
 		$err_msg .= '<i class="fa fa-check-square-o"></i>&nbsp; Database <b>Payroll '.$year.'</b> exists already.<br>';
 	}
+
+
+	$db_name = $cid."_payroll_data_".$year;
+	if(!$dbc->query("DESCRIBE `$db_name`")) { 
+		$sql = "CREATE TABLE IF NOT EXISTS `$db_name` (
+		  `ids` int(11) NOT NULL AUTO_INCREMENT,
+		  `months` varchar(11) DEFAULT NULL,
+		  `payroll_modal_ids` varchar(11) DEFAULT NULL,
+		  `emp_ids` varchar(55) DEFAULT NULL,
+		  `allow_deduct_ids` varchar(11) DEFAULT NULL,
+		  `classifications` varchar(11) DEFAULT NULL,
+		  `groups` varchar(55) DEFAULT NULL,
+		  `tax_base` varchar(55) DEFAULT NULL,
+		  `pnd` varchar(55) DEFAULT NULL,
+		  `sso` varchar(55) DEFAULT NULL,
+		  `hrs` varchar(55) DEFAULT NULL,
+		  `pvf` varchar(55) DEFAULT NULL,
+		  `psf` varchar(55) DEFAULT NULL,
+		  `curr_calc` varchar(55) DEFAULT NULL,
+		  `prev_calc` varchar(55) DEFAULT NULL,
+		  `curr_month` varchar(55) DEFAULT NULL,
+		  `jan` varchar(55) DEFAULT NULL,
+		  `feb` varchar(55) DEFAULT NULL,
+		  `mar` varchar(55) DEFAULT NULL,
+		  `apr` varchar(55) DEFAULT NULL,
+		  `may` varchar(55) DEFAULT NULL,
+		  `jun` varchar(55) DEFAULT NULL,
+		  `jul` varchar(55) DEFAULT NULL,
+		  `aug` varchar(55) DEFAULT NULL,
+		  `sep` varchar(55) DEFAULT NULL,
+		  `oct` varchar(55) DEFAULT NULL,
+		  `nov` varchar(55) DEFAULT NULL,
+		  `dec` varchar(55) DEFAULT NULL,
+		  `datetime` datetime DEFAULT NULL,
+		  PRIMARY KEY (`ids`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
+		if(!$dbc->query($sql)){
+			$err_msg .= '<span style="color:#c00"><i class="fa fa-times-circle"></i>&nbsp; Create database <b>Payroll Data '.$year.'</b> failed. Error : <b>'.mysqli_error($dbc).'</b></span><br>';
+			$error = true;
+		}else{
+			$err_msg .= '<i class="fa fa-check-square-o"></i>&nbsp; Database <b>Payroll Data '.$year.'</b> created successfully.<br>';
+		}
+	}else{
+		$err_msg .= '<i class="fa fa-check-square-o"></i>&nbsp; Database <b>Payroll Data '.$year.'</b> exists already.<br>';
+	}
+
 	
 	$db_name = $cid."_payroll_months";
 	if(!$dbc->query("DESCRIBE `$db_name`")) {
@@ -1457,6 +1529,7 @@
 			`paid` text COLLATE utf8_bin DEFAULT NULL, 
 			`allowDeductEmpRegFixed` longtext COLLATE utf8_bin DEFAULT NULL, 
 			`allowDeductEmpRegManual` longtext COLLATE utf8_bin DEFAULT NULL, 
+			`sso_rates_for_month` longtext COLLATE utf8_bin DEFAULT NULL, 
 		  PRIMARY KEY (`month`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 		if(!$dbc->query($sql)){
@@ -1664,6 +1737,11 @@
 	        `idcard_nr` text COLLATE utf8_bin DEFAULT NULL,
 	        `sso_id` text COLLATE utf8_bin DEFAULT NULL,
 	        `tax_id` text COLLATE utf8_bin DEFAULT NULL,
+	        `tax_id_check` text COLLATE utf8_bin DEFAULT NULL,
+	        `sso_id_check` text COLLATE utf8_bin DEFAULT NULL,
+	        `work_days_per_week` varchar(11) COLLATE utf8_bin DEFAULT NULL,
+	        `checked_days` text COLLATE utf8_bin DEFAULT NULL,
+	        `input_hours` text COLLATE utf8_bin DEFAULT NULL,
 	
             PRIMARY KEY (`id`) 
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
@@ -1805,8 +1883,8 @@
 		`annual_leave` varchar(20) COLLATE utf8_bin DEFAULT NULL, 
 		`start_date` varchar(100) COLLATE utf8_bin DEFAULT NULL, 
 		`base_salary` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-        `contract_type` varcar(10) COLLLATE utf8_bin DEFAULT NULL,
-        `calc_base` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+        `contract_type` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+        `calc_base` varchar(20) COLLATE utf8_bin DEFAULT NULL,
         `bank_code` varchar(20) COLLATE utf8_bin DEFAULT NULL,
         `bank-name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
         `bank_branch` varchar(10) COLLATE utf8_bin DEFAULT NULL,
@@ -1819,13 +1897,14 @@
         `income_section` varchar(11) COLLATE utf8_bin DEFAULT NULL,
         `modify_tax` varchar(55) COLLATE utf8_bin DEFAULT NULL,
         `calc_sso` varchar(1) COLLATE utf8_bin DEFAULT NULL,
+        `calc_psf` varchar(55) COLLATE utf8_bin DEFAULT NULL,
+        `calc_pvf` varchar(55) COLLATE utf8_bin DEFAULT NULL,
         `sso_by` varchar(1) COLLATE utf8_bin DEFAULT NULL,
         `gov_house_banking` varchar(55) COLLATE utf8_bin DEFAULT NULL,
         `savings` varchar(55) COLLATE utf8_bin DEFAULT NULL,
         `legal_execution` varchar(55) COLLATE utf8_bin DEFAULT NULL,
         `kor_yor_sor` varchar(55) COLLATE utf8_bin DEFAULT NULL,
         `same_as_id` varchar(55) COLLATE utf8_bin DEFAULT NULL,
-        `sso_id` varchar(15) COLLATE utf8_bin DEFAULT NULL,
 		PRIMARY KEY (`id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 		if(!$dbc->query($sql)){

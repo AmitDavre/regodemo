@@ -6,7 +6,7 @@
 	
 	$deduct_group = array('ded_abs'=>'Absence', 'ded_fix'=>'Fixed deductions', 'ded_var'=>'Variable deductions', 'ded_oth'=>'Other deductions', 'ded_leg'=>'Legal deductions / Loans', 'ded_pay'=>'Advanced payments');
 	
-	$tax_base = array('fixpro'=>'Fixed - Pro rated', 'fix'=>'Fixed', 'var'=>'Variable', 'nontax'=>'Non-taxable');
+	$tax_base = array('fixpro'=>'Fixed - Pro rated', 'fix'=>'Fixed', 'var'=>'Variable', 'nontax'=>'Non-taxable', 'ssoby'=>'SSO by company', 'taxby'=>'Tax by company');
 
 
 
@@ -286,13 +286,13 @@ $arrayset = unserialize($_SESSION['RGadmin']['filter_group_allowance_array']);
 						<th data-visible="false"></th>
 						<th class="tac w1"><?=$lng['Earnings']?></th>
 						<th class="tac w1"><?=$lng['Deductions']?></th>
-						<th class="tac w1"><?=$lng['Hour rate/Daily rate']?></th>
+						<th class="tac w1"><?=str_replace('/', '/<br>', $lng['Hour rate/Daily rate']) ?></th>
 						<th class="tac w1"><?=$lng['PND1']?></th>
-						<th class="tac w1" style="line-height:110%"><?=$lng['Tax incom']?></th>
+						<th class="tac w1" style="line-height:110%"><?=str_replace(' ', '<br>', $lng['Tax incom'])?></th>
 						<th class="tac w1"><?=$lng['SSO']?></th>
 						<th class="tac w1"><?=$lng['PVF']?></th>
 						<th class="tac w1"><?=$lng['PSF']?></th>
-						<th><?=$lng['Tax base']?></th>
+						<th><?=$lng['Tax Base']?></th>
 						<th class="tac w1" style="line-height:110%">Manual<br>Emp. Reg.</th>
 						<th class="tac w1" style="line-height:110%">Fixed <br>Emp. Reg.</th>
 						<th class="tac w1" style="line-height:110%">Manual<br>Attendance</th>

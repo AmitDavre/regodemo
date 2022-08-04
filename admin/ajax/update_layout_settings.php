@@ -28,12 +28,12 @@
 			$mob_login_screen_banner_array= unserialize($row5['mob_login_screen_banner_array']);
 			$system_login_screen_banner_array= unserialize($row5['system_login_screen_banner_array']);
 			$main_dashboard_array= unserialize($row5['main_dashboard']);
-            $scan_login_screen_logo=unserialize($row5['scan_login_screen_logo']);
-            $scan_login_screen_banner=unserialize($row5['scan_screen_banner_array']);
+
+
 		}
 	}
-	//print_r($scan_login_screen_logo);die();
-    
+
+
 	if($_REQUEST['buttons_layout']['buttonLayout1'] == '')
 	{
 		$_REQUEST['buttons_layout']['buttonLayout1'] = $buttons_tab_array['buttonLayout1'];
@@ -677,18 +677,8 @@
 	$_REQUEST['logoandheaders'][$_REQUEST['logoandheaders']['select_admin_logo_image_selection']] =$_REQUEST['logoandheaders'];
 
 	$_REQUEST['logoandheaders'][$_REQUEST['logoandheaders']['select_admin_banner_image_selection']] =$_REQUEST['logoandheaders'];
-	//print_r($_REQUEST['logoandheaders']);die();
-	//print_r($scan_login_screen_logo);
-	if(isset($_REQUEST['logoandheaders']['scanscreenlogo']))
-	{
-	    $scanloginscreen = $_REQUEST['logoandheaders']['scanscreenlogo'];
-	   // echo 'rthtbeh';
-	}
-	else
-	{
-	    $scanloginscreen = $scan_login_screen_logo;
-	  //  print_r($scan_login_screen_logo);
-	}	
+
+
 	// ADMIN LOGIN SCREEN LOGO 
 	if(isset($_REQUEST['logoandheaders']['adminloginscreen']))
 	{
@@ -752,14 +742,6 @@
 	// ============================================>LOGO HEADER CHANGES FOR ARRAY<==========================================
 
 	// ============================================>BANNER HEADER CHANGES FOR ARRAY<==========================================
-	if(isset($_REQUEST['logoandheaders']['scanscreenbanner']))
-	{
-	    $scanloginscreenbanner = $_REQUEST['logoandheaders']['scanscreenbanner'];
-	}
-	else
-	{
-	    $scanloginscreenbanner = $scan_login_screen_banner;
-	}	
 	if(isset($_REQUEST['logoandheaders']['adminloginscreenbanner']))
 	{
 		$adminloginscreenbanner = $_REQUEST['logoandheaders']['adminloginscreenbanner'];
@@ -784,11 +766,12 @@
 	{
 		$mobloginscreenbanner = $mob_login_screen_banner_array;
 	}
-    
+
 	// ============================================>BANNER HEADER CHANGES FOR ARRAY<==========================================
 
 
 	// echo '<pre>';
+	// print_r($_REQUEST['logoandheaders']);
 	// print_r($mobilescreenlogo);
 	// echo '</pre>';
 
@@ -809,9 +792,9 @@
 
 
 	// update tab layout settings
-	$sql2 = "UPDATE rego_layout_settings SET admin_dashboard = '".$dba->real_escape_string(serialize($_REQUEST['admin_dashboard']))."' , admin_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['admin']))."', system_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['system']))."', mob_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['mob']))."', scan_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['scan']))."',scan_login_screen_logo = '".$dba->real_escape_string(serialize($scanloginscreen))."', admin_login_screen_logo = '".$dba->real_escape_string(serialize($adminloginscreen))."', admin_login_screen_title_logo = '".$dba->real_escape_string(serialize($adminloginscreentitle))."', buttons_tab = '".$dba->real_escape_string(serialize($_REQUEST['buttons_layout']))."' , system_login_screen_logo = '".$dba->real_escape_string(serialize($systemloginscreen))."', system_login_screen_title_logo = '".$dba->real_escape_string(serialize($systemloginscreentitle))."', admin_dashboard_banner_logo = '".$dba->real_escape_string(serialize($admindashboardbannerlogo))."',main_dashboard = '".$dba->real_escape_string(serialize($_REQUEST['main_dashboard']))."',admin_login_screen_banner_array = '".$dba->real_escape_string(serialize($adminloginscreenbanner))."' ,system_login_screen_banner_array = '".$dba->real_escape_string(serialize($systemloginscreenbanner))."',mob_login_screen_logo_array = '".$dba->real_escape_string(serialize($mobilescreenlogo))."',mob_login_screen_banner_array = '".$dba->real_escape_string(serialize($mobloginscreenbanner))."',scan_screen_banner_array = '".$dba->real_escape_string(serialize($scanloginscreenbanner))."'   WHERE id = '1'";
+	$sql2 = "UPDATE rego_layout_settings SET admin_dashboard = '".$dba->real_escape_string(serialize($_REQUEST['admin_dashboard']))."' , admin_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['admin']))."', system_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['system']))."', mob_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['mob']))."', scan_login_screen = '".$dba->real_escape_string(serialize($_REQUEST['login_screen']['scan']))."', admin_login_screen_logo = '".$dba->real_escape_string(serialize($adminloginscreen))."', admin_login_screen_title_logo = '".$dba->real_escape_string(serialize($adminloginscreentitle))."', buttons_tab = '".$dba->real_escape_string(serialize($_REQUEST['buttons_layout']))."' , system_login_screen_logo = '".$dba->real_escape_string(serialize($systemloginscreen))."', system_login_screen_title_logo = '".$dba->real_escape_string(serialize($systemloginscreentitle))."', admin_dashboard_banner_logo = '".$dba->real_escape_string(serialize($admindashboardbannerlogo))."',main_dashboard = '".$dba->real_escape_string(serialize($_REQUEST['main_dashboard']))."',admin_login_screen_banner_array = '".$dba->real_escape_string(serialize($adminloginscreenbanner))."' ,system_login_screen_banner_array = '".$dba->real_escape_string(serialize($systemloginscreenbanner))."',mob_login_screen_logo_array = '".$dba->real_escape_string(serialize($mobilescreenlogo))."',mob_login_screen_banner_array = '".$dba->real_escape_string(serialize($mobloginscreenbanner))."'   WHERE id = '1'";
 	$dba->query($sql2);
-    //print_r($systemloginscreen);
+
 
 	
 	if($dba->query($sql)){
@@ -827,6 +810,7 @@
 	}else{
 		echo mysqli_error($dba);
 	}
+
 
 
 

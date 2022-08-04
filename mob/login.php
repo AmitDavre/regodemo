@@ -255,7 +255,7 @@
 					}
 					if($.trim(response) == 'success'){
 						//location.href = 'index.php?mn=18';
-						location.href = 'index.php?mn=21';
+						location.href = 'index.php?mn=2';
 					}
 				},
 				error:function (xhr, ajaxOptions, thrownError){

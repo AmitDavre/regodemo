@@ -90,18 +90,8 @@
 
 	$leaveCheck = $standardArray[$versionValue]['leave'];
 	$timeCheck = $standardArray[$versionValue]['time'];
-	$permissionsVar=array();
-	$sql111 = "SELECT * FROM ".$cid."_users WHERE username = '".$_SESSION['rego']['username']."'";
-	if($res111 = $dbc->query($sql111)){
-	    while($row111 = $res111->fetch_assoc()){
-	        if(count(unserialize($row111['permissions']))>0){
-	        $permissionsVar = unserialize($row111['permissions']);
-	        //print_r($row111['permissions']);
-	        //echo 'uiegduex';
-	        }
-	    }
-	}
-	//print_r($permissionsVar);die;
+
+
 ?>
 
 <!doctype html>
@@ -204,12 +194,7 @@
 
 			case 201: 
 				include('notification.php'); break;
-			case 1701:
-			    include('app_leave.php'); break;
-			case 1702:
-			    include('app_time.php'); break;
-			case 1703:
-			    include('app_payroll.php'); break;
+			
 		}	?>
 
     <!-- App Bottom Menu -->

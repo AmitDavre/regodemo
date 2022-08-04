@@ -19,6 +19,18 @@
 				}
 			}
 
+			foreach ($value['allow_deduct']['times'] as $k => $v) {
+				if($v != ''){
+					$dataTotal['total'][$k] = str_replace(',', '', $value['total'][$k]);
+				}
+			}
+
+			foreach ($value['allow_deduct']['thb'] as $k => $v) {
+				if($v != ''){
+					$dataTotal['total'][$k] = str_replace(',', '', $value['total'][$k]);
+				}
+			}
+
 			//calculate salary for day contract
 			$getpayrollinfoModalWise = getpayrollinfoModalWise($key, $_SESSION['rego']['cur_month'], $_REQUEST['payroll_mdl_id']);
 

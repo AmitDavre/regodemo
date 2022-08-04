@@ -201,11 +201,23 @@
 	
 	$teamdata = 'a:3:{s:2:"en";a:1:{s:4:"NOTEAM";s:9:"No Teams";}s:2:"th";a:1:{s:4:"NOTEAM";s:9:"No Teams";}s:7:"code_id";a:1:{s:4:"NOTEAM";s:4:"NOTEAM";}}';
 
+	$checked_days = 'a:5:{i:1;s:1:"1";i:2;s:1:"2";i:3;s:1:"3";i:4;s:1:"4";i:5;s:1:"5";}';
+	$input_hours = 'a:7:{i:1;s:5:"08:00";i:2;s:5:"08:00";i:3;s:5:"08:00";i:4;s:5:"08:00";i:5;s:5:"08:00";i:6;s:0:"";i:7;s:0:"";}';
 
 	$tab_default = $data['tab_default'];
 
+	$empdata_cols = 'a:89:{s:12:"basic_salary";s:12:"Basic salary";s:7:"Housing";s:7:"Housing";s:9:"Transport";s:9:"Transport";s:8:"Position";s:8:"Position";s:5:"Phone";s:5:"Phone";s:13:"Pay back loan";s:13:"Pay back loan";s:8:"calc_tax";s:13:"Calculate Tax";s:8:"calc_sso";s:13:"Calculate SSO";s:8:"calc_pvf";s:13:"Calculate PVF";s:8:"calc_psf";s:13:"Calculate PSF";s:11:"calc_method";s:22:"Tax calculation method";s:10:"modify_tax";s:10:"Modify tax";s:10:"pvf_pr_thb";s:12:"PVF % or THB";s:10:"psf_pr_thb";s:12:"PSF % or THB";s:12:"pvf_rate_emp";s:17:"PVF rate employee";s:12:"pvf_rate_com";s:17:"PVF rate employer";s:12:"psf_rate_emp";s:17:"PSF rate employee";s:12:"psf_rate_com";s:17:"PSF rate employer";s:13:"contract_type";s:13:"Contract type";s:9:"calc_base";s:16:"Calculation base";s:6:"sso_by";s:3:"SSO";s:18:"Standard deduction";s:18:"Standard deduction";s:13:"Personal care";s:13:"Personal care";s:14:"Provident fund";s:14:"Provident fund";s:20:"Social Security Fund";s:20:"Social Security Fund";s:15:"Other Deduction";s:15:"Other Deduction";s:24:"Government house banking";s:24:"Government house banking";s:7:"Savings";s:7:"Savings";s:25:"Legal execution deduction";s:25:"Legal execution deduction";s:26:"Kor.Yor.Sor (Student loan)";s:26:"Kor.Yor.Sor (Student loan)";s:16:"remaining_salary";s:12:"Retro salary";s:14:"notice_payment";s:14:"Notice payment";s:10:"paid_leave";s:10:"Paid leave";s:9:"severance";s:9:"Severance";s:16:"legal_deductions";s:16:"Legal deductions";s:12:"other_income";s:12:"Other income";s:8:"position";s:8:"Position";s:7:"company";s:7:"Company";s:8:"location";s:8:"Location";s:8:"division";s:8:"Division";s:10:"department";s:10:"Department";s:5:"teams";s:5:"Teams";s:12:"joining_date";s:12:"Joining date";s:11:"resign_date";s:13:"Resigned Date";i:0;s:12:"basic_salary";i:1;s:7:"Housing";i:2;s:9:"Transport";i:3;s:8:"Position";i:4;s:5:"Phone";i:5;s:5:"Bonus";i:6;s:13:"Pay back loan";i:7;s:8:"calc_tax";i:8;s:8:"calc_sso";i:9;s:8:"calc_pvf";i:10;s:8:"calc_psf";i:11;s:11:"calc_method";i:12;s:10:"modify_tax";i:13;s:10:"pvf_pr_thb";i:14;s:10:"psf_pr_thb";i:15;s:12:"pvf_rate_emp";i:16;s:12:"pvf_rate_com";i:17;s:12:"psf_rate_emp";i:18;s:12:"psf_rate_com";i:19;s:13:"contract_type";i:20;s:9:"calc_base";i:21;s:6:"sso_by";i:22;s:18:"Standard deduction";i:23;s:13:"Personal care";i:24;s:14:"Provident fund";i:25;s:20:"Social Security Fund";i:26;s:15:"Other Deduction";i:27;s:24:"Government house banking";i:28;s:7:"Savings";i:29;s:25:"Legal execution deduction";i:30;s:26:"Kor.Yor.Sor (Student loan)";i:31;s:16:"remaining_salary";i:32;s:14:"notice_payment";i:33;s:10:"paid_leave";i:34;s:9:"severance";i:35;s:16:"legal_deductions";i:36;s:12:"other_income";i:37;s:8:"position";i:38;s:7:"company";i:39;s:8:"location";i:40;s:8:"division";i:41;s:10:"department";i:42;s:5:"teams";i:43;s:12:"joining_date";i:44;s:11:"resign_date";}';
 
-	$sql = "INSERT INTO ".$cid."_sys_settings (id, cur_month, cur_year, years, pr_startdate, fix_allow, var_allow, fix_deduct, var_deduct, payslip_template, payslip_rate, payslip_field, tab_default, support_email, account_codes, auto_id, id_start, scan_id, id_prefix, joining_date, team,teams,shiftplan_schedule,teams_name, emp_group, emp_type, emp_status, account_code, position, date_start, time_reg, selfie, leeve, pay_type, calc_psf, psf_rate_emp, psf_rate_com, calc_pvf, pvf_rate_emp, pvf_rate_com, calc_method, calc_tax, calc_sso, contract_type, calc_base, base_ot_rate, ot_rate, payroll_modal_value, sso_defaults, periods_defaults, manualrates_default) VALUES (
+	$empdate_showhide_cols = 'a:89:{i:5;i:5;i:6;i:6;i:7;i:7;i:8;i:8;i:9;i:9;i:10;i:10;i:11;i:11;i:12;i:12;i:13;i:13;i:14;i:14;i:15;i:15;i:16;i:16;i:17;i:17;i:18;i:18;i:19;i:19;i:20;i:20;i:21;i:21;i:22;i:22;i:23;i:23;i:24;i:24;i:25;i:25;i:26;i:26;i:27;i:27;i:28;i:28;i:29;i:29;i:30;i:30;i:31;i:31;i:32;i:32;i:33;i:33;i:34;i:34;i:35;i:35;i:36;i:36;i:37;i:37;i:38;i:38;i:39;i:39;i:40;i:40;i:41;i:41;i:42;i:42;i:43;i:43;i:44;i:44;i:45;i:45;i:46;i:46;i:47;i:47;i:48;i:48;i:49;i:5;i:50;i:6;i:51;i:7;i:52;i:8;i:53;i:9;i:54;i:10;i:55;i:11;i:56;i:12;i:57;i:13;i:58;i:14;i:59;i:15;i:60;i:16;i:61;i:17;i:62;i:18;i:63;i:19;i:64;i:20;i:65;i:21;i:66;i:22;i:67;i:23;i:68;i:24;i:69;i:25;i:70;i:26;i:71;i:27;i:72;i:28;i:73;i:29;i:74;i:30;i:75;i:31;i:76;i:32;i:77;i:33;i:78;i:34;i:79;i:35;i:80;i:36;i:81;i:37;i:82;i:38;i:83;i:39;i:84;i:40;i:85;i:41;i:86;i:42;i:87;i:43;i:88;i:44;i:89;i:45;i:90;i:46;i:91;i:47;i:92;i:48;i:93;i:49;}';
+
+	$employeeDataSectionShowHide = 'a:6:{s:8:"section0";s:38:"Current Benefits Payroll of this month";s:8:"section1";s:14:"Wage Condition";s:8:"section2";s:14:"Tax deductions";s:8:"section3";s:24:"Monthly Legal deductions";s:8:"section4";s:12:"End contract";s:8:"section5";s:13:"Employee Data";}';
+	$employeeDataSectionShowHideCols = 'a:6:{i:0;i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;i:4;i:5;i:5;}';
+
+	$Pmanualfeed_cols = 'a:1:{s:13:"Absence (hrs)";s:13:"Absence (hrs)";}';
+	$Pmanualfeed_showhide_cols = 'a:1:{i:0;i:21;}';
+
+
+	$sql = "INSERT INTO ".$cid."_sys_settings (id, cur_month, cur_year, years, pr_startdate, fix_allow, var_allow, fix_deduct, var_deduct, payslip_template, payslip_rate, payslip_field, tab_default, support_email, account_codes, auto_id, id_start, scan_id, empdata_cols, empdata_showhide_cols, Pmanualfeed_cols, Pmanualfeed_showhide_cols, employeeDataSectionShowHide, employeeDataSectionShowHideCols, id_prefix, joining_date, team,teams, shiftplan_schedule,teams_name, emp_group, emp_type, emp_status, account_code, position, date_start, time_reg, selfie, leeve, pay_type, calc_psf, psf_rate_emp, psf_rate_com, calc_pvf, pvf_rate_emp, pvf_rate_com, calc_method, calc_tax, calc_sso, contract_type, calc_base, base_ot_rate, ot_rate, payroll_modal_value, sso_defaults, periods_defaults, manualrates_default, work_days_per_week, checked_days, input_hours) VALUES (
 			'".$dbc->real_escape_string(1)."',
 			'".$dbc->real_escape_string(1)."',
 			'".$dbc->real_escape_string(date('Y'))."',
@@ -224,6 +236,12 @@
 			'".$dbc->real_escape_string($data['auto_id'])."', 
 			'".$dbc->real_escape_string($data['id_start'])."', 
 			'".$dbc->real_escape_string($data['scan_id'])."', 
+			'".$dbc->real_escape_string($empdate_cols)."', 
+			'".$dbc->real_escape_string($empdate_showhide_cols)."', 
+			'".$dbc->real_escape_string($Pmanualfeed_cols)."', 
+			'".$dbc->real_escape_string($Pmanualfeed_showhide_cols)."', 
+			'".$dbc->real_escape_string($employeeDataSectionShowHide)."', 
+			'".$dbc->real_escape_string($employeeDataSectionShowHideCols)."', 
 			'".$dbc->real_escape_string($data['id_prefix'])."', 
 			'".$dbc->real_escape_string($data['joining_date'])."', 
 			'".$dbc->real_escape_string($data['team'])."', 
@@ -256,7 +274,10 @@
 			'".$dbc->real_escape_string($data['payroll_modal_value'])."',
 			'".$dbc->real_escape_string($data['sso_defaults'])."',
 			'".$dbc->real_escape_string($data['periods_defaults'])."',
-			'".$dbc->real_escape_string($data['manualrates_default'])."')
+			'".$dbc->real_escape_string($data['manualrates_default'])."',
+			'".$dbc->real_escape_string(5)."',
+			'".$dbc->real_escape_string($checked_days)."',
+			'".$dbc->real_escape_string($input_hours)."')
 				ON DUPLICATE KEY UPDATE 
 				id = VALUES(id)";
 		if(!$dbc->query($sql)){

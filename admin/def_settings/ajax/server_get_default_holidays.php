@@ -18,6 +18,11 @@
 	       
 	$nr=0;
 	
+	$columns[] = array( 'db' => 'apply', 'dt' => $nr, 'formatter' => function($d, $row ){
+		if($d == 1){$checked = 'checked';}else{$checked='';}
+		return '<input class="checkbox-custom-blue" data-id="'.$d.'" value="'.$d.'" onclick="setCheckboxvalueNew(this);" type="checkbox" '.$checked.'>';
+	}); $nr++;
+
 	$columns[] = array( 'db' => 'date', 'dt' => $nr, 'formatter' => function($d, $row ){
 		return date('D d-m-Y', strtotime($d));
 	}); $nr++;

@@ -84,10 +84,10 @@
 		</div>
 		<div class="dashbox orange">
 			<div class="inner" onclick="window.location.href='index.php?mn=609';" <? echo "style=background:".$savedAdminColors[$savedMainDashboardlayout['maincolorSelect8']]['code']."";?>>
-				<i class="fa fa-rebel"></i>
+				<i class="fa fa-calendar"></i>
 				<div class="parent">
 					<div class="child">
-						<p <?php echo "style=font-family:".$savedDefaultFonts[$savedMainDashboardlayout['main_font_settings']]."!important;color:".$savedAdminColors[$savedMainDashboardlayout['mainfontColor']]['code']."!important"; ?>><?=$lng['Public holidays']?></p>
+						<p <?php echo "style=font-family:".$savedDefaultFonts[$savedMainDashboardlayout['main_font_settings']]."!important;color:".$savedAdminColors[$savedMainDashboardlayout['mainfontColor']]['code']."!important"; ?>><?=$lng['Working Calendar']?></p>
 					</div>
 				</div>						
 			</div>

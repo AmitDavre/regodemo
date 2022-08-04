@@ -2281,6 +2281,17 @@
 	}
 
 
+	function getDefaultValueFromAdmin()
+	{
+		global $dbx;
+		$data = array();
+		$res = $dbx->query("SELECT * FROM rego_default_settings  WHERE id = '1'");
+		while($row = $res->fetch_assoc()){
+			$data = $row;
+		}
+		return $data;
+	}
+
 
 
 

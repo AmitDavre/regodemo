@@ -54,6 +54,7 @@
 
 	$pperiods = array();
 	$pmdata = array();
+	$sso_rates_def = array();
 	$sql = "SELECT * FROM ".$cid."_payroll_months WHERE month LIKE '".$_SESSION['rego']['cur_year']."%'";
 	if($res = $dbc->query($sql)){
 		while($row = $res->fetch_assoc()){
@@ -61,6 +62,9 @@
 			$pperiods[$nr[1]] = $row;
 
 			$pmdata[$nr[1]] = $row;
+
+			$sso_rates_def[$nr[1]] = unserialize($row['sso_rates_for_month']);
+
 		}
 	}
 
@@ -182,9 +186,9 @@
 	//===HIDING COLUMN SALARY & PAYROLL RESULT OVERVIEW TABLES===//
 
 	//echo $salColView;
-	// echo '<pre>';
-	// print_r($getSalaryOverviewEmptyColumns);
-	// echo '</pre>';
+	/*echo '<pre>';
+	print_r($sso_rates_def);
+	echo '</pre>';*/
 
 	//FOR EMPLOYEE DATA TAB
 	$sCols = getEmptyResultColumnsEmployee($getonlyapplyAllowDeduct);	
@@ -204,10 +208,11 @@
 	foreach($salpopupCols['dedct'] as $v){$eColsMdlD .= $v.',';}
 	$eColsMdlD = '['.substr($eColsMdlD,0,-1).']';
 
+
+
 	//echo "<pre>";
-	//echo $pperiods;
 	//echo '<br>';
-	//print_r($pperiods);
+	//print_r($getSSOEmpRateForMonths);
 	//echo $eColsMdlD;
 	//echo "</pre>";
 	//=================== Employee data tab end ================//
@@ -719,16 +724,16 @@
 								</tr>
 							</thead>
 							<tbody>
-							<? foreach($pperiods as $k=>$v){ $id = $cur_year.'_'.$k;?>
+							<? foreach($pperiods as $k=>$v){ $id = $cur_year.'_'.$k; ?>
 								<tr>
 									<td class="pd_lft" style="width: 46%;"><input type="text" class="font-weight-bold" value="<?=$months[$k]?>" readonly></td>
-									<td class="tac" style="width: 15%;"><?=$v['sso_eRate']?></td>
-									<td class="tac" style="width: 15%;"><?=$v['sso_eMax']?></td>
-									<td class="tac"><?=$v['sso_eMin']?></td>
-									<td class="tac"><?=$v['sso_cRate']?></td>
-									<td class="tac"><?=$v['sso_cMax']?></td>
-									<td class="tac"><?=$v['sso_cMin']?></td>
-									<td class="tac"><?=$v['wht']?></td>
+									<td class="tac" style="width: 15%;"><?= isset($sso_rates_def[$_SESSION['rego']['cur_month']][$id]['rate']) ? $sso_rates_def[$_SESSION['rego']['cur_month']][$id]['rate'] : $v['sso_eRate'];?></td>
+									<td class="tac" style="width: 15%;"><?=isset($sso_rates_def[$_SESSION['rego']['cur_month']][$id]['max']) ? $sso_rates_def[$_SESSION['rego']['cur_month']][$id]['max'] : $v['sso_eMax']?></td>
+									<td class="tac"><?=isset($sso_rates_def[$_SESSION['rego']['cur_month']][$id]['min']) ? $sso_rates_def[$_SESSION['rego']['cur_month']][$id]['min'] : $v['sso_eMin']?></td>
+									<td class="tac"><?=isset($sso_rates_def[$_SESSION['rego']['cur_month']][$id]['crate']) ? $sso_rates_def[$_SESSION['rego']['cur_month']][$id]['crate'] : $v['sso_cRate']?></td>
+									<td class="tac"><?=isset($sso_rates_def[$_SESSION['rego']['cur_month']][$id]['cmax']) ? $sso_rates_def[$_SESSION['rego']['cur_month']][$id]['cmax'] : $v['sso_cMax']?></td>
+									<td class="tac"><?=isset($sso_rates_def[$_SESSION['rego']['cur_month']][$id]['cmin']) ? $sso_rates_def[$_SESSION['rego']['cur_month']][$id]['cmin'] : $v['sso_cMin']?></td>
+									<td class="tac"><?=isset($sso_rates_def[$_SESSION['rego']['cur_month']][$id]['wht']) ? $sso_rates_def[$_SESSION['rego']['cur_month']][$id]['wht'] : $v['wht']?></td>
 									
 								</tr>
 							<? } ?>
@@ -924,7 +929,8 @@
 
 												<select id="incomeBase<?=$row['id']?>" multiple="multiple" name="income_base[<?=$row['id']?>]" style="width:auto; min-width:100%;" >							
 													<? foreach($data_income as $k=>$v){ ?>
-														<option value="<?=$k?>" <?if(in_array($k, $explodeIncome)){echo 'selected';}elseif(in_array($k, $defincome_base)){ echo 'selected';} ?> ><?=$v?></option>
+														<!-- <option value="<?=$k?>" <?if(in_array($k, $explodeIncome)){echo 'selected';}elseif(in_array($k, $defincome_base)){ echo 'selected';} ?> ><?=$v?></option> -->
+														<option value="<?=$k?>" <?if(in_array($k, $explodeIncome)){echo 'selected';} ?> ><?=$v?></option>
 													<? } ?>
 												</select>
 											</td>
@@ -1140,9 +1146,9 @@
 			<form id="FixedIncomecalc">
 			<div class="modal-header">
 				<h5 class="modal-title"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Income calculator']?></h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
-				</button>
+				</button> -->
 			</div>
 			<div class="modal-body modal-tabs" style="padding: 10px 2px 10px 2px">
 				<ul class="nav nav-tabs">
@@ -1443,7 +1449,7 @@
 			</div>
 			<div class="modal-footer">
 	        	<button type="button" onclick="FixedIncomeCalculation()" class="btn btn-primary"><?=$lng['Calculate']?></button>
-	        	<button type="button" class="btn btn-danger" data-dismiss="modal"><?=$lng['Close popup']?></button>
+	        	<button type="button" onclick="window.location.reload(); "class="btn btn-danger"><?=$lng['Close popup']?></button>
 	      	</div>
 	      	</form>
 		</div>
@@ -1827,12 +1833,13 @@
 		var payrollparam = <?=json_encode($payrollparametersformonth)?>;
 		var varallowdedt = <?=json_encode($getAttendAllowDeduct)?>;
 		var unitopt = <?=json_encode($unitopt)?>;
+		var mid = '<?=$_GET['mid']?>';
 		
 		if(empid !=''){
 			$.ajax({
 				type: "post",
 				url: "ajax/get_payroll_data.php",
-				data: {empid: empid,nrdaysVal:nrdaysVal,PaidDays:PaidDays},
+				data: {empid: empid,nrdaysVal:nrdaysVal,PaidDays:PaidDays,mid:mid},
 				success: function(result){
 
 					if(result == 'error'){
@@ -2109,14 +2116,23 @@
 											}
 										}
 									})
+
+
 									
 									var nrhrs = value.nrhrs;
 									var nrhrsval = nrhrs.split(":");
+									var nrdayss = value.nrdays;
+									if(nrdayss < 1){nrdayss=1;}
+
+
 									//TotalIncome.replace(",", "");
-									var currCalc = parseFloat(TotalIncome / value.nrdays / nrhrsval[0]) * parseFloat(value.multiplicator); 
+									var currCalc = parseFloat(TotalIncome / nrdayss / nrhrsval[0]) * parseFloat(value.multiplicator); 
 									var currCalcs = currCalc.toFixed(2);
 
-									//if(hrs_curr_wages[index]){ currCalcs = number_format(hrs_curr_wages[index]); }
+									$('#Normalcalculator .modal-header h5#apph5').remove();
+									if(hrs_curr_wages[index] != currCalcs){ 
+										$('#Normalcalculator .modal-header').append('<h5 id="apph5" class="text-right font-italic font-weight-bold text-danger">Please calculate income again</h5>');
+									}
 
 									tbl1 += '<tr>';
 									tbl1 += '<td class="tal pd_lft">'+value.en+'</td>';
@@ -2454,6 +2470,7 @@
 			data: {mid:mid},
 			success: function(result){
 				if(result == 'success'){
+					
 					$("body").overhang({
 						type: "success",
 						message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
@@ -2526,112 +2543,227 @@
 		}
 	}
 
+	
 
 	function Manualfeedcalc(itemid, rowid){
 
 		var empid = $('#ManualFeedDT #total_'+itemid+'_'+rowid).closest('tr').attr('data-eid');
 		var empSalary = $('#ManualFeedDT #total_'+itemid+'_'+rowid).closest('tr').attr('data-sal');
-		//alert(empid);
-
-		$('li#saveManualfeedData').css('pointer-events','none');
 
 		if(itemid !=''){
-			$.ajax({
-				url: "ajax/get_allowdeduct_details.php",
-				data: {itemid: itemid},
-				success: function(result){
-					if(result == 'error'){
-						$("body").overhang({
-							type: "error",
-							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error'].': '.$lng['No data available for this month']?>',
-							duration: 3,
-							callback: function(v){
-								location.reload();
-							}
-						})
-					}else{
 
-						var hrs = $('.hrs_'+itemid+'_'+rowid).val();
-						var times = $('.times_'+itemid+'_'+rowid).val();
-						var thb = $('.thb_'+itemid+'_'+rowid).val();
+			var getpayrolldatass = getpayrolldata(empid);
+			var hrs_curr_wages_rates = getpayrolldatass['hrs_curr_wages'];
+			var times_curr_wages = getpayrolldatass['times_curr_wages'];
 
-						data = JSON.parse(result); //get Calculation basis Variable allowances
+			var hrs = $('.hrs_'+itemid+'_'+rowid).val();
+			var times = $('.times_'+itemid+'_'+rowid).val();
+			var thb = $('.thb_'+itemid+'_'+rowid).val();
 
-						var ptcalc;
-						var salary = empSalary;
+			var hrstot=0;
+			if(hrs !== undefined){
+				var myHrs = hrs.split(":");
+				var darhrss1 = (myHrs[1] / 60); 
+				var darhrss = parseFloat(parseInt(myHrs[0]) + darhrss1); 
+				var hrsrate = hrs_curr_wages_rates[itemid];
+				hrstot = parseFloat(darhrss * hrsrate);
+			}
 
-						var darhrss = 1;
-						if(data.nrhrs !=''){
+			var myTimes = 0;
+			if(times > 0){
+				var thbunit=1;
+				if(times_curr_wages[itemid] > 0){ thbunit=times_curr_wages[itemid];}
+				myTimes = (times * thbunit);
+			} 
 
-							//alert(data.nrhrs);
-							var myHrs = data.nrhrs.split(":");
-							var darhrss1 = (myHrs[1] / 60); 
-							var darhrss = parseFloat(parseInt(myHrs[0]) + darhrss1); 
-						}
+			var mythb = 0;
+			if(thb > 0){
+				mythb = thb;
+			} 
 
-						//alert(darhrss1);
-						//alert(darhrss);
+			var totalCalc1 = parseInt(myTimes) + parseInt(mythb);		
+			var totalCalc2 = (hrstot + totalCalc1);
+			var totalAmts = totalCalc2.toFixed(2);
 
-						var muliplyby = 1;
-						if(data.multiplicator > 0){
-							muliplyby = data.multiplicator;
-						}
-						
-						//
-						if(data.calcOpt == 3){
-							ptcalc = (((salary / data.nrdays) / darhrss) * muliplyby);
+			var gTotal;
+			if(mythb > 0){
+				gTotal = parseFloat(mythb).toFixed(2);
+			}else{ 
+				gTotal = totalAmts;
+			}
+
+			$('#ManualFeedDT #total_'+itemid+'_'+rowid).val(0);
+			$('#ManualFeedDT #total_'+itemid+'_'+rowid).val(gTotal);
+		}
+	}
+
+
+	/*function ManualfeedcalcOld(itemid, rowid){
+
+		var empid = $('#ManualFeedDT #total_'+itemid+'_'+rowid).closest('tr').attr('data-eid');
+		var empSalary = $('#ManualFeedDT #total_'+itemid+'_'+rowid).closest('tr').attr('data-sal');
+		//alert(empid);
+
+		if(itemid !=''){
+
+			var getpayrolldatass = getpayrolldata(empid);
+
+			setTimeout(function() { 
+				$.ajax({
+					url: "ajax/get_allowdeduct_details.php",
+					data: {itemid: itemid},
+					success: function(result){
+						if(result == 'error'){
+							$("body").overhang({
+								type: "error",
+								message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error'].': '.$lng['No data available for this month']?>',
+								duration: 3,
+								callback: function(v){
+									location.reload();
+								}
+							})
 						}else{
-							var defdays = 30;
-							ptcalc = (((salary / defdays) / darhrss) * muliplyby);
+
+							var hrs = $('.hrs_'+itemid+'_'+rowid).val();
+							var times = $('.times_'+itemid+'_'+rowid).val();
+							var thb = $('.thb_'+itemid+'_'+rowid).val();
+
+							data = JSON.parse(result); //get Calculation basis Variable allowances
+
+							var ptcalc;
+							var salary = empSalary;
+
+							var darhrss = 1;
+							if(data.nrhrs !=''){
+
+								//alert(data.nrhrs);
+								var myHrs = data.nrhrs.split(":");
+								var darhrss1 = (myHrs[1] / 60); 
+								var darhrss = parseFloat(parseInt(myHrs[0]) + darhrss1); 
+							}
+
+							//alert(darhrss1);
+							//alert(darhrss);
+
+							var muliplyby = 1;
+							if(data.multiplicator > 0){
+								muliplyby = data.multiplicator;
+							}
+							
+							//
+							if(data.calcOpt == 3){
+								ptcalc = (((salary / data.nrdays) / darhrss) * muliplyby);
+							}else{
+								var defdays = 30;
+								ptcalc = (((salary / defdays) / darhrss) * muliplyby);
+							}
+							//alert(ptcalc);
+							var myinputHrs = 1;
+							if(hrs !='' && hrs != undefined){
+								var inputHrs = hrs.split(":");
+								var inpu1 = (inputHrs[1] / 60);
+								myinputHrs = parseFloat(parseInt(inputHrs[0]) + inpu1);
+							}
+							//alert(myinputHrs);
+
+							var myTimes = 0;
+							if(times > 0){
+								myTimes = (times * data.thbunit);
+							} //alert(times);
+
+							var mythb = 0;
+							if(thb > 0){
+								mythb = thb;
+							} //alert(thb);
+
+							var totalCalc = (ptcalc * myinputHrs);
+							var totalCalc1 = parseInt(myTimes) + parseInt(mythb);
+
+							//alert(myinputHrs);
+							//alert(totalCalc);
+							//alert(mythb);
+							
+							var totalCalc2 = (totalCalc + totalCalc1);
+							var totalAmts = totalCalc2.toFixed(2);
+
+							var gTotal;
+							//var allowopt = data.allowopt.split(",");
+							if(mythb > 0){
+								gTotal = parseFloat(mythb).toFixed(2);
+							}else{ 
+								gTotal = totalAmts;
+							}
+							
+							//alert(totalAmts);
+							$('#ManualFeedDT #total_'+itemid+'_'+rowid).val(0);
+							$('#ManualFeedDT #total_'+itemid+'_'+rowid).val(gTotal);
+
+							//$('li#saveManualfeedData').css('pointer-events','visible');
+
 						}
-						//alert(ptcalc);
-						var myinputHrs = 1;
-						if(hrs !='' && hrs != undefined){
-							var inputHrs = hrs.split(":");
-							var inpu1 = (inputHrs[1] / 60);
-							myinputHrs = parseFloat(parseInt(inputHrs[0]) + inpu1);
-						}
-						//alert(myinputHrs);
-
-						var myTimes = 0;
-						if(times > 0){
-							myTimes = (times * data.thbunit);
-						} //alert(times);
-
-						var mythb = 0;
-						if(thb > 0){
-							mythb = thb;
-						} //alert(thb);
-
-						var totalCalc = (ptcalc * myinputHrs);
-						var totalCalc1 = parseInt(myTimes) + parseInt(mythb);
-
-						//alert(myinputHrs);
-						//alert(totalCalc);
-						//alert(mythb);
-						
-						var totalCalc2 = (totalCalc + totalCalc1);
-						var totalAmts = totalCalc2.toFixed(2);
-
-						var gTotal;
-						//var allowopt = data.allowopt.split(",");
-						if(mythb > 0){
-							gTotal = parseFloat(mythb).toFixed(2);
-						}else{ 
-							gTotal = totalAmts;
-						}
-						
-						//alert(totalAmts);
-						$('#ManualFeedDT #total_'+itemid+'_'+rowid).val(0);
-						$('#ManualFeedDT #total_'+itemid+'_'+rowid).val(gTotal);
-
-						$('li#saveManualfeedData').css('pointer-events','visible');
-
 					}
+				})
+			}, 1000);	//run after 1 sec
+		}
+	}*/
+
+	function getpayrolldata(empid){
+
+		var empid = empid;
+		var nrdaysVal = '<?=$paiddays['paid_days'];?>';
+		var PaidDays = '<?=$noOfPaidDays?>';
+		var mid = '<?=$_GET['mid']?>';
+		var data;
+		
+		if(empid !=''){
+			$.ajax({
+				type: "post",
+				url: "ajax/get_payroll_data.php",
+				async: false,
+				data: {empid: empid,nrdaysVal:nrdaysVal,PaidDays:PaidDays,mid:mid},
+				success: function(result){
+
+					data = JSON.parse(result);;
 				}
 			})
 		}
+
+		return data;
 	}
+
+	function calculatePayrollAgain(empid,mid){
+		 $.ajax({
+			type: 'POST',
+			url: "ajax/calculate_payroll.php",
+			data: {empid: empid,mid:mid},
+			success: function(result){
+
+				if(result == 'success'){
+					
+					$("body").overhang({
+						type: "success",
+						message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Payroll calculated successfuly']?>',
+						duration: 3,
+						callback: function(v){
+							window.location.reload();
+						}
+					})
+
+				}else{
+
+					$("body").overhang({
+						type: "error",
+						message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: '+ result,
+						duration: 3,
+						callback: function(v){
+							window.location.reload();
+						}
+					})
+				}
+			}
+		})
+	}
+
 
 	
 	function calculatePayrollData(){
@@ -2657,15 +2789,15 @@
 				success: function(result){
 
 					if(result == 'success'){
-						
-						$("body").overhang({
+						calculatePayrollAgain(ids,mid);
+						/*$("body").overhang({
 							type: "success",
 							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Payroll calculated successfuly']?>',
 							duration: 3,
 							callback: function(v){
 								window.location.reload();
 							}
-						})
+						})*/
 
 					}else{
 
@@ -3059,12 +3191,11 @@
   		
   		var totl=$("#mfeedsel .SumoSelect li").length;
 		for(let i=5;i<totl+5;i++){
-			console.log(i+totl+1);
 			if($.inArray(i,eColsmf)==-1){  // && dtmanual.column(i+totl)!=-1
 				dtmanual.column(i+totl+1).visible(true);
-			}else if(dtmanual.column(i+totl+1).visible()!=undefined && dtmanual.columns().length>i+totl+1)
+			}else if(dtmanual.column(i+totl+1).visible()!=undefined)
 			{
-				try{dtmanual.column(i+totl+1).visible(false);}catch(error){console.log(error);}
+				dtmanual.column(i+totl+1).visible(false);
 			}			
 		}
 
@@ -3190,9 +3321,9 @@
 			filter: true,
 			info: true,
 			<?=$dtable_lang?>
- 			columnDefs: [
+			columnDefs: [
 				//{"targets": eColsmf, "visible": false, "searchable": false},
-				/*<?=$eColsad11?>*/
+				<?=$eColsad11?>
 			]
 			
 		});
@@ -3225,7 +3356,9 @@
 			<?=$dtable_lang?>
 			columnDefs: [
 				{"targets": salColView, "visible": false, "searchable": false}
+				
 			]
+			
 		});
 
 		$("#searchFiltersc").keyup(function() {
@@ -3281,7 +3414,7 @@
 		var numbersString = "<?=$_SESSION['rego']['selpr_teams']?>";
 		var SelprTeams = numbersString.split(',');
 		
-		var activeTabPay = localStorage.getItem('activeTabPayqqq11');
+		var activeTabPay = localStorage.getItem('activeTabPayroll');
 		if(activeTabPay){
 			var alltabs = '<?=$alltabs?>';
 			if(alltabs == ''){
@@ -3304,7 +3437,7 @@
 		}*/
 
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-			localStorage.setItem('activeTabPayqqq11', $(e.target).attr('href'));
+			localStorage.setItem('activeTabPayroll', $(e.target).attr('href'));
 
 			dtable.columns.adjust().draw();
 			dtmanual.columns.adjust().draw();
@@ -3329,6 +3462,8 @@
 	        return this.id;
 	    }).get();
 
+	    var mid = '<?=$_GET['mid']?>';
+
 	    if(ids.length === 0){
 	    	$("body").overhang({
 				type: "error",
@@ -3340,7 +3475,7 @@
 	    	$.ajax({
 				type: 'POST',
 				url: "ajax/fetch_emps_data.php",
-				data: {empid: ids},
+				data: {empid: ids, mid:mid},
 				success: function(result){
 					//alert(result);
 					if($.trim(result) == 'success'){
@@ -3397,7 +3532,7 @@
 		//localStorage.setItem('activeTabPay', '#tab_Parameters');
 		
 
-		var activeTabPay1 = localStorage.getItem('activeTabPayqqq11');
+		var activeTabPay1 = localStorage.getItem('activeTabPayroll');
 
 		$('.nav-link[href="'+activeTabPay1+'"]').tab('show');
 

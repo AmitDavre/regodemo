@@ -8,8 +8,8 @@
 	$protocol = 'http://';
 	if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') { $protocol = 'https://';}
 	
-	define('ROOT', $protocol.$_SERVER['HTTP_HOST'].'/regodemo/');
-	define('DIR', $_SERVER['DOCUMENT_ROOT'].'/regodemo/');
+	define('ROOT', $protocol.$_SERVER['HTTP_HOST'].'/');
+	define('DIR', $_SERVER['DOCUMENT_ROOT'].'/');
 
 	if(isset($_COOKIE['scanlang'])) {
 		$lang = $_COOKIE['scanlang'];
@@ -58,8 +58,8 @@
 	}
 
 	$my_database = 'localhost';
-	$my_username = 'root';
-	$my_password = '';
+	$my_username = 'admin_regodemo';
+	$my_password = 'regodemo@1234';
 	$demo = false;
 	$prefix = 'admin_';
 

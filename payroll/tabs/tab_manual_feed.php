@@ -527,7 +527,7 @@ table#ManualFeedDT tbody tr td{
 		var year = <?=json_encode($_SESSION['rego']['cur_year'])?>;
 		var month = <?=json_encode($_SESSION['rego']['curr_month'])?>;
 
-		$("#saveManualfeedData").click(function() {
+		function calcAgainmanualFeed(){
 			var frm = $('form#manualfeedData');
 			var datas = frm.serialize();
 			$.ajax({
@@ -542,8 +542,6 @@ table#ManualFeedDT tbody tr td{
 							duration: 1,
 							callback: function(v){
 								window.location.reload();
-
-								//dtcalcfeed.columns.adjust().draw();
 							}
 						})
 					}else{
@@ -556,6 +554,22 @@ table#ManualFeedDT tbody tr td{
 							}
 						})
 					}
+				} 
+			})
+		}
+
+		$("#saveManualfeedData").click(function() {
+			var frm = $('form#manualfeedData');
+			var datas = frm.serialize();
+			$.ajax({
+				type : 'post',
+				url : 'tabs/ajax/save_manual_feed.php',
+				data : datas,
+				success : function(result){
+					
+					setTimeout(function() { 
+				        calcAgainmanualFeed();
+				    }, 1000);		
 				} 
 			})
 		})

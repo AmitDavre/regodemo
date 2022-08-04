@@ -6,7 +6,7 @@
 	$disabledWeekdays = '[0,6]';
 	$workingdays = 5;
 	
-	$res = $dba->query("SELECT * FROM rego_default_leave_time_settings");
+	/*$res = $dba->query("SELECT * FROM rego_default_leave_time_settings");
 	if(mysqli_error($dba)){ echo 'Error : '.mysqli_error($dba);}else{
 		if($row = $res->fetch_assoc()){
 			//$leave = unserialize($row['leave_types']); 
@@ -21,11 +21,11 @@
 			//$attendance_target = $row['attendance_target'];
 		}
 	}
-	if($workingdays == 6){$disabledWeekdays = '[0]';}
+	if($workingdays == 6){$disabledWeekdays = '[0]';}*/
 	//var_dump($workingdays);
 	
 	$holidays = array();
-	$res = $dba->query("SELECT * FROM rego_default_holidays WHERE year = '".$_SESSION['RGadmin']['cur_year']."'");
+	$res = $dba->query("SELECT * FROM rego_default_holidays WHERE apply='1' AND year = '".$_SESSION['RGadmin']['cur_year']."'");
 	while($row = $res->fetch_assoc()){
 		$holidays[] = $row;
 	}
@@ -53,9 +53,32 @@
 		$wd[$i]=0;
 		$hd[$i]=0;
 	}
+
+	// echo '<pre>';
+	// print_r($holidays);
+	// echo '</pre>'; 
+
 	foreach($holidays as $k=>$v){
-		$hd[date('n', strtotime($v['cdate']))]++;
+		if($workingdays == 6){
+			$weekdays = date('N', strtotime($v['cdate']));
+			if($weekdays == 7){
+
+			}else{
+				$hd[date('n', strtotime($v['cdate']))]++;
+			}
+		}else{
+			$weekdays = date('N', strtotime($v['cdate']));
+			if($weekdays >= 6){
+
+			}else{
+				$hd[date('n', strtotime($v['cdate']))]++;
+			}
+		}
 	}
+
+	// echo '<pre>';
+	// print_r($hd);
+	// echo '</pre>'; 
 	//var_dump($hd);
 	foreach($days as $k=>$v){
 		if($workingdays == 6){
@@ -73,7 +96,7 @@
 		}
 	}
 	foreach($nw as $k=>$v){
-		$nw[$k] += $hd[$k];
+		//$nw[$k] += $hd[$k];
 		$wd[$k] -= $hd[$k];
 	}
 	$monthly_hours = $wd;
@@ -111,10 +134,24 @@
 		.popover.top {
 		  xmargin-top: -3px;
 		}
+
+		#formDate {
+		    padding: 0 0 0 5px;
+		    display: inline-block;
+		    background: transparent;
+		    width: 95px;
+		    font-size: 16px;
+		    cursor: pointer;
+		    color: #039;
+		    border: 0;
+		    font-weight: 600;
+		}
 		
 	</style>
 	
-	<h2><i class="fa fa-cogs"></i>&nbsp;&nbsp;Default Holidays calendar <span style="float:right; display:none; font-style:italic; color:#b00" id="sAlert"><?=$lng['Data is not updated to last changes made']?></span></h2>
+	<h2><i class="fa fa-cogs"></i>&nbsp;&nbsp;Default Holidays calendar 
+	<input id="formDate" class="ml-2 tar xdatepick" name="" value="01/01/<?=$_SESSION['RGadmin']['cur_year']?>">
+	<span style="float:right; display:none; font-style:italic; color:#b00" id="sAlert"><?=$lng['Data is not updated to last changes made']?></span></h2>
 	<div class="main" style="padding:10px">
 		<div style="padding:0 0 0 20px" id="dump"></div>
 			
@@ -137,18 +174,32 @@
 					<td class="tac"><?=array_sum($wd)?></td>
 				</tr>
 				<tr>
-					<th>Non-working days</th>
+					<th>Weekends</th>
 					<? foreach($nw as $k=>$v){
 						echo '<td class="tac">'.$v.'</td>';
 					} ?>
 					<td class="tac"><?=array_sum($nw)?></td>
 				</tr>
 				<tr>
+					<th>Company holidays</th>
+					<? foreach($hd as $k=>$v){
+						echo '<td class="tac">'.$v.'</td>';
+					} ?>
+					<td class="tac"><?=array_sum($hd)?></td>
+				</tr>
+				<!--<tr>
+					<th>Non-working days</th>
+					<? foreach($nw as $k=>$v){
+						echo '<td class="tac">'.$v.'</td>';
+					} ?>
+					<td class="tac"><?=array_sum($nw)?></td>
+				</tr>-->
+				<tr>
 					<th>Total days</th>
 					<? foreach($wd as $k=>$v){
-						echo '<td class="tac">'.($v+$nw[$k]).'</td>';
+						echo '<td class="tac">'.($v+$nw[$k]+$hd[$k]).'</td>';
 					} ?>
-					<td class="tac"><?=(array_sum($wd)+array_sum($nw))?></td>
+					<td class="tac"><?=(array_sum($wd)+array_sum($nw)+array_sum($hd))?></td>
 				</tr>
 			</table>
 		</div>
@@ -167,6 +218,8 @@
 		
 		var disabledWeekdays = <?=json_encode($disabledWeekdays)?>;
 		var startYear = <?=json_encode($_SESSION['RGadmin']['cur_year'])?>;
+
+		//alert(startYear);
 		
 		$('#calendar').calendar({ 
 			enableContextMenu: true,
@@ -243,6 +296,37 @@
 			dataSource: []
 		});
 		setTimeout(function(){$('#showCalendar').fadeIn(200);},300);
+
+
+		$('.xdatepick').datepicker({
+			viewMode: "years",
+			format: "dd/mm/yyyy",
+			autoclose: true,
+			inline: true,
+			orientation: 'auto bottom',
+			language: lang,
+			todayHighlight: true,
+			startView: 'year',
+			minViewMode: "years",
+
+			//startDate : startYear,
+			//endDate   : endYear
+		}).on('changeDate', function(e){
+
+			var changeFormat = e.format();
+			var datearray = changeFormat.split("/");
+			var newYear = datearray[2];
+			//alert(newYear);
+
+			$.ajax({
+				url: "def_settings/ajax/change_year_for_admin.php",
+				data: {newYear: newYear},
+				dataType: 'json',
+				success: function(data){
+					window.location.reload();
+				}
+			})
+		})
 
 	});
 

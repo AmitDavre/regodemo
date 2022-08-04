@@ -8,6 +8,7 @@
 	$res = $dba->query("SELECT * FROM rego_default_holidays WHERE id = '".$_REQUEST['id']."'"); 
 	if($row = $res->fetch_assoc()){
 		$data['id'] = $row['id'];
+		$data['apply'] = $row['apply'];
 		$data['date'] = date('D d-m-Y', strtotime($row['date']));
 		$data['cdate'] = date('D d-m-Y', strtotime($row['cdate']));
 		$data['th'] = $row['th'];

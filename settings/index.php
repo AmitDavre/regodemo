@@ -8,6 +8,7 @@
 	//include(DIR.'time/functions.php');
 
 	$getParametersName = getParameters(); //Dynamic name for tab
+	
 
 	// echo '<pre>';
 	// print_r($getParametersName);

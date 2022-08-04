@@ -23,6 +23,8 @@
 	$activity_level = array(1=>'ได้รับอนุญาตให้แก้ไขและตรวจสอบ',2=>'มีอำนาจแก้ไขและอนุมัติร่วมกัน',3=>'ได้รับอนุญาตให้แก้ไขและอนุมัติคนเดียว');
 	$months = array(1=>"มกราคม", 2=>"กุมภาพันธ์", 3=>"มีนาคม", 4=>"เมษายน", 5=>"พฤษภาคม", 6=>"มิถุนายน", 7=>"กรกฏาคม", 8=>"สิงหาคม", 9=>"กันยายน", 10=>"ตุลาคม", 11=>"พฤษจิกายน", 12=>"ธันวาคม");
 	$short_months = array(1=>"ม.ค.", 2=>"ก.พ.", 3=>"มี.ค", 4=>"เม.ย.", 5=>"พ.ค.", 6=>"มิ.ย.", 7=>"ก.ค.", 8=>"ส.ค.", 9=>"ก.ย.", 10=>"ต.ค.", 11=>"พ.ย.", 12=>"ธ.ค.");
+
+	
 	$weekdays = array(1=>"วันจันทร์", 2=>"วันอังคาร", 3=>"วันพุธ", 4=>"วันพฤหัสบดี", 5=>"วันศุกร์", 6=>"วันเสาร์", 7=>"วันอาทิตย์");
 
 	$user_status = array(1=>'ใช้งานอยู่',2=>'เลื่อนออกไป');
@@ -90,6 +92,8 @@
 	$emp_typeReverse = array('ถาวร'=> '1', 'ชั่วคราว' => '2', 'ผู้ฝึกงาน' => '3', 'ผู้รับเหมา(ไม่รวมอยู่ในบัญชีเงินเดือน)' => '4', 'ระหว่างกาล (ไม่รวมอยู่ในบัญชีเงินเดือน)' => '5');
 	//$emp_status = array(1=>'พนักงาน', 2=>'ลาออก', 3=>'ถูกไล่ออก', 4=>'การทดสอบ', 5=>'คล่องแคล่ว WOP');
 	$emp_status = array(1=>'พนักงาน', 2=>'ลาออก', 3=>'เลิกจ้าง', 0=>'ยกเลิก', 7=>'*in-Complete');
+	$emp_status2 = array( 2=>'Resigned', 3=>'Terminated');
+	$emp_status3 = array(1=>'Active', 0=>'Canceled', 7=>'in-Complete');
 
 	//$scan_system = array(0=>"ไม่มีการสแกน", "txt"=>"ยี่ห้อ 01 (20170316 154 01102018 0750) Textfile.txt", "excel"=>"ยี่ห้อ 02 (Excel)", "other"=>"ยี่ห้อ 03");
 
@@ -165,7 +169,7 @@
 	
 	$deduct_group = array('ded_abs'=>'Absence', 'ded_fix'=>'Fixed deductions', 'ded_var'=>'Variable deductions', 'ded_oth'=>'Other deductions', 'ded_leg'=>'Legal deductions / Loans', 'ded_pay'=>'Advanced payments');
 	
-	$tax_base = array('fixpro'=>'Fixed - Pro rated', 'fix'=>'Fixed', 'var'=>'Variable', 'nontax'=>'Non-taxable');
+	$tax_base = array('fixpro'=>'Fixed - Pro rated', 'fix'=>'Fixed', 'var'=>'Variable', 'nontax'=>'Non-taxable', 'ssoby'=>'SSO by company', 'taxby'=>'Tax by Company');
 
 	$Announcementtype 	= array(1=>'Notification',2=>'Announcement',3=>'Event');
 	$AnnouncementMode  	= array(1=>'Email',2=>'Notification Box',3=>'Both');

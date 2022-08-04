@@ -7,12 +7,16 @@
 	include(DIR.'files/payroll_functions.php');
 	include(DIR.'files/arrays_'.$lang.'.php');
 
+	$getSSOEmpRateForMonths = getSSOEmpRateForMonths();
+
 
 	$empid = $_REQUEST['empid'];
+	$mid = $_REQUEST['mid'];
 	$sessionpayrollDbase = $_SESSION['rego']['cid'].'_payroll_'.$_SESSION['rego']['cur_year'];
+	$sessionpayrollDataTable = $_SESSION['rego']['cid'].'_payroll_data_'.$_SESSION['rego']['cur_year'];
 
 	$data=array();
-	$getMonthdata = $dbc->query("SELECT * FROM ".$sessionpayrollDbase." WHERE emp_id = '".$empid."' AND month = '".$_SESSION['rego']['cur_month']."' ");
+	$getMonthdata = $dbc->query("SELECT * FROM ".$sessionpayrollDbase." WHERE emp_id = '".$empid."' AND month = '".$_SESSION['rego']['cur_month']."' AND payroll_modal_id='".$mid."' ");
 	if($getMonthdata->num_rows > 0){
 		while ($row = $getMonthdata->fetch_assoc()) {
 			$data[] = $row;
@@ -55,6 +59,29 @@
 			$data['rate_wages'] = unserialize($row['rate_wages']);
 			$data['thb_wages'] = unserialize($row['thb_wages']);
 
+			$pdata = $dbc->query("SELECT * FROM ".$sessionpayrollDataTable." WHERE `emp_ids`='".$row['emp_id']."' AND `months`='".$row['month']."' AND `payroll_modal_ids`='".$row['payroll_modal_id']."' ORDER BY case when allow_deduct_ids in (56) then -1 else allow_deduct_ids end, allow_deduct_ids ");
+			if($pdata->num_rows > 0){
+				while ($row = $pdata->fetch_assoc()) {
+
+					$sumAll = ($row['jan'] + $row['feb'] + $row['mar'] + $row['apr'] + $row['may'] + $row['jun'] + $row['jul'] + $row['aug'] + $row['sep'] + $row['oct'] + $row['nov'] + $row['dec']);
+			
+					if($sumAll > 0){
+						if($row['allow_deduct_ids'] == ''){
+							if($row['classifications'] == 2){
+								$allow_deduct_ids='ssoemployer';
+							}elseif($row['classifications'] == 3){
+								$allow_deduct_ids='pvfemployer';
+							}elseif($row['classifications'] == 4){
+								$allow_deduct_ids='psfemployer';
+							}
+						}else{
+							$allow_deduct_ids=$row['allow_deduct_ids'];
+						}
+						$data['payroll_data'][$allow_deduct_ids] = $row;
+					}
+				}
+			} 
+
 		}
 
 		$employee_info = getEmployeeInfo($_SESSION['rego']['cid'], $empid);
@@ -87,8 +114,6 @@
 		$startDate_prev = isset($get_employee_career[1]['start_date']) ? date('d-m-Y', strtotime($get_employee_career[1]['start_date'])) : '';
 		$data['startDate_prev'] = $startDate_prev;
 		$data['endDate_prev'] = isset($get_employee_career[1]['end_date']) ? date('d-m-Y', strtotime($get_employee_career[1]['end_date'])) : '';
-
-
 
 		$data['joining_date'] = date('d-m-Y', strtotime($employee_info['joining_date']));
 		$data['resign_date'] = '';
@@ -141,6 +166,62 @@
 				$data['days_prev'] = $tot_days_prev['worked_days'];
 			}
 		}
+
+		$data['ssoEmpRates'] = $getSSOEmpRateForMonths;
+
+
+		/*** Payroll column for salary tab popup ****/
+		/*$ecol= array();
+		$columns= array();
+
+		$sqlpd = "SELECT * FROM ".$sessionpayrollDataTable." WHERE emp_ids = '".$empid."' AND months = '".$_SESSION['rego']['cur_month']."' AND payroll_modal_ids='".$mid."' AND `classifications` IN (0,1)";
+			if($respd = $dbc->query($sqlpd)){
+				while($rowpd = $respd->fetch_assoc()){
+
+					$columns[] = $rowpd;
+				}
+			}else{
+				echo mysqli_error($dbc);
+			}
+
+			echo '<pre>';
+			print_r($columns);
+			echo '</pre>';
+			die('ddd');
+
+			if($columns){
+				$nr = 1;
+				$nrd = 1;
+				foreach ($columns as $key => $rowpd) {
+					if($rowpd['classifications'] == 0){
+
+						
+
+					}
+
+					if($rowpd['jan']==0){$ecol['allow'][$nr] = $nr;} $nr++;
+					
+			
+				}
+			}
+
+			//if($ecol){
+
+				$eColsMdlA = '';
+				foreach($ecol['allow'] as $v){$eColsMdlA .= $v.',';}
+				$eColsMdlA = '['.substr($eColsMdlA,0,-1).']';
+
+				$eColsMdlD = '';
+				foreach($ecol['dedct'] as $v){$eColsMdlD .= $v.',';}
+				$eColsMdlD = '['.substr($eColsMdlD,0,-1).']';
+
+				$data['eColsMdlA'] = $eColsMdlA;
+				$data['eColsMdlD'] = $eColsMdlD;
+
+				
+			//}*/
+			
+		/*** Payroll column for salary tab popup ****/
 
 		ob_clean();
 		echo json_encode($data);

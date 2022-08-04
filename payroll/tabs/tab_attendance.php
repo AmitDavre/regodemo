@@ -19,8 +19,7 @@
 			<tr>
 				<th colspan="2" class="tac"><?=$lng['Employee']?></th>
 				<th colspan="<?=count($Pmanualfeed_cols) +2;?>" class="tac"><?=$lng['Attendance & Allowance Data']?></th>
-				<th colspan="<?=count($Pmanualfeed_cols);+1?>" class="tac"><?=$lng['Total allowance in THB']?></th>
-			     
+				<th colspan="<?=count($Pmanualfeed_cols) +1;?>" class="tac"><?=$lng['Total allowance in THB']?></th>
 			</tr>
 			<tr>
 				<th class="tal"><?=$lng['Emp. ID']?></th>
@@ -78,15 +77,15 @@
 									
 									echo '<td class="tar">'.$manual_feed_data['hrs'][$rows[1]].'</td>';
 
-								}else if($position = stripos($rows[0],"hours", 5) == true){
+								}elseif($position = stripos($rows[0],"hours", 5) == true){
 									
 									echo '<td class="tar">'.$manual_feed_data['hours'][$rows[1]].'</td>';
 
-								}else if($position = stripos($rows[0],"times", 5) == true){
+								}elseif($position = stripos($rows[0],"times", 5) == true){
 									
 									echo '<td class="tar">'.$manual_feed_data['times'][$rows[1]].'</td>';
 
-								}else if($position = stripos($rows[0],"thb", 3) == true){
+								}elseif($position = stripos($rows[0],"thb", 3) == true){
 									
 									echo '<td class="tar">'.$manual_feed_data['thb'][$rows[1]].'</td>';
 

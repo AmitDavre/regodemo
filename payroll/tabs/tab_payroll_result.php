@@ -350,6 +350,7 @@
 
 		var empid = that.id;
 		var currmnth = <?=$_SESSION['rego']['cur_month']?>;
+		var mid = '<?=$_GET['mid']?>';
 
 		var get_prev_months_allowancesdeductss = '';
 		if(currmnth > 1){
@@ -359,7 +360,7 @@
 		$.ajax({
 			type: 'post',
 			url: "ajax/get_payroll_data.php",
-			data: {empid: empid},
+			data: {empid: empid,mid:mid},
 			success: function(result){
 
 				if(result == 'error'){
@@ -388,6 +389,7 @@
 					var remaining_mnth = 12 - currmnth + 1;
 
 					//console.log(payrollparametersformonth);
+					var ssoEmpRates = data[0].ssoEmpRates;
 
 					var countAllown = 0;
 					var countDeduct = 0;
@@ -584,6 +586,8 @@
 								var sso = '';
 								var pvf = '';
 								var psf = '';
+								var extracls = '';
+								var extraTax = '';
 								
 								$.each(payrollparametersformonth, function(k1,v){
 
@@ -601,10 +605,10 @@
 											if(k == 47){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].savings); }
 											if(k == 48){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].legal_execution); }
 											if(k == 49){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].kor_yor_sor); }
-											if(k == 57){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].sso_employee); }
+											if(k == 57){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].sso_employee); extracls="ssocurr";}else{ extracls="";}
 											if(k == 58){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].pvf_employee); }
 											if(k == 59){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].psf_employee); }
-											if(k == 60){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].tax_this_month); }
+											if(k == 60){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].tax_this_month); extraTax="exTax";}else{ extraTax="";}
 
 											//crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0; 
 										
@@ -613,7 +617,7 @@
 											if(v['pvf'] == 1){ pvf = 'pvf';}else{ pvf = '';}
 											if(v['psf'] == 1){ psf = 'psf';}else{ psf = '';}
 
-											deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
+											deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+extracls+' '+extraTax+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 											
 										}else if(currmnth > i){ 
 
@@ -646,16 +650,26 @@
 												if(k == 47){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].savings); }
 												if(k == 48){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].legal_execution); }
 												if(k == 49){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].kor_yor_sor); }
-												if(k == 57){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].sso_employee); }
+												if(k == 57){ 
+													var sso_thb = data[0].sso_employee;
+													crmth_manual_feed = parseFloat(sso_thb); 
+												}
 												if(k == 58){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].pvf_employee); }
 												if(k == 59){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].psf_employee); }
-												if(k == 60){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].tax_this_month); }
+												if(k == 60){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].tax_next_month); }
 
 												//crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0;
 
 												deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 											}else{
-												deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+v['groups']+'">0.00</td>';
+
+												if(k == 57){ 
+													var sso_thb = data[0].sso_employee;
+													crmth_manual_feed = parseFloat(sso_thb); 
+												}
+												if(k == 60){ crmth_manual_feed = parseFloat(data[0].tax_next_month); }
+												
+												deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 											}
 										}
 									}
@@ -1163,13 +1177,13 @@
 			// alert(lhs);
 			// alert(rhs);
 
-			if(lhs != rhs){
+			/*if(lhs != rhs){
 				$("body").overhang({
 					type: "error",
 					message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: Both side totals are not equal<br> LHS = '+lhs+'<br> RHS = '+rhs+'',
 					duration: 1,
 				})
-			}
+			}*/
 		}
 	});
 

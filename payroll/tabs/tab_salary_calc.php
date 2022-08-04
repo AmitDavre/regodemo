@@ -104,7 +104,8 @@
 						<input type="checkbox" class="checkbox-custom-blue empchkbox" name="sel_all[]" value="<?=$row['emp_id']?>" style="left:0px !important;">
 					</td>
 					<td>
-						<a onclick="Opencalculationpopups(this)" id="<?=$row['emp_id']?>"><i class="fa fa-calculator fa-lg" ></i></a>
+						<!-- <a onclick="Opencalculationpopups(this)" id="<?=$row['emp_id']?>"><i class="fa fa-calculator fa-lg" ></i></a> -->
+						<a onclick="OpencalculationpopupsNEW(this)" id="<?=$row['emp_id']?>"><i class="fa fa-calculator fa-lg" ></i></a>
 					</td>
 					<td><?=$pd?></td>
 					<td class="tar"><?=number_format($row['total_earnings'],2);?></td>
@@ -153,7 +154,7 @@
 				<div style=" position:absolute; right:40px; padding:3px 0">
 					<a title="Print" href="#" style="margin-right:5px"><i class="fa fa-print fa-lg" style="margin-top: 5px;"></i></a>
 				</div>
-				<a title="Close" type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
+				<a title="Close" onclick="closeBtn();" type="button" class="close" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
 			</div>
 			<div class="modal-body mb-4" style="padding: 5px 20px 5px !important;overflow: hidden;overflow-y: scroll;">
 
@@ -280,7 +281,7 @@
 							</tbody>
 							<thead>
 								<tr>
-									<th colspan="7" class="tal"><?=strtoupper($lng['Total']).' '.strtoupper($lng['Taxable income'])?></th>
+									<th colspan="7" class="tal"><?=strtoupper($lng['Tax Base'])?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -312,13 +313,31 @@
 									<td class="tar" id="var_full_year"></td>
 								</tr>
 								<tr>
-									<th class="tal"><?=$lng['Total all taxable income']?></th>
+									<th class="tal"><?=$lng['SSO by company']?></th>
+									<td></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['Taxable income before tax']?></th>
 									<td></td>
 									<td class="tar" id="totalffv_curr_calc"></td>
 									<td class="tar" ></td>
 									<td class="tar" id="totalffv_curr_mnth"></td>
 									<td class="tar" id="totalffv_prev_mnth"></td>
 									<td class="tar" id="totalffv_full_year"></td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['Tax by company']?></th>
+									<td></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
+									<td class="tar" ></td>
 								</tr>
 								<tr>
 									<th class="tal"><?=$lng['Non-taxable']?></th>
@@ -339,7 +358,9 @@
 								<tr>
 									<th class="tal"><?=$lng['SSO Employee']?></th>
 									<td>
-										<a onclick="modal_sso();"><i class="fa fa-calculator fa-lg text-primary" ></i></a>
+										<a id="modalssopopup" style="display: none;" onclick="modal_sso();">
+											<i class="fa fa-calculator fa-lg text-primary" ></i>
+										</a>
 									</td>
 									<td class="tar" id="sso_emp_curr_calc"></td>
 									<td class="tar" ></td>
@@ -350,7 +371,9 @@
 								<tr>
 									<th class="tal"><?=$lng['PVF Employee']?></th>
 									<td>
-										<a onclick="modal_pvf();"><i class="fa fa-calculator fa-lg text-primary" ></i></a>
+										<a id="modalpvfpopup" style="display: none;" onclick="modal_pvf();">
+											<i class="fa fa-calculator fa-lg text-primary" ></i>
+										</a>
 									</td>
 									<td class="tar" id="pvf_emp_curr_calc"></td>
 									<td class="tar" ></td>
@@ -361,7 +384,9 @@
 								<tr>
 									<th class="tal"><?=$lng['PSF Employee']?></th>
 									<td>
-										<a onclick="modal_psf();"><i class="fa fa-calculator fa-lg text-primary"></i></a>
+										<a id="modalpsfpopup" style="display: none;" onclick="modal_psf();">
+											<i class="fa fa-calculator fa-lg text-primary"></i>
+										</a>
 									</td>
 									<td class="tar" id="psf_emp_curr_calc"></td>
 									<td class="tar" ></td>
@@ -389,7 +414,7 @@
 									<td class="tar" ></td>
 									<td class="tar" id="td_emp_curr_mnth"></td>
 									<td class="tar" id="td_emp_prev_mnth"></td>
-									<td class="tar" id="td_emp_full_year"></td>
+									<td class="tar" id="td_emp_full_year" style="pointer-events: none;"></td>
 								</tr>
 								<tr>
 									<th class="tal"><?=$lng['Tax by company']?></th>
@@ -465,369 +490,517 @@
 
 
 <!-------------------- modalSSO --------------------->
-<div class="modal fade" id="modalSSO" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog" role="document" style="min-width: 700px !important;">
+<div class="modal fade" id="modalSSO" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="top: 0px;">
+	<div class="modal-dialog" role="document" style="min-width: 1000px !important;">
 		<div class="modal-content">
-			<div class="modal-header" style="padding: 5px 13px;background: darkgray;">
-				<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate SSO']?></h5>
-				<a title="Close" type="button" class="close closebtn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
-			</div>
-			<div class="modal-body" style="padding: 5px 20px 5px !important;background: #efe;">
-				
-				<table class="basicTable" border="0" style="width: 100%;">
-					<thead>
-						<tr>
-							<th colspan="6" class="tac text-danger p-1"><?=$lng['SSO CALCULATION']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['Emp. ID']?></th>
-							<td id="sso_empid"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['Calculate SSO']?></th>
-							<td id="sso_calc_sso" style="background:#fdf4bd;padding: 0px !important;">
-								<select name="ss_calc_sso" id="sss_calc_sso" style="padding: 0px !important;background:#fdf4bd;" onchange="SSO_calc(this)">
-									<? foreach($noyes01 as $k => $v){?>
-										<option value="<?=$k?>"><?=$v?></option>
-									<? } ?>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Employee name']?></th>
-							<td id="sso_empname"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['SSO paid by']?></th>
-							<td id="sso_sso_paidby" style="background:#fdf4bd;padding: 0px !important;">
-								<select name="ss_paidby_sso" id="sss_paidby_sso" style="padding: 0px !important;background:#fdf4bd;" onchange="SSO_calc(this)">
-									<? foreach($sso_paidby as $k => $v){ ?>
-										<option value="<?=$k?>"><?=$v?></option>
-									<? } ?>
-								</select>
-							</td>
-						</tr>
-					</tbody>
+			<form id="ssoAlldata">
+				<div class="modal-header" style="padding: 5px 13px;background: darkgray;">
+					<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate SSO']?></h5>
+					<a title="Close" type="button" class="close closebtn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
+				</div>
+				<div class="modal-body" style="padding: 5px 20px 5px !important;background: #efe;">
+					
+					<!-- <div class="row">
+						<div class="col-md-7" style="padding-right: 0px;max-width: 54%;"> -->
 
-					<thead class="mt-3">
-						<tr>
-							<th colspan="6" class="tal text-danger p-1"><?=$lng['Calculation employee contribution']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['SSO'].' '.$lng['Income']?></th>
-							<td id="sso_total_sso_emp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['SSO rate employee']?></th>
-							<td id="sso_rate_emp"><?=$SSOnewcal['rate']?>%</td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['SSO'].' '.$lng['Calculated']?></th>
-							<td id="sso_calculate_sso_emp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['Minimum rate']?></th>
-							<td id="sso_min_emp"><?=$SSOnewcal['min']?></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Manual correction']?></th>
-							<td id="sso_memp" style="background:#fdf4bd;padding: 0px !important;">
-								<input type="text" id="sso_manual_emp" class="float72" onchange="SSO_calc(this)" style="background:#fdf4bd;">
-							</td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['Maximum rate']?></th>
-							<td id="sso_max_emp"><?=$SSOnewcal['max']?></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['SSO Employee']?></th>
-							<td id="sso_emp_sso"></td>
-							<td colspan="4"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['SSO by company']?></th>
-							<td id="sso_sso_by_company"></td>
-							<td colspan="4"></td>
-						</tr>
-					</tbody>
-					<thead class="mt-3">
-						<tr>
-							<th colspan="6" class="tal text-danger p-1"><?=$lng['Calculation Employer contribution']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['SSO'].' '.$lng['Income']?></th>
-							<td id="sso_total_sso_comp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['SSO rate Employer']?></th>
-							<td id="sso_rate_comp"><?=$SSOnewcal['crate']?>%</td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['SSO'].' '.$lng['Calculated']?></th>
-							<td id="sso_calculate_sso_comp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['Minimum rate']?></th>
-							<td id="sso_min_comp"><?=$SSOnewcal['cmin']?></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Manual correction']?></th>
-							<td style="background:#fdf4bd;padding: 0px !important;">
-								<input type="text" id="sso_manual_comp" onchange="SSO_calc(this)" name="manual_emplyr" class="float72" style="background:#fdf4bd;">
-							</td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['Maximum rate']?></th>
-							<td id="sso_max_comp"><?=$SSOnewcal['cmax']?></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['SSO Employer']?></th>
-							<td id="sso_sso_employerss"></td>
-							<td colspan="4"></td>
-						</tr>
-						
-					</tbody>
-				</table>
-			</div>
-			<div class="modal-footer" style="background: darkgray;">
-				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Cancel']?></button>
-				<button class="btn btn-primary ml-1" id="SaveSSOdata" type="button"><?=$lng['Confirm']?></button>
-			</div>
+							<input type="hidden" name="empid" id="ssoEmpid" value="">
+							<input type="hidden" name="mid" value="<?=$_GET['mid']?>">
+							<input type="hidden" name="cur_month" value="<?=$_SESSION['rego']['cur_month']?>">
+
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr>
+										<th colspan="10" class="tac text-danger p-1"><?=$lng['SSO CALCULATION']?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th class="tal"><?=$lng['Emp. ID']?></th>
+										<td colspan="7" id="sso_empid"></td>
+										
+										<th class="tal"><?=$lng['Calculate SSO']?></th>
+										<td id="sso_calc_sso" style="background:#fdf4bd;padding: 0px !important;">
+											<select name="ss_calc_sso" id="sss_calc_sso" style="padding: 0px !important;background:#fdf4bd;" onchange="SSO_calc(this)">
+												<? foreach($noyes01 as $k => $v){?>
+													<option value="<?=$k?>"><?=$v?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['Employee name']?></th>
+										<td colspan="7" id="sso_empname"></td>
+										
+										<th class="tal"><?=$lng['SSO paid by']?></th>
+										<td id="sso_sso_paidby" style="background:#fdf4bd;padding: 0px !important;">
+											<select name="ss_paidby_sso" id="sss_paidby_sso" style="padding: 0px !important;background:#fdf4bd;" onchange="SSO_calc(this)">
+												<? foreach($sso_paidby as $k => $v){ ?>
+													<option value="<?=$k?>"><?=$v?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['SSO'].' '.$lng['Income']?></th>
+										<td colspan="7" id="sso_total_sso_emp"></td>
+										
+										<th class="tal"></th>
+										<td id="sso_rate_emp"></td>
+									</tr>
+								</tbody>
+
+								<thead>
+									<tr>
+										<th colspan="10" class="tac text-danger p-1"><?=$lng['Calculations Full Year']?>
+											<span class="text-primary float-right mr-5 ml-4"><?=$lng['Manual']?></span>
+											<input type="checkbox" class="checkbox-custom-blue float-right" name="ssoManual" onclick="manualssoinput(this.checked)"> 
+										</th>
+									</tr>
+									<tr>
+										<th colspan="4" class="tac"><?=$lng['SSO']?> <?=$lng['Employee']?></th>
+										<th colspan="3" class="tac"><?=$lng['SSO']?> <?=$lng['Company']?></th>
+										<th colspan="3" class="tac"></th>
+									</tr>
+								</thead>
+							
+								<thead class="mt-4">
+									<tr>
+										<th class="tac"><?=$lng['Month']?></th>
+										<th class="tac"><?=$lng['Rate']?> %</th>
+										<th class="tac"><?=$lng['Min']?></th>
+										<th class="tac"><?=$lng['Max']?></th>
+										<th class="tac"><?=$lng['Rate']?> %</th>
+										<th class="tac"><?=$lng['Min']?></th>
+										<th class="tac"><?=$lng['Max']?></th>
+										<th class="tac"><?=$lng['SSO Employee']?></th>
+										<th class="tac"><?=$lng['SSO Employer']?></th>
+										<th class="tac"><?=$lng['SSO by company']?></th>
+									</tr>
+								</thead>
+								<tbody id="append_full_table">
+									
+								</tbody>
+
+								<!--<thead class="mt-3">
+									<tr>
+										<th colspan="4" class="tal text-danger p-1"><?=$lng['Calculation employee contribution']?></th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<tr>
+										<th class="tal"><?=$lng['SSO'].' '.$lng['Calculated']?></th>
+										<td id="sso_calculate_sso_emp"></td>
+										
+										<th class="tal"><?=$lng['Minimum rate']?></th>
+										<td id="sso_min_emp"><?=$SSOnewcal['min']?></td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['Manual correction']?></th>
+										<td id="sso_memp" style="background:#fdf4bd;padding: 0px !important;width: 25%;">
+											<input type="text" id="sso_manual_emp" class="float72" onchange="SSO_calc(this)" style="background:#fdf4bd;">
+										</td>
+										
+										<th class="tal"><?=$lng['Maximum rate']?></th>
+										<td id="sso_max_emp"><?=$SSOnewcal['max']?></td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['SSO Employee']?></th>
+										<td id="sso_emp_sso"></td>
+										<td colspan="2"></td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['SSO by company']?></th>
+										<td id="sso_sso_by_company"></td>
+										<td colspan="2"></td>
+									</tr>
+								</tbody>
+								<thead class="mt-3">
+									<tr>
+										<th colspan="4" class="tal text-danger p-1"><?=$lng['Calculation Employer contribution']?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th class="tal"><?=$lng['SSO'].' '.$lng['Income']?></th>
+										<td id="sso_total_sso_comp"></td>
+										
+										<th class="tal"><?=$lng['SSO rate Employer']?></th>
+										<td id="sso_rate_comp"><?=$SSOnewcal['crate']?>%</td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['SSO'].' '.$lng['Calculated']?></th>
+										<td id="sso_calculate_sso_comp"></td>
+										
+										<th class="tal"><?=$lng['Minimum rate']?></th>
+										<td id="sso_min_comp"><?=$SSOnewcal['cmin']?></td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['Manual correction']?></th>
+										<td style="background:#fdf4bd;padding: 0px !important;width: 25%;">
+											<input type="text" id="sso_manual_comp" onchange="SSO_calc(this)" name="manual_emplyr" class="float72" style="background:#fdf4bd;">
+										</td>
+										
+										<th class="tal"><?=$lng['Maximum rate']?></th>
+										<td id="sso_max_comp"><?=$SSOnewcal['cmax']?></td>
+									</tr>
+									<tr>
+										<th class="tal"><?=$lng['SSO Employer']?></th>
+										<td id="sso_sso_employerss"></td>
+										<td colspan="2"></td>
+									</tr>
+									
+								</tbody>-->
+							</table>
+						<!-- </div>
+						<div class="col-md-5" style="padding-left: 0px;max-width: 40%;">
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr>
+										<th colspan="6" class="tac text-danger p-1"><?=$lng['Calculations Full Year']?></th>
+									</tr>
+								</thead>
+							
+								<thead class="mt-4">
+									<tr>
+										<th class="tac"><?=$lng['Month']?></th>
+										<th class="tac"><?=$lng['SSO']?>%</th>
+										<th class="tac"><?=$lng['SSO'].' '.$lng['Min']?></th>
+										<th class="tac"><?=$lng['SSO'].' '.$lng['Max']?></th>
+										<th class="tac"><?=$lng['SSO'].' '.$lng['THB']?></th>
+										<th class="tac"><?=$lng['SSO by company']?></th>
+									</tr>
+								</thead>
+								<tbody id="append_full_table">
+									
+								</tbody>
+
+							</table>
+						</div>
+					</div> -->
+				</div>
+				<div class="modal-footer" style="background: darkgray;">
+					<button class="btn btn-primary ml-1" id="SaveSSOdata" type="button"><?=$lng['Calculate']?></button>
+					<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Close popup']?></button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
 <!-------------------- modalSSO --------------------->
 
 <!-------------------- modalPVF --------------------->
-<div class="modal fade" id="modalPVF" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalPVF" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="top: 0px;">
 	<div class="modal-dialog" role="document" style="min-width: 700px !important;">
 		<div class="modal-content">
-			<div class="modal-header" style="padding: 5px 13px;background: darkgray;">
-				<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate PVF']?></h5>
-				<a title="Close" type="button" class="close closebtn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
-			</div>
-			<div class="modal-body" style="padding: 5px 20px 5px !important;background: #efe;">
-				<table class="basicTable" border="0" style="width: 100%;">
-					<thead>
-						<tr>
-							<th colspan="6" class="tac text-danger p-1"><?=$lng['PVF CALCULATION']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['Emp. ID']?></th>
-							<td id="pvf_empid"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['Calculate PVF']?></th>
-							<td id="pvfs_calc_pvf" style="background:#fdf4bd;padding: 0px !important;">
-								<select name="pvf_calc_pvf" id="pvfss_calc_pvf" onchange="PVF_calc(this)" style="padding: 0px !important;background:#fdf4bd;">
-									<? foreach($noyes01 as $k => $v){?>
-										<option value="<?=$k?>"><?=$v?></option>
-									<? } ?>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Employee name']?></th>
-							<td id="pvf_empname"></td>
-							<td colspan="4"></td>
-							
-						</tr>
-					</tbody>
+			<form id="formpvfdata">
+				<div class="modal-header" style="padding: 5px 13px;background: darkgray;">
+					<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate PVF']?></h5>
+					<a title="Close" type="button" class="close closebtn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
+				</div>
+				<div class="modal-body" style="padding: 5px 20px 5px !important;background: #efe;">
 
-					<thead class="mt-3">
-						<tr>
-							<th colspan="6" class="tal text-danger p-1"><?=$lng['Calculation employee contribution']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['PVF'].' '.$lng['Income']?></th>
-							<td id="pvf_income_pvf_emp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PVF rate employee']?></th>
-							<td id="pvf_rate_pvf_emp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PVF'].' '.$lng['Calculated']?></th>
-							<td id="pvf_calculate_emp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PVF amount THB']?></th>
-							<td id="pvf_amt_thb_emp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Manual correction']?></th>
-							<td style="background:#fdf4bd;padding: 0px !important;">
-								<input type="text" id="pvf_manual_emp" onchange="PVF_calc(this)" name="manual_emp" class="float72" style="background:#fdf4bd;">
-							</td>
-							<td colspan="4"></td>
-							
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PVF Employee']?></th>
-							<td id="pvf_pvfemp_emp"></td>
-							<td colspan="4"></td>
-						</tr>
-					</tbody>
+						<input type="hidden" name="empid" id="pvfEmpid" value="">
+						<input type="hidden" name="mid" value="<?=$_GET['mid']?>">
+						<input type="hidden" name="cur_month" value="<?=$_SESSION['rego']['cur_month']?>">
+						<table class="basicTable" border="0" style="width: 100%;">
+							<thead>
+								<tr>
+									<th colspan="5" class="tac text-danger p-1"><?=$lng['PVF CALCULATION']?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th class="tal"><?=$lng['Emp. ID']?></th>
+									<td colspan="2" id="pvf_empid"></td>
+									
+									<th class="tal"><?=$lng['Calculate PVF']?></th>
+									<td id="pvfs_calc_pvf" style="background:#fdf4bd;padding: 0px !important;">
+										<select name="pvf_calc_pvf" id="pvfss_calc_pvf" onchange="PVF_calc(this)" style="padding: 0px !important;background:#fdf4bd;">
+											<? foreach($noyes01 as $k => $v){?>
+												<option value="<?=$k?>"><?=$v?></option>
+											<? } ?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['Employee name']?></th>
+									<td colspan="2" id="pvf_empname"></td>
+									<th class="tal"><?=$lng['% or THB']?></th>
+									<td id="pvf_paidby" style="background:#fdf4bd;padding: 0px !important;">
+										<select name="pf_paidby_pvf" id="pvf_paidby_pvf" onchange="PVF_calc(this)" style="padding: 0px !important;background:#fdf4bd;">
+											<? foreach($per_or_thb as $k => $v){ ?>
+												<option value="<?=$k?>"><?=$v?></option>
+											<? } ?>
+										</select>
+									</td>
+									
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['PVF'].' '.$lng['Income']?></th>
+									<td colspan="2"id="pvf_income_pvf_emp"></td>
+									<td colspan="2"></td>
+								</tr>
+							</tbody>
 
-					<thead class="mt-3">
-						<tr>
-							<th colspan="6" class="tal text-danger p-1"><?=$lng['Calculation Employer contribution']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['PVF'].' '.$lng['Income']?></th>
-							<td id="pvf_income_pvf_comp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PVF rate employer']?></th>
-							<td id="pvf_rate_pvf_comp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PVF'].' '.$lng['Calculated']?></th>
-							<td id="pvf_calculate_comp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PVF amount THB']?></th>
-							<td id="pvf_amt_thb_comp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Manual correction']?></th>
-							<td style="background:#fdf4bd;padding: 0px !important;">
-								<input type="text" id="pvf_manual_comp" onchange="PVF_calc(this)" name="manual_emplyr" class="float72" style="background:#fdf4bd;">
-							</td>
-							<td colspan="4"></td>
-							
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PVF Employer']?></th>
-							<td id="pvf_pvfcom_comp"></td>
-							<td colspan="4"></td>
-						</tr>
-					</tbody>
+							<thead>
+								<tr>
+									<th colspan="5" class="tac text-danger p-1"><?=$lng['Calculations Full Year']?>
+										<span class="text-primary float-right mr-5 ml-4"><?=$lng['Manual']?></span>
+										<input type="checkbox" class="checkbox-custom-blue float-right" name="pvfManual" onclick="manualpvfinput(this.checked)"> 
+									</th>
+								</tr>
+								<tr>
+									<th class="tac"><?=$lng['Month']?></th>
+									<th class="tac"><?=$lng['PVF Employee']?> <?=$lng['Rate']?></th>
+									<th class="tac"><?=$lng['PVF Employer']?> <?=$lng['Rate']?></th>
+									<th class="tac"><?=$lng['PVF Employee']?></th>
+									<th class="tac"><?=$lng['PVF Employer']?></th>
+								</tr>
+							</thead>
+							<tbody id="append_full_table_pvf">
+								
+							</tbody>
 
-				</table>
-			</div>
-			<div class="modal-footer" style="background: darkgray;">
-				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Cancel']?></button>
-				<button class="btn btn-primary ml-1" id="SavePVFdata" type="button"><?=$lng['Confirm']?></button>
-			</div>
+						</table>
+					
+				</div>
+				<div class="modal-footer" style="background: darkgray;">
+					<button class="btn btn-primary ml-1" id="SavePVFdata" type="button"><?=$lng['Calculate']?></button>
+					<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Close popup']?></button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
 <!-------------------- modalPVF --------------------->
 
 <!-------------------- modalPSF --------------------->
-<div class="modal fade" id="modalPSF" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalPSF" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="top: 0px;">
 	<div class="modal-dialog" role="document" style="min-width: 700px !important;">
+		<div class="modal-content">
+			<form id="formpsfdata">
+				<div class="modal-header" style="padding: 5px 13px;background: darkgray;">
+					<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate PSF']?></h5>
+					<a title="Close" type="button" class="close closebtn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
+				</div>
+				<div class="modal-body" style="padding: 5px 20px 5px !important;background: #efe;">
+
+						<input type="hidden" name="empid" id="psfEmpid" value="">
+						<input type="hidden" name="mid" value="<?=$_GET['mid']?>">
+						<input type="hidden" name="cur_month" value="<?=$_SESSION['rego']['cur_month']?>">
+						<table class="basicTable" border="0" style="width: 100%;">
+							<thead>
+								<tr>
+									<th colspan="5" class="tac text-danger p-1"><?=$lng['PSF CALCULATION']?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th class="tal"><?=$lng['Emp. ID']?></th>
+									<td colspan="2" id="psf_empid"></td>
+									
+									<th class="tal"><?=$lng['Calculate PSF']?></th>
+									<td id="psfs_calc_sso" style="background:#fdf4bd;padding: 0px !important;">
+										<select name="psf_calc_sso" id="psfss_calc_sso" onchange="PSF_calc(this)" style="padding: 0px !important;background:#fdf4bd;">
+											<? foreach($noyes01 as $k => $v){?>
+												<option value="<?=$k?>"><?=$v?></option>
+											<? } ?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['Employee name']?></th>
+									<td colspan="2" id="psf_empname"></td>
+									<th class="tal"><?=$lng['% or THB']?></th>
+									<td id="psf_paidby" style="background:#fdf4bd;padding: 0px !important;">
+										<select name="pf_paidby_psf" id="psf_paidby_psf" onchange="PSF_calc(this)" style="padding: 0px !important;background:#fdf4bd;">
+											<? foreach($per_or_thb as $k => $v){ ?>
+												<option value="<?=$k?>"><?=$v?></option>
+											<? } ?>
+										</select>
+									</td>
+									
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['PSF'].' '.$lng['Income']?></th>
+									<td colspan="2"id="psf_income_emp"></td>
+									<td colspan="2"></td>
+								</tr>
+							</tbody>
+
+							<thead>
+								<tr>
+									<th colspan="5" class="tac text-danger p-1"><?=$lng['Calculations Full Year']?>
+										<span class="text-primary float-right mr-5 ml-4"><?=$lng['Manual']?></span>
+										<input type="checkbox" class="checkbox-custom-blue float-right" name="psfManual" onclick="manualpsfinput(this.checked)"> 
+									</th>
+								</tr>
+								
+								<tr>
+									<th class="tac"><?=$lng['Month']?></th>
+									<th class="tac"><?=$lng['PSF Employee']?> <?=$lng['Rate']?></th>
+									<th class="tac"><?=$lng['PSF Employer']?> <?=$lng['Rate']?></th>
+									<th class="tac"><?=$lng['PSF Employee']?></th>
+									<th class="tac"><?=$lng['PSF Employer']?></th>
+								</tr>
+							</thead>
+							<tbody id="append_full_table_psf">
+								
+							</tbody>
+
+						</table>
+					
+				</div>
+				<div class="modal-footer" style="background: darkgray;">
+					<button class="btn btn-primary ml-1" id="SavePSFdata" type="button"><?=$lng['Calculate']?></button>
+					<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Close popup']?></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-------------------- modalPSF --------------------->
+
+<!-------------------- modalPSF --------------------->
+<!--<div class="modal fade" id="modalPSF" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="top: 0px;">
+	<div class="modal-dialog" role="document" style="min-width: 900px !important;">
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 5px 13px;background: darkgray;">
 				<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate PSF']?></h5>
 				<a title="Close" type="button" class="close closebtn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
 			</div>
 			<div class="modal-body" style="padding: 5px 20px 5px !important;background: #efe;">
-				<table class="basicTable" border="0" style="width: 100%;">
-					<thead>
-						<tr>
-							<th colspan="6" class="tac text-danger p-1"><?=$lng['PSF CALCULATION']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['Emp. ID']?></th>
-							<td id="psf_empid"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['Calculate PSF']?></th>
-							<td id="psfs_calc_sso" style="background:#fdf4bd;padding: 0px !important;">
-								<select name="psf_calc_sso" id="psfss_calc_sso" onchange="PSF_calc(this)" style="padding: 0px !important;background:#fdf4bd;">
-									<? foreach($noyes01 as $k => $v){?>
-										<option value="<?=$k?>"><?=$v?></option>
-									<? } ?>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Employee name']?></th>
-							<td id="psf_empname"></td>
-							<td colspan="4"></td>
-							
-						</tr>
-					</tbody>
-					<thead class="mt-3">
-						<tr>
-							<th colspan="6" class="tal text-danger p-1"><?=$lng['Calculation employee contribution']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['PSF'].' '.$lng['Income']?></th>
-							<td id="psf_income_emp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PSF rate employee']?></th>
-							<td id="psf_rate_psf_emp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PSF'].' '.$lng['Calculated']?></th>
-							<td id="psf_calculate_emp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PSF amount THB']?></th>
-							<td id="psf_amt_thb_emp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Manual correction']?></th>
-							<td style="background:#fdf4bd;padding: 0px !important;">
-								<input type="text" id="psf_manual_emp" onchange="PSF_calc(this)" name="manual_emp" class="float72" style="background:#fdf4bd;">
-							</td>
-							<td colspan="4"></td>
-							
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PSF Employee']?></th>
-							<td id="psf_psf_emp"></td>
-							<td colspan="4"></td>
-						</tr>
-					</tbody>
+				<div class="row">
+					<div class="col-md-7" style="padding-right: 0px;max-width: 58%;">
+						<table class="basicTable" border="0" style="width: 100%;">
+							<thead>
+								<tr>
+									<th colspan="4" class="tac text-danger p-1"><?=$lng['PSF CALCULATION']?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th class="tal"><?=$lng['Emp. ID']?></th>
+									<td id="psf_empid"></td>
+									
+									<th class="tal"><?=$lng['Calculate PSF']?></th>
+									<td id="psfs_calc_sso" style="background:#fdf4bd;padding: 0px !important;">
+										<select name="psf_calc_sso" id="psfss_calc_sso" onchange="PSF_calc(this)" style="padding: 0px !important;background:#fdf4bd;">
+											<? foreach($noyes01 as $k => $v){?>
+												<option value="<?=$k?>"><?=$v?></option>
+											<? } ?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['Employee name']?></th>
+									<td id="psf_empname"></td>
+									<td colspan="2"></td>
+									
+								</tr>
+							</tbody>
+							<thead class="mt-3">
+								<tr>
+									<th colspan="4" class="tal text-danger p-1"><?=$lng['Calculation employee contribution']?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th class="tal"><?=$lng['PSF'].' '.$lng['Income']?></th>
+									<td id="psf_income_emp"></td>
+									
+									<th class="tal"><?=$lng['PSF rate employee']?></th>
+									<td id="psf_rate_psf_emp"></td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['PSF'].' '.$lng['Calculated']?></th>
+									<td id="psf_calculate_emp"></td>
+									
+									<th class="tal"><?=$lng['PSF amount THB']?></th>
+									<td id="psf_amt_thb_emp"></td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['Manual correction']?></th>
+									<td style="background:#fdf4bd;padding: 0px !important;width: 25%;">
+										<input type="text" id="psf_manual_emp" onchange="PSF_calc(this)" name="manual_emp" class="float72" style="background:#fdf4bd;">
+									</td>
+									<td colspan="2"></td>
+									
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['PSF Employee']?></th>
+									<td id="psf_psf_emp"></td>
+									<td colspan="2"></td>
+								</tr>
+							</tbody>
 
-					<thead class="mt-3">
-						<tr>
-							<th colspan="6" class="tal text-danger p-1"><?=$lng['Calculation Employer contribution']?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th class="tal"><?=$lng['PSF'].' '.$lng['Income']?></th>
-							<td id="psf_income_comp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PSF rate employer']?></th>
-							<td id="psf_rate_psf_comp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PSF'].' '.$lng['Calculated']?></th>
-							<td id="psf_calculate_comp"></td>
-							<td colspan="2"></td>
-							<th class="tal"><?=$lng['PSF amount THB']?></th>
-							<td id="psf_amt_thb_comp"></td>
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['Manual correction']?></th>
-							<td style="background:#fdf4bd;padding: 0px !important;">
-								<input type="text" id="psf_manual_comp" onchange="PSF_calc(this)" name="manual_emplyr" class="float72" style="background:#fdf4bd;">
-							</td>
-							<td colspan="4"></td>
-							
-						</tr>
-						<tr>
-							<th class="tal"><?=$lng['PSF Employer']?></th>
-							<td id="psf_psf_comp"></td>
-							<td colspan="4"></td>
-						</tr>
-					</tbody>
-				</table>
+							<thead class="mt-3">
+								<tr>
+									<th colspan="4" class="tal text-danger p-1"><?=$lng['Calculation Employer contribution']?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th class="tal"><?=$lng['PSF'].' '.$lng['Income']?></th>
+									<td id="psf_income_comp"></td>
+									
+									<th class="tal"><?=$lng['PSF rate employer']?></th>
+									<td id="psf_rate_psf_comp"></td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['PSF'].' '.$lng['Calculated']?></th>
+									<td id="psf_calculate_comp"></td>
+									
+									<th class="tal"><?=$lng['PSF amount THB']?></th>
+									<td id="psf_amt_thb_comp"></td>
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['Manual correction']?></th>
+									<td style="background:#fdf4bd;padding: 0px !important;width: 25%;">
+										<input type="text" id="psf_manual_comp" onchange="PSF_calc(this)" name="manual_emplyr" class="float72" style="background:#fdf4bd;">
+									</td>
+									<td colspan="2"></td>
+									
+								</tr>
+								<tr>
+									<th class="tal"><?=$lng['PSF Employer']?></th>
+									<td id="psf_psf_comp"></td>
+									<td colspan="2"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-5" style="padding-left: 0px;max-width: 40%;">
+						<table class="basicTable" border="0" style="width: 100%;">
+							<thead>
+								<tr>
+									<th colspan="3" class="tac text-danger p-1"><?=$lng['Calculations Full Year']?></th>
+								</tr>
+							</thead>
+						
+							<thead class="mt-4">
+								<tr>
+									<th class="tac"><?=$lng['Month']?></th>
+									<th class="tac"><?=$lng['PSF']?> %</th>
+									<th class="tac"><?=$lng['SSO'].' '.$lng['Min']?></th>
+								</tr>
+							</thead>
+							<tbody id="append_full_table_psf">
+								
+							</tbody>
+
+						</table>
+					</div>
+				</div>
 			</div>
 			<div class="modal-footer" style="background: darkgray;">
-				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Cancel']?></button>
-				<button class="btn btn-primary ml-1" id="SavePSFdata" type="button"><?=$lng['Confirm']?></button>
+				<button class="btn btn-primary ml-1" id="SavePSFdata" type="button"><?=$lng['Calculate']?></button>
+				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Close popup']?></button>
 			</div>
 		</div>
 	</div>
-</div>
+</div>-->
 <!-------------------- modalPVF --------------------->
 
 <!-------------------- modalTAX --------------------->
@@ -1076,8 +1249,8 @@
 				</table>
 			</div>
 			<div class="modal-footer" style="background: darkgray;">
-				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Cancel']?></button>
-				<button class="btn btn-primary ml-1" id="SaveTAXdata" type="button"><?=$lng['Confirm']?></button>
+				<button class="btn btn-primary ml-1" id="SaveTAXdata" type="button"><?=$lng['Calculate']?></button>
+				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Close popup']?></button>
 			</div> 
 		</div>
 	</div>
@@ -1086,7 +1259,7 @@
 
 <!-------------------- modalTAXDeduction --------------------->
 <div class="modal fade" id="modalTAXDeduction" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="top:0px;">
-	<div class="modal-dialog" role="document" style="min-width: 1052px !important;">
+	<div class="modal-dialog" role="document" style="min-width: 700px !important;">
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 5px 13px;background: darkgray;">
 				<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate'].' '.$lng['Tax deductions']?></h5>
@@ -1096,14 +1269,13 @@
 				<table class="basicTable" border="0" style="width: 101%;">
 					<thead>
 						<tr>
-							<th colspan="6" class="tac text-danger p-1"><?=$lng['Tax deductions']?></th>
+							<th colspan="5" class="tac text-danger p-1"><?=$lng['Tax deductions']?></th>
 						</tr>
 					</thead>
 				</table>
 
-				<div class="row">
-					<div class="col-md-7" style="padding-right: 0px;max-width: 59.5%;">
-						<table class="basicTable" border="0" style="width: 100%;border-right: 1px solid #ccc;">
+				
+						<table class="basicTable" border="0" style="width: 100%;">
 							<tbody>
 								<tr>
 									<th class="tal"><?=$lng['Emp. ID']?></th>
@@ -1196,84 +1368,15 @@
 									<td class="tar" id="td_pcare_deduct"></td>
 								</tr>
 								
-								<tr>
-									<th colspan="2" class="tac text-primary"><?=$lng['Calculation SSO deduction']?></th>
-									<th colspan="3" class="tac text-primary" style="border-right: 1px solid #ccc;"><?=$lng['Calculation PVF deduction']?></th>
-								</tr>
-								<tr>
-									<td class="tal"><?=$lng['Income SSO Cur Mth']?></td>
-									<td class="tar" id="th_income_sso_mnth"></td>
-									<td></td>
-									<td class="tal"><?=$lng['Income PVF cur mth']?></td>
-									<td class="tar" id="th_income_pvf_mnth"></td>
-								</tr>
-								<tr>
-									<td class="tal"><?=$lng['Subtotal']?></td>
-									<td class="tar" id="td_subtotal_sso"></td>
-									<td></td>
-									<td class="tal"><?=$lng['Subtotal']?></td>
-									<td class="tar" id="td_subtotal_pvf"></td>
-								</tr>
-								<tr>
-									<td class="tal"><?=$lng['Manual correction']?></td>
-									<td style="background:#fdf4bd;padding: 0px !important;">
-										<input type="text" id="td_manual_ssod" onchange="tax_deduct_calc(this)" class="tar float72" style="background:#fdf4bd;">
-									</td>
-									<td></td>
-									<td class="tal"><?=$lng['Manual correction']?></td>
-									<td style="background:#fdf4bd;padding: 0px !important;">
-										<input type="text" id="td_manual_pvfd" onchange="tax_deduct_calc(this)" class="tar float72" style="background:#fdf4bd;">
-									</td>
-								</tr>
-								<tr>
-									<td class="tal"><?=$lng['SSO'].' '.$lng['Deduction']?></td>
-									<td class="tar" id="td_sso_deduct"></td>
-									<td></td>
-									<td class="tal"><?=$lng['PVF'].' '.$lng['Deduction']?></td>
-									<td class="tar" id="td_pvf_deduct"></td>
-								</tr>
 
 							</tbody>
 						</table>
 
-					</div>
-					<div class="col-md-5" style="padding-left: 0px;max-width: 40%;">
-						<table class="basicTable" border="0" style="width: 100%;">
-							<thead>
-								<tr>
-									<th colspan="6" class="tac text-danger p-1"><?=$lng['Calculations Full Year']?></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td colspan="2"></td>
-									<th><?=$lng['PVF rate']?></th>
-									<th id="td_pvf_emp"></th>
-									<td colspan="2"></td>
-								</tr>
-							</tbody>
-
-							<thead class="mt-4">
-								<tr>
-									<th class="tac"><?=$lng['Month']?></th>
-									<th class="tac"><?=$lng['SSO']?>%</th>
-									<th class="tac"><?=$lng['SSO'].' '.$lng['Min']?></th>
-									<th class="tac"><?=$lng['SSO'].' '.$lng['Max']?></th>
-									<th class="tac"><?=$lng['SSO'].' '.$lng['THB']?></th>
-									<th class="tac"><?=$lng['PVF'].' '.$lng['THB']?></th>
-								</tr>
-							</thead>
-							<tbody id="append_full_table">
-								
-							</tbody>
-
-						</table>
-					</div>
-				</div>
+					
 			</div>
 			<div class="modal-footer" style="background: darkgray;">
-				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Cancel']?></button>
-				<button class="btn btn-primary ml-1" id="SaveTDdata" type="button"><?=$lng['Confirm']?></button>
+				<button class="btn btn-primary ml-1" id="SaveTDdata" type="button"><?=$lng['Calculate']?></button>
+				<button class="btn btn-danger closebtn" type="button" data-dismiss="modal"><?=$lng['Close popup']?></button>
 			</div>
 		</div>
 	</div>
@@ -1284,20 +1387,16 @@
 
 <script type="text/javascript">
 
-	function Opencalculationpopups(that){
+	function OpencalculationpopupsNEW(that){
 
 		var empid = that.id;
 		var currmnth = <?=$_SESSION['rego']['cur_month']?>;
-		
-		var get_prev_months_allowancesdeductss = '';
-		if(currmnth > 1){
-			get_prev_months_allowancesdeductss = get_prev_months_allowancesdeduct(empid);
-		}
+		var mid = '<?=$_GET['mid']?>';
 
 		$.ajax({
 			type: 'post',
 			url: "ajax/get_payroll_data.php",
-			data: {empid: empid},
+			data: {empid: empid,mid:mid},
 			success: function(result){
 
 				if(result == 'error'){
@@ -1312,6 +1411,422 @@
 				}else{
 
 					var data = JSON.parse(result);
+					var payroll_datas = data.payroll_data;
+
+					//console.log(payroll_datas);
+
+					//===================== Right side table data start (Allowances) ======================//
+					var eColsMdlA = <?=$eColsMdlA?>;
+					var eColsMdlD = <?=$eColsMdlD?>;
+					
+					var pperiods = <?=json_encode($pperiods)?>;
+					var short_months = <?=json_encode($short_months)?>;
+					var payrollparametersformonth = <?=json_encode(array_values($payrollparametersformonth))?>;
+					var allowance_deduct_name = <?=json_encode($allowDdt)?>;
+					var allowDdtEmp_name = <?=json_encode($allowDdtEmp)?>;
+					var curryear = <?=substr($_SESSION['rego']['cur_year'], -2)?>;
+					var remaining_mnth = 12 - currmnth + 1;
+					var ssoEmpRates = data[0].ssoEmpRates;
+
+					//console.log(payrollparametersformonth);
+					//console.log(payroll_datas);
+
+					var countAllown = 0;
+					var countDeduct = 0;
+					$.each(payroll_datas, function(k,v){
+
+						if(v['allow_deduct_ids'] !=''){
+							if(v['classifications'] == 0){
+								countAllown++;
+							}else if(v['classifications'] == 1){
+								countDeduct++;
+							}
+						}
+					});
+
+					var defclm = 1;
+					var tot_count = parseFloat(countAllown) + parseFloat(defclm);
+
+					var manual_feed_total = data.manual_feed_total;
+					var fix_allow_from_emp = data.fix_allow_from_emp;
+					var fix_deduct_from_emp = data.fix_deduct_from_emp;
+					//console.log(fix_allow_from_emp);
+					$('#Salarycalculator #linkedcolumnsSC thead').remove();
+					$('#Salarycalculator #linkedcolumnsSC tbody').remove();
+
+					var allow_and_deduct_data = '<thead>';
+						allow_and_deduct_data +='<tr><th colspan="'+tot_count+'" class="tal text-danger"><?=$lng['DETAILS ALLOWANCES & DEDUCTIONS']?></th></tr>';
+						allow_and_deduct_data +='<tr>';
+						allow_and_deduct_data +='<th class="tac"><?=$lng['Month']?></th>';
+
+						var countClm = 0;
+						var clmnval;
+						$.each(payroll_datas, function(k1,v){
+							if(v['allow_deduct_ids'] !=''){
+								if(v['classifications'] == 0){
+									countClm++;
+
+									if(allowance_deduct_name[k1] == undefined){ clmnval = allowDdtEmp_name[k1];}else{ clmnval = allowance_deduct_name[k1];}
+									allow_and_deduct_data +='<th class="tac '+v['groups']+'">'+clmnval+'</th>';
+								}
+							}
+						})
+						
+						allow_and_deduct_data +='</tr>';
+						allow_and_deduct_data +='</thead>';
+
+						allow_and_deduct_data +='<tbody>';
+							var i;
+							for(i=1; i <=12 ; i++){
+
+								allow_and_deduct_data +='<tr><td class="tac font-weight-bold">'+short_months[i]+'-'+curryear+'</td>';
+								
+								var currMnths = '';
+								var crmth_manual_feed = 0.00;
+								var prmth_manual_feed = 0.00;
+								var pnd1 = '';
+								var sso = '';
+								var pvf = '';
+								var psf = '';
+								var tax_basefp = '';
+								var tax_basef = '';
+								var tax_basev = '';
+								var tax_basent = '';
+								var taxbycom = '';
+
+								$.each(payroll_datas, function(k1,v){
+
+									if(v['allow_deduct_ids'] !=''){
+										var k = k1;
+										if(v['classifications'] == 0){
+
+											var monthss = short_months[i];
+											var monthssLower = monthss.toLowerCase();
+											crmth_manual_feed = v[monthssLower];
+											if(crmth_manual_feed == ''){crmth_manual_feed=0.00;};
+											
+											if(v['pnd'] == 1){ pnd1 = 'pnd1';}else{ pnd1 = '';}
+											if(data[0].calc_sso == 1 && v['sso'] == 1){ sso = 'sso';}else{ sso = '';}
+											if(data[0].calc_pvf == 1 && v['pvf'] == 1){ pvf = 'pvf';}else{ pvf = '';}
+											if(data[0].calc_psf == 1 && v['psf'] == 1){ psf = 'psf';}else{ psf = '';}
+											if(v['tax_base'] == 'fixpro'){ tax_basefp = 'fixpro';}else{ tax_basefp = '';}
+											if(v['tax_base'] == 'fix'){ tax_basef = 'fix';}else{ tax_basef = '';}
+											if(v['tax_base'] == 'var'){ tax_basev = 'var';}else{ tax_basev = '';}
+											if(v['tax_base'] == 'nontax'){ tax_basent = 'nontax';}else{ tax_basent = '';}
+
+											allow_and_deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+taxbycom+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
+										}
+									}
+								})
+
+								allow_and_deduct_data +='</tr>';
+							}
+
+						allow_and_deduct_data +='</tbody>';
+						$('#Salarycalculator #linkedcolumnsSC').append(allow_and_deduct_data);
+					//===================== Right side table data end ======================//
+
+					//===================== Right side table data Start (Deduction) ======================//
+					var defclmd = 1;
+					var tot_countd = parseFloat(countDeduct) + parseFloat(defclmd);
+					$('#Salarycalculator #linkedcolumnsSCD thead').remove();
+					$('#Salarycalculator #linkedcolumnsSCD tbody').remove();
+
+					var deduct_data = '<thead>';
+						deduct_data +='<tr>';
+						deduct_data +='<th class="tac"><?=$lng['Month']?></th>';
+
+						var countClm = 0;
+						$.each(payroll_datas, function(k1,v){
+							if(v['allow_deduct_ids'] !=''){
+								var k = k1;
+								if(v['classifications'] == 1){
+									countClm++;
+									if(allowance_deduct_name[k] == undefined){ clmnval = allowDdtEmp_name[k];}else{ clmnval = allowance_deduct_name[k];}
+									deduct_data +='<th class="tac '+v['groups']+'">'+clmnval+'</th>';
+								}
+							}
+						})
+						
+						deduct_data +='</tr>';
+						deduct_data +='</thead>';
+
+						deduct_data +='<tbody>';
+							var i;
+							for(i=1; i <=12 ; i++){
+								deduct_data +='<tr><td class="tac font-weight-bold">'+short_months[i]+'-'+curryear+'</td>';
+								
+								var currMnths = '';
+								var crmth_manual_feed = 0.00;
+								var prmth_manual_feed = 0.00;
+								var pnd1 = '';
+								var sso = '';
+								var pvf = '';
+								var psf = '';
+								var tax_basefp = '';
+								var tax_basef = '';
+								var tax_basev = '';
+								var tax_basent = '';
+								var extracls = '';
+								var extraTax = '';
+								
+								$.each(payroll_datas, function(k1,v){
+
+									if(v['allow_deduct_ids'] !=''){
+										var k = k1;
+										if(v['classifications'] == 1){
+
+											var monthss = short_months[i];
+											var monthssLower = monthss.toLowerCase();
+											crmth_manual_feed = v[monthssLower];
+
+											if(v['pnd'] == 1){ pnd1 = 'pnd1';}else{ pnd1 = '';}
+											if(data[0].calc_sso == 1 && v['sso'] == 1){ sso = 'sso';}else{ sso = '';}
+											if(data[0].calc_pvf == 1 && v['pvf'] == 1){ pvf = 'pvf';}else{ pvf = '';}
+											if(data[0].calc_psf == 1 && v['psf'] == 1){ psf = 'psf';}else{ psf = '';}
+											if(v['tax_base'] == 'fixpro'){ tax_basefp = 'fixpro';}else{ tax_basefp = '';}
+											if(v['tax_base'] == 'fix'){ tax_basef = 'fix';}else{ tax_basef = '';}
+											if(v['tax_base'] == 'var'){ tax_basev = 'var';}else{ tax_basev = '';}
+											if(v['tax_base'] == 'nontax'){ tax_basent = 'nontax';}else{ tax_basent = '';}
+
+											deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+extracls+' '+extraTax+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
+
+										}
+									}
+								})
+
+								deduct_data +='</tr>';
+							}
+
+						deduct_data +='</tbody>';
+						$('#Salarycalculator #linkedcolumnsSCD').append(deduct_data);
+					//===================== Right side table data end ======================//
+
+					$('#Salarycalculator #empids').text(data[0].emp_id);
+					$('#Salarycalculator #deptval').text(data.department);
+					$('#Salarycalculator #contract_type').text(data.contract_type);
+					$('#Salarycalculator #calc_tax').text(data.calc_tax);
+					$('#Salarycalculator #calc_sso').text(data.calc_sso);
+					
+					if(data.calc_sso == 'Yes'){ $('#Salarycalculator #modalssopopup').css('display','table-row'); }else{ $('#Salarycalculator #modalssopopup').css('display','none'); }
+					if(data.calc_pvf == 'Yes'){ $('#Salarycalculator #modalpvfpopup').css('display','table-row'); }else{ $('#Salarycalculator #modalpvfpopup').css('display','none'); }
+					if(data.calc_psf == 'Yes'){ $('#Salarycalculator #modalpsfpopup').css('display','table-row'); }else{ $('#Salarycalculator #modalpsfpopup').css('display','none'); }
+
+
+					$('#Salarycalculator #emp_name').text(data[0].emp_name_en);
+					$('#Salarycalculator #teamval').text(data.team);
+					$('#Salarycalculator #tax_calc_method').text(data[0].calc_method);
+
+					if(data.calc_pvf == 'Yes'){
+						$('#Salarycalculator #pvfpsfLbl').text('<?=$lng['Calculate PVF']?>');
+						$('#Salarycalculator #calc_pvf').text(data.calc_pvf);
+					}else if(data.calc_psf == 'Yes'){
+						$('#Salarycalculator #pvfpsfLbl').text('<?=$lng['Calculate PSF']?>');
+						$('#Salarycalculator #calc_pvf').text(data.calc_psf);
+					}else{
+						$('#Salarycalculator #pvfpsfLbl').text('');
+						$('#Salarycalculator #calc_pvf').text('');
+					}
+
+					//$('#Salarycalculator #calc_pvf').text(data.calc_pvf);
+					//$('#Salarycalculator #calc_psf').text(data.calc_psf);
+
+					$('#Salarycalculator #position_val').text(data.position);
+					$('#Salarycalculator #calc_base').text(data.calc_base);
+
+					
+					$('#Salarycalculator #ear_curr_calc').text(number_format(data[0].total_earnings));
+					$('#Salarycalculator #ear_curr_mnth').text(number_format(data[0].total_earnings));
+					$('#Salarycalculator #ear_prev_mnth').text(number_format(data[0].total_earnings_prev));
+					$('#Salarycalculator #ear_full_year').text(number_format(data[0].full_year_earnings));
+
+					$('#Salarycalculator #ded_curr_calc').text(number_format(data[0].total_deductions));
+					$('#Salarycalculator #ded_curr_mnth').text(number_format(data[0].total_deductions));
+					$('#Salarycalculator #ded_prev_mnth').text(number_format(data[0].total_deductions_prev));
+					$('#Salarycalculator #ded_full_year').text(number_format(data[0].full_year_deductions));
+
+					$('#Salarycalculator #pnd_curr_calc').text(number_format(data[0].total_pnd1));
+					$('#Salarycalculator #pnd_curr_mnth').text(number_format(data[0].total_pnd1));
+					$('#Salarycalculator #pnd_prev_mnth').text(number_format(data[0].total_pnd1_prev));
+					$('#Salarycalculator #pnd_full_year').text(number_format(data[0].full_year_pnd));
+
+					$('#Salarycalculator #sso_curr_calc').text(number_format(data[0].total_sso));
+					$('#Salarycalculator #sso_curr_mnth').text(number_format(data[0].total_sso));
+					$('#Salarycalculator #sso_prev_mnth').text(number_format(data[0].total_sso_prev));
+					$('#Salarycalculator #sso_full_year').text(number_format(data[0].full_year_sso));
+
+					$('#Salarycalculator #pvf_curr_calc').text(number_format(data[0].total_pvf));
+					$('#Salarycalculator #pvf_curr_mnth').text(number_format(data[0].total_pvf));
+					$('#Salarycalculator #pvf_prev_mnth').text(number_format(data[0].total_pvf_prev));
+					$('#Salarycalculator #pvf_full_year').text(number_format(data[0].full_year_pvf));
+
+					$('#Salarycalculator #psf_curr_calc').text(number_format(data[0].total_psf));
+					$('#Salarycalculator #psf_curr_mnth').text(number_format(data[0].total_psf));
+					$('#Salarycalculator #psf_prev_mnth').text(number_format(data[0].total_psf_prev));
+					$('#Salarycalculator #psf_full_year').text(number_format(data[0].full_year_psf));
+
+					$('#Salarycalculator #fixpro_curr_calc').text(number_format(data[0].total_tax_fixpro));
+					$('#Salarycalculator #fixpro_curr_mnth').text(number_format(data[0].total_tax_fixpro));
+					$('#Salarycalculator #fixpro_prev_mnth').text(number_format(data[0].total_tax_fixpro_prev));
+					$('#Salarycalculator #fixpro_full_year').text(number_format(data[0].full_year_fixprorated));
+
+					$('#Salarycalculator #fix_curr_calc').text(number_format(data[0].total_tax_fix));
+					$('#Salarycalculator #fix_curr_mnth').text(number_format(data[0].total_tax_fix));
+					$('#Salarycalculator #fix_prev_mnth').text(number_format(data[0].total_tax_fix_prev));
+					$('#Salarycalculator #fix_full_year').text(number_format(data[0].full_year_fixed));
+
+					$('#Salarycalculator #var_curr_calc').text(number_format(data[0].total_tax_var));
+					$('#Salarycalculator #var_curr_mnth').text(number_format(data[0].total_tax_var));
+					$('#Salarycalculator #var_prev_mnth').text(number_format(data[0].total_tax_var_prev));
+					$('#Salarycalculator #var_full_year').text(number_format(data[0].full_year_var));
+
+					$('#Salarycalculator #totalffv_curr_calc').text(number_format(data[0].total_of_alltax));
+					$('#Salarycalculator #totalffv_curr_mnth').text(number_format(data[0].total_of_alltax));
+					$('#Salarycalculator #totalffv_prev_mnth').text(number_format(data[0].total_of_alltax_prev));
+					$('#Salarycalculator #totalffv_full_year').text(number_format(data[0].full_year_taxableincome));
+
+					$('#Salarycalculator #nontax_curr_calc').text(number_format(data[0].total_tax_nontax));
+					$('#Salarycalculator #nontax_curr_mnth').text(number_format(data[0].total_tax_nontax));
+					$('#Salarycalculator #nontax_prev_mnth').text(number_format(data[0].total_tax_nontax_prev));
+					$('#Salarycalculator #nontax_full_year').text(number_format(data[0].full_year_non_taxable));
+
+					$('#Salarycalculator #sso_emp_curr_calc').text(number_format(data[0].sso_employee));
+					$('#Salarycalculator #sso_emp_curr_mnth').text(number_format(data[0].sso_employee));
+					$('#Salarycalculator #sso_emp_prev_mnth').text(number_format(data[0].sso_employee_prev));
+					$('#Salarycalculator #sso_emp_full_year').text(number_format(data[0].full_year_sso_employee));
+
+					$('#Salarycalculator #pvf_emp_curr_calc').text(number_format(data[0].pvf_employee));
+					$('#Salarycalculator #pvf_emp_curr_mnth').text(number_format(data[0].pvf_employee));
+					$('#Salarycalculator #pvf_emp_prev_mnth').text(number_format(data[0].pvf_employee_prev));
+					$('#Salarycalculator #pvf_emp_full_year').text(number_format(data[0].full_year_pvf_employee));
+
+					$('#Salarycalculator #psf_emp_curr_calc').text(number_format(data[0].psf_employee));
+					$('#Salarycalculator #psf_emp_curr_mnth').text(number_format(data[0].psf_employee));
+					$('#Salarycalculator #psf_emp_prev_mnth').text(number_format(data[0].psf_employee_prev));
+					$('#Salarycalculator #psf_emp_full_year').text(number_format(data[0].full_year_psf_employee));
+
+					$('#Salarycalculator #tax_emp_curr_calc').text(number_format(data[0].tax_this_month));
+					$('#Salarycalculator #tax_emp_curr_mnth').text(number_format(data[0].tax_this_month));
+					$('#Salarycalculator #tax_emp_prev_mnth').text(number_format(data[0].tax_previous));
+					$('#Salarycalculator #tax_emp_full_year').text(number_format(data[0].total_tax_year));
+
+					$('#Salarycalculator #td_emp_curr_calc').text('');
+					$('#Salarycalculator #td_emp_curr_mnth').text('');
+					$('#Salarycalculator #td_emp_prev_mnth').text('');
+					$('#Salarycalculator #td_emp_full_year').text(number_format(data[0].total_yearly_tax_deductions));
+
+					$('#Salarycalculator #ssobycom_curr_calc').text(number_format(data[0].sso_by_company));
+					$('#Salarycalculator #ssobycom_curr_mnth').text(number_format(data[0].sso_by_company));
+					$('#Salarycalculator #ssobycom_prev_mnth').text(number_format(data[0].sso_by_company_prev));
+					$('#Salarycalculator #ssobycom_full_year').text(0);
+
+					$('#Salarycalculator #taxbycom_curr_calc').text(number_format(data[0].tax_by_company));
+					$('#Salarycalculator #taxbycom_curr_mnth').text(number_format(data[0].tax_by_company));
+					$('#Salarycalculator #taxbycom_prev_mnth').text(number_format(data[0].tax_previous));
+					$('#Salarycalculator #taxbycom_full_year').text(0);
+
+					$('#Salarycalculator #total_net_income_cur_cal').text(number_format(data[0].total_net_income));
+					$('#Salarycalculator #total_net_income_cur_mnth').text(number_format(data[0].total_net_income));
+					$('#Salarycalculator #total_net_income_prev_mnth').text(number_format(data[0].total_net_income_prev));
+					$('#Salarycalculator #total_net_income_fullyear').text(number_format(data[0].fullyear_net_income));
+
+
+					$('#Salarycalculator #total_net_pay_cur_cal').text(number_format(data[0].total_net_pay));
+					$('#Salarycalculator #total_net_pay_cur_mnth').text(number_format(data[0].total_net_pay));
+					$('#Salarycalculator #total_net_pay_prev_mnth').text(number_format(data[0].total_net_pay_prev));
+					$('#Salarycalculator #total_net_pay_fullyear').text(number_format(data[0].fullyear_net_pay));
+
+				
+					$('#Salarycalculator').modal('show');
+
+					$('#linkedcolumnsSC').DataTable().destroy();
+					$('#linkedcolumnsSCD').DataTable().destroy();
+
+
+					var dtablesmdl = $('#linkedcolumnsSC').DataTable({
+						//scrollX: true,
+						lengthChange: false,
+						searching: false,
+						ordering: false,
+						paging: false,
+						pageLength: 12,
+						filter: false,
+						info: false,
+						responsive: false,
+						<?=$dtable_lang?>
+						/*columnDefs: [
+							{"targets": eColsMdlA, "visible": false, "searchable": false},
+							//{ width: '10%', targets: "tac" }
+						],*/
+						
+					});
+
+					var dtablesmdld = $('#linkedcolumnsSCD').DataTable({
+						
+						lengthChange: false,
+						searching: false,
+						ordering: false,
+						paging: false,
+						pageLength: 12,
+						filter: false,
+						info: false,
+						responsive: false,
+						<?=$dtable_lang?>
+						/*columnDefs: [
+							{"targets": eColsMdlD, "visible": false, "searchable": false},
+							//{ width: '10%', targets: "tac" }
+						],*/
+						
+					});
+
+					
+
+				}
+			}
+		})
+	}
+
+	function closeBtn(){
+
+		$('#linkedcolumnsSC').DataTable().destroy();
+		$('#linkedcolumnsSCD').DataTable().destroy();
+
+		$('#Salarycalculator').modal('hide');
+	}
+
+
+	/*function Opencalculationpopups(that){
+
+		var empid = that.id;
+		var currmnth = <?=$_SESSION['rego']['cur_month']?>;
+		var mid = '<?=$_GET['mid']?>';
+		
+		var get_prev_months_allowancesdeductss = '';
+		if(currmnth > 1){
+			get_prev_months_allowancesdeductss = get_prev_months_allowancesdeduct(empid);
+		}
+
+		$.ajax({
+			type: 'post',
+			url: "ajax/get_payroll_data.php",
+			data: {empid: empid,mid:mid},
+			success: function(result){
+
+				if(result == 'error'){
+					$("body").overhang({
+						type: "error",
+						message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: '+ result,
+						duration: 3,
+						callback: function(v){
+							window.location.reload();
+						}
+					})
+				}else{
+
+					var data = JSON.parse(result);
+					//console.log(data);
+
+					var payroll_datas = data.payroll_data;
 
 					//===================== Right side table data start (Allowances) ======================//
 					var eColsMdlA = <?=$eColsMdlA?>;
@@ -1325,7 +1840,10 @@
 					var curryear = <?=substr($_SESSION['rego']['cur_year'], -2)?>;
 					var remaining_mnth = 12 - currmnth + 1;
 					//console.log(pperiods);
+					var ssoEmpRates = data[0].ssoEmpRates;
 
+					//console.log(payrollparametersformonth);
+					//console.log(payroll_datas);
 
 					var countAllown = 0;
 					var countDeduct = 0;
@@ -1398,9 +1916,7 @@
 												crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0.00; 
 											}
 											
-											/*if(v['groups'] == 'inc_sal'){
-												crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].salary);
-											}*/
+											
 
 											if(k == 27){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].tax_by_company); taxbycom="taxbycom";}else{ taxbycom="";}
 											if(k == 28){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].sso_by_company); }
@@ -1477,9 +1993,7 @@
 													crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(dsaly); 
 												}
 												//crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0; 
-												/*if(v['groups'] == 'inc_sal'){
-													crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].salary);
-												}*/
+												
 												allow_and_deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 											}else{
 												allow_and_deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+v['groups']+'">0.00</td>';
@@ -1609,19 +2123,24 @@
 												if(k == 49){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].kor_yor_sor); }
 
 												if(k == 57){ 
-													var sso_thb = (data[0].total_sso * pperiods[i]['sso_eRate']);
-													if(sso_thb > pperiods[i]['sso_eMax']){ sso_thb = pperiods[i]['sso_eMax'];}
-													else if(sso_thb < pperiods[i]['sso_eMin']){ sso_thb = pperiods[i]['sso_eMin'];}
-													crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(sso_thb); 
+													var sso_thb = data[0].sso_employee;
+													crmth_manual_feed = parseFloat(sso_thb); 
 												}
 
 												if(k == 58){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].pvf_employee); }
 												if(k == 59){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].psf_employee); }
-												if(k == 60){ crmth_manual_feed = parseFloat(crmth_manual_feed) + parseFloat(data[0].tax_this_month); }
-												//crmth_manual_feed = (manual_feed_total[k] > 0) ? manual_feed_total[k] : 0; 
+												if(k == 60){ crmth_manual_feed = parseFloat(data[0].tax_next_month); }
+												
 												deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 											}else{
-												deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+v['groups']+'">0.00</td>';
+
+												if(k == 57){ 
+													var sso_thb = data[0].sso_employee;
+													crmth_manual_feed = parseFloat(sso_thb); 
+												}
+												if(k == 60){ crmth_manual_feed = parseFloat(data[0].tax_next_month); }
+
+												deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 											}
 										}
 									}
@@ -1639,6 +2158,10 @@
 					$('#Salarycalculator #contract_type').text(data.contract_type);
 					$('#Salarycalculator #calc_tax').text(data.calc_tax);
 					$('#Salarycalculator #calc_sso').text(data.calc_sso);
+					
+					if(data.calc_sso == 'Yes'){ $('#Salarycalculator #modalssopopup').css('display','table-row'); }else{ $('#Salarycalculator #modalssopopup').css('display','none'); }
+					if(data.calc_pvf == 'Yes'){ $('#Salarycalculator #modalpvfpopup').css('display','table-row'); }else{ $('#Salarycalculator #modalpvfpopup').css('display','none'); }
+					if(data.calc_psf == 'Yes'){ $('#Salarycalculator #modalpsfpopup').css('display','table-row'); }else{ $('#Salarycalculator #modalpsfpopup').css('display','none'); }
 
 
 					$('#Salarycalculator #emp_name').text(data[0].emp_name_en);
@@ -1736,22 +2259,22 @@
 					$('#Salarycalculator #tax_emp_curr_calc').text(number_format(data[0].tax_this_month));
 					$('#Salarycalculator #tax_emp_curr_mnth').text(number_format(data[0].tax_this_month));
 					$('#Salarycalculator #tax_emp_prev_mnth').text(number_format(data[0].tax_previous));
-					$('#Salarycalculator #tax_emp_full_year').text(number_format(data[0].full_year_psf_employee));
+					$('#Salarycalculator #tax_emp_full_year').text(number_format(data[0].total_tax_year));
 
-					$('#Salarycalculator #td_emp_curr_calc').text(0);
-					$('#Salarycalculator #td_emp_curr_mnth').text(0);
-					$('#Salarycalculator #td_emp_prev_mnth').text(0);
-					$('#Salarycalculator #td_emp_full_year').text(0);
+					$('#Salarycalculator #td_emp_curr_calc').text('');
+					$('#Salarycalculator #td_emp_curr_mnth').text('');
+					$('#Salarycalculator #td_emp_prev_mnth').text('');
+					$('#Salarycalculator #td_emp_full_year').text(number_format(data[0].total_yearly_tax_deductions));
 
 					$('#Salarycalculator #ssobycom_curr_calc').text(number_format(data[0].sso_by_company));
 					$('#Salarycalculator #ssobycom_curr_mnth').text(number_format(data[0].sso_by_company));
 					$('#Salarycalculator #ssobycom_prev_mnth').text(number_format(data[0].sso_by_company_prev));
-					$('#Salarycalculator #ssobycom_full_year').text(number_format(data[0].total_tax_year));
+					$('#Salarycalculator #ssobycom_full_year').text(0);
 
 					$('#Salarycalculator #taxbycom_curr_calc').text(number_format(data[0].tax_by_company));
 					$('#Salarycalculator #taxbycom_curr_mnth').text(number_format(data[0].tax_by_company));
 					$('#Salarycalculator #taxbycom_prev_mnth').text(number_format(data[0].tax_previous));
-					$('#Salarycalculator #taxbycom_full_year').text(number_format(data[0].total_tax_year));
+					$('#Salarycalculator #taxbycom_full_year').text(0);
 
 					$('#Salarycalculator #total_net_income_cur_cal').text(number_format(data[0].total_net_income));
 					$('#Salarycalculator #total_net_income_cur_mnth').text(number_format(data[0].total_net_income));
@@ -1772,7 +2295,7 @@
 
 
 					var dtablesmdl = $('#linkedcolumnsSC').DataTable({
-						
+						//scrollX: true,
 						lengthChange: false,
 						searching: false,
 						ordering: false,
@@ -1784,7 +2307,9 @@
 						<?=$dtable_lang?>
 						columnDefs: [
 							{"targets": eColsMdlA, "visible": false, "searchable": false},
+							//{ width: '10%', targets: "tac" }
 						],
+						
 					});
 
 					var dtablesmdld = $('#linkedcolumnsSCD').DataTable({
@@ -1799,15 +2324,17 @@
 						responsive: false,
 						<?=$dtable_lang?>
 						columnDefs: [
-							{"targets": eColsMdlD, "visible": false, "searchable": false}
+							{"targets": eColsMdlD, "visible": false, "searchable": false},
+							//{ width: '10%', targets: "tac" }
 						],
+						
 					});
 
 
 				}
 			}
 		})		
-	}
+	}*/
 
 	
 
@@ -1831,13 +2358,14 @@
 	function modal_tax(){
 
 		var empids = $('#Salarycalculator #empids').text();
+		var mid = '<?=$_GET['mid']?>';
 		if(empids !=''){
 
 			$.ajax({
 				type: 'post',
 				url: "ajax/get_payroll_data.php",
 				async: false,
-				data: {empid: empids},
+				data: {empid: empids,mid:mid},
 				success: function(result){
 
 					if(result == 'error'){
@@ -1858,9 +2386,9 @@
 						$('#modalTAX #tx_calc_tax').text(data.calc_tax);
 						$('#modalTAX select#tx_calc_method option[value="'+data[0].calc_method+'"]').attr('selected',true);
 
-						$('#modalTAX #tx_tax_deduction').text(number_format(data[0].total_deductions));
-						$('#modalTAX #tx_tax_deduction_ytd').text(number_format(data[0].total_deductions));
-						$('#modalTAX #tx_tax_deduction_cam').text(number_format(data[0].total_deductions));
+						$('#modalTAX #tx_tax_deduction').text(number_format(data[0].total_yearly_tax_deductions));
+						$('#modalTAX #tx_tax_deduction_ytd').text(number_format(data[0].total_yearly_tax_deductions));
+						$('#modalTAX #tx_tax_deduction_cam').text(number_format(data[0].total_yearly_tax_deductions));
 
 						$('#modalTAX #tx_fixed_actual').text(number_format(data[0].fixed_actual_yearly));
 
@@ -1925,6 +2453,7 @@
 	function modal_tax_deduction(){
 
 		var empids = $('#Salarycalculator #empids').text();
+		var mid = '<?=$_GET['mid']?>';
 
 		if(empids !=''){
 
@@ -1934,7 +2463,7 @@
 				type: 'post',
 				url: "ajax/get_payroll_data.php",
 				async: false,
-				data: {empid: empids},
+				data: {empid: empids,mid:mid},
 				success: function(result){
 
 					if(result == 'error'){
@@ -2235,11 +2764,13 @@
 	function modal_pvf(){
 
 		var empids = $('#Salarycalculator #empids').text();
+		var mid = '<?=$_GET['mid']?>';
 		if(empids !=''){
+			var get_sso_pvf_full_year_thbss = get_sso_pvf_full_year_thb(empids);
 			$.ajax({
 				type: 'post',
 				url: "ajax/get_payroll_data.php",
-				data: {empid: empids},
+				data: {empid: empids,mid:mid},
 				success: function(result){
 
 					if(result == 'error'){
@@ -2254,91 +2785,90 @@
 					}else{
 						var data = JSON.parse(result);
 						//console.log(data);
+						var payroll_datass = data.payroll_data;
 
 						$('#modalPVF #pvf_empid').text(data[0].emp_id);
+						$('#modalPVF #pvfEmpid').val(data[0].emp_id);
 						$('#modalPVF #pvf_empname').text(data[0].emp_name_en);
 
 						$('#modalPVF select[name="pvf_calc_pvf"] option[value="'+data[0].calc_pvf+'"]').attr('selected',true);
+						$('#modalPVF select[name="pf_paidby_pvf"] option[value="'+data[0].perc_thb_pvf+'"]').attr('selected',true);
 
-						$('#modalPVF #pvf_income_pvf_emp').text(data[0].total_pvf);
-
-
-						if(data[0].perc_thb_pvf == 1){
-							$('#modalPVF #pvf_rate_pvf_emp').text(data[0].pvf_rate_emp+'%');
-							$('#modalPVF #pvf_amt_thb_emp').text('0');
-						}else{
-							$('#modalPVF #pvf_rate_pvf_emp').text('0');
-							$('#modalPVF #pvf_amt_thb_emp').text(data[0].pvf_rate_emp);
-						}
-
-						if(data[0].perc_thb_pvf == 1){
-							$('#modalPVF #pvf_rate_pvf_comp').text(data[0].pvf_rate_com+'%');
-							$('#modalPVF #pvf_amt_thb_comp').text('0');
-						}else{
-							$('#modalPVF #pvf_rate_pvf_comp').text('0');
-							$('#modalPVF #pvf_amt_thb_comp').text(data[0].pvf_rate_emp);
-						}
-
-						$('#modalPVF #pvf_manual_emp').val(data[0].pvf_emp_manual);
-						$('#modalPVF #pvf_manual_comp').val(data[0].pvf_comp_manual);
-
-						$('#modalPVF #pvf_income_pvf_comp').text(data[0].total_pvf);
-						
+						$('#modalPVF #pvf_income_pvf_emp').text(number_format(data[0].total_pvf));
 
 						//pvf_calculate_emp
 						var pvf_calc_pvf = $('select[name="pvf_calc_pvf"]').val();
+						var pvf_paidby_pvf = $('select[name="pf_paidby_pvf"]').val();
+						//alert(pvf_paidby_pvf);
+						
+						//===================== SSO & PVF full year ================================//
+						var pperiods = <?=json_encode($pperiods)?>;
+						var short_months = <?=json_encode($short_months)?>;
+						var curryear = <?=substr($_SESSION['rego']['cur_year'], -2)?>;
 
-						var pvf_income_pvf_emp = $('#pvf_income_pvf_emp').text();
-						var pvf_rate_pvf_emp = $('#pvf_rate_pvf_emp').text();
-						var rate_pvf_emp = pvf_rate_pvf_emp.replace('%','');
-						var getvalueEmp = rate_pvf_emp / 100;
+						var total_Pvf_emp = 0.00;
+						var total_Pvf_com = 0.00;
 
-						var pvf_calc_emp = 0;
-						if(pvf_calc_pvf == 1){
-							if(getvalueEmp > 0){
-								pvf_calc_emp = parseFloat(pvf_income_pvf_emp) + parseFloat(getvalueEmp);
-							}else{
-								pvf_calc_emp = $('#pvf_amt_thb_emp').text();
-							}
+						if(pvf_paidby_pvf == 2){
+							var pvf_emp = parseFloat(data[0].pvf_rate_emp);
+							var pvf_com = parseFloat(data[0].pvf_rate_com);
+							var rate_emp = '';
+							var rate_com = '';
+						}else{
+							var pvf_emp = parseFloat(data[0].total_pvf * data[0].pvf_rate_emp)/100;
+							var pvf_com = parseFloat(data[0].total_pvf * data[0].pvf_rate_com)/100;
+							var rate_emp = data[0].pvf_rate_emp;
+							var rate_com = data[0].pvf_rate_com;
+						}
+						
+						
+						var tbl=''; 
+						var i1;
+						for (i1=1; i1 <= 12; i1++) { 
+
+							var monthss = short_months[i1];
+							var monthssLower = monthss.toLowerCase();
+							
+							var pvf_emp_val = 0.00;
+							var pvf_com_val = 0.00;
+
+							if(pvf_calc_pvf == 1){
+							//if(psf_calc_sso == 1 && i1 >= data[0].month){
+								//var psf_emp_val = psf_emp;
+								//var psf_com_val = psf_com;
+								pvf_emp_val = payroll_datass[58][monthssLower];
+								pvf_com_val = payroll_datass['pvfemployer'][monthssLower];
+							}	
+
+							tbl += '<tr>';
+								tbl += '<th class="tac">'+short_months[i1]+'-'+curryear+'</th>';
+								tbl += '<td class="tar">'+rate_emp+'</td>';
+								tbl += '<td class="tar">'+rate_com+'</td>';
+								tbl += '<td class="tar" style="padding:0px;"><input type="text" id="pvfemp_'+i1+'" name="pvfemp['+i1+']" class="float72 text-right" value="'+number_format(pvf_emp_val)+'" style="background: #eeffee;" readonly></td>';
+								tbl += '<td class="tar" style="padding:0px;"><input type="text" id="pvfcom_'+i1+'" name="pvfcom['+i1+']" class="float72 text-right" value="'+number_format(pvf_com_val)+'" style="background: #eeffee;" readonly></td>';
+							tbl += '</tr>';
+
+							total_Pvf_emp = parseFloat(total_Pvf_emp) + parseFloat(pvf_emp_val);
+							total_Pvf_com = parseFloat(total_Pvf_com) + parseFloat(pvf_com_val);
 						}
 
-						$('#modalPVF #pvf_calculate_emp').text(pvf_calc_emp);
+					
 
-						var pvf_manual_emp = $('#pvf_manual_emp').val();
-						var pvf_pvfemp_empss = pvf_calc_emp;
-						if(pvf_manual_emp > 0){
-							pvf_pvfemp_empss = parseFloat(pvf_calc_emp) + parseFloat(pvf_manual_emp);
-						}
+						tbl += '<tr>';
+						tbl += '<th class="tac">Total</th>';
+						tbl += '<td class="tar"></td>';
+						tbl += '<td class="tar"></td>';
+						tbl += '<td class="tar font-weight-bold">'+number_format(total_Pvf_emp)+'</td>';
+						tbl += '<td class="tar font-weight-bold">'+number_format(total_Pvf_com)+'</td>';
+						
+						tbl += '</tr>';
 
-						$('#modalPVF #pvf_pvfemp_emp').text(pvf_pvfemp_empss);
+						$('#append_full_table_pvf tr').remove();
+						$('#append_full_table_pvf').append(tbl);
+					
+						//===================== SSO & PVF full year ================================//
 
-
-						//pvf_calculate_comp
-						var pvf_income_pvf_comp = $('#pvf_income_pvf_comp').text();
-						var pvf_rate_pvf_comp = $('#pvf_rate_pvf_comp').text();
-						var rate_pvf_comp = pvf_rate_pvf_comp.replace('%','');
-						var getvalueComp = rate_pvf_comp / 100;
-
-						var pvf_calc_comp = 0;
-						if(pvf_calc_pvf == 1){
-							if(getvalueComp > 0){
-								pvf_calc_comp = parseFloat(pvf_income_pvf_comp) + parseFloat(getvalueComp);
-							}else{
-								pvf_calc_comp = $('#pvf_amt_thb_emp').text();
-							}
-						}
-
-						$('#modalPVF #pvf_calculate_comp').text(pvf_calc_comp);
-
-						var pvf_manual_comp = $('#pvf_manual_comp').val();
-						var pvf_pvfcom_comp = pvf_calc_comp;
-						if(pvf_manual_comp > 0){
-							pvf_pvfcom_comp = parseFloat(pvf_calc_comp) + parseFloat(pvf_manual_comp);
-						}
-
-						$('#modalPVF #pvf_pvfcom_comp').text(pvf_pvfcom_comp);
-
-						$('#modalPVF').modal('toggle');
+						$('#modalPVF').modal('show');
 					}
 				}
 			})
@@ -2355,6 +2885,8 @@
 	function PVF_calc(that){
 
 		var pvf_calc_pvf = $('select[name="pvf_calc_pvf"]').val();
+		var pvf_paidby_pvf = $('select[name="pf_paidby_pvf"]').val();
+
 		var pvf_manual_emp = $('#pvf_manual_emp').val();
 		var pvf_manual_comp = $('#pvf_manual_comp').val();
 
@@ -2408,16 +2940,27 @@
 
 		$('#modalPVF #pvf_pvfcom_comp').text(pvf_pvfcom_comp);
 
+		if($("#modalPVF input[name='pvfManual']").is(':checked')){
+			manualpvfinput(true);
+		}else{
+			manualpvfinput(false);
+		}
+
+		//fetch sso again
+		modal_pvf();
+
 	}
 
 	function modal_psf(){
 
 		var empids = $('#Salarycalculator #empids').text();
+		var mid = '<?=$_GET['mid']?>';
 		if(empids !=''){
+			var get_sso_pvf_full_year_thbss = get_sso_pvf_full_year_thb(empids);
 			$.ajax({
 				type: 'post',
 				url: "ajax/get_payroll_data.php",
-				data: {empid: empids},
+				data: {empid: empids,mid:mid},
 				success: function(result){
 
 					if(result == 'error'){
@@ -2432,93 +2975,90 @@
 					}else{
 						var data = JSON.parse(result);
 						//console.log(data);
+						var payroll_datass = data.payroll_data;
 
 						$('#modalPSF #psf_empid').text(data[0].emp_id);
+						$('#modalPSF #psfEmpid').val(data[0].emp_id);
 						$('#modalPSF #psf_empname').text(data[0].emp_name_en);
 
-						$('#modalPSF #psf_income_emp').text(data[0].total_psf);
-						$('#modalPSF #psf_income_comp').text(data[0].total_psf);
+						$('#modalPSF #psf_income_emp').text(number_format(data[0].total_psf));
+						//$('#modalPSF #psf_income_comp').text(data[0].total_psf);
 
 						$('#modalPSF select[name="psf_calc_sso"] option[value="'+data[0].calc_psf+'"]').attr('selected',true);
+						$('#modalPSF select[name="pf_paidby_psf"] option[value="'+data[0].perc_thb_psf+'"]').attr('selected',true);
 
-						if(data[0].perc_thb_psf == 1){
-							$('#modalPSF #psf_rate_psf_emp').text(data[0].psf_rate_emp+'%');
-							$('#modalPSF #psf_amt_thb_emp').text('0');
-						}else{
-							$('#modalPSF #psf_rate_psf_emp').text('0');
-							$('#modalPSF #psf_amt_thb_emp').text(data[0].psf_rate_emp);
-						}
-
-						if(data[0].perc_thb_psf == 1){
-							$('#modalPSF #psf_rate_psf_comp').text(data[0].psf_rate_com+'%');
-							$('#modalPSF #psf_amt_thb_comp').text('0');
-						}else{
-							$('#modalPSF #psf_rate_psf_comp').text('0');
-							$('#modalPSF #psf_amt_thb_comp').text(data[0].psf_rate_com);
-						}
-
-						$('#modalPSF #psf_manual_emp').val(data[0].psf_emp_manual);
-						$('#modalPSF #psf_manual_comp').val(data[0].psf_comp_manual);
-						
-
-						//psf_calculate_emp
 						var psf_calc_sso = $('select[name="psf_calc_sso"]').val();
-						var psf_income_emp = $('#psf_income_emp').text();
+						var pf_paidby_psf = $('select[name="pf_paidby_psf"]').val();
 
-						var psf_rate_psf_emp = $('#psf_rate_psf_emp').text();
-						var rate_psf_emp = psf_rate_psf_emp.replace('%','');
-						var getvaluepsfEmp = rate_psf_emp / 100;
 
-						var psf_calc_emp = 0;
-						if(psf_calc_sso == 1){
-							if(getvaluepsfEmp > 0){
-								psf_calc_emp = parseFloat(psf_income_emp) + parseFloat(getvaluepsfEmp);
+						//===================== SSO & PVF full year ================================//
+						var pperiods = <?=json_encode($pperiods)?>;
+						var short_months = <?=json_encode($short_months)?>;
+						var curryear = <?=substr($_SESSION['rego']['cur_year'], -2)?>;
+
+						var total_Psf_emp = 0.00;
+						var total_Psf_com = 0.00;
+
+						if(pf_paidby_psf == 2){
+							var psf_emp = parseFloat(data[0].psf_rate_emp);
+							var psf_com = parseFloat(data[0].psf_rate_com);
+							var rate_emp = '';
+							var rate_com = '';
+						}else{
+							var psf_emp = parseFloat(data[0].total_psf * data[0].psf_rate_emp)/100;
+							var psf_com = parseFloat(data[0].total_psf * data[0].psf_rate_com)/100;
+							var rate_emp = data[0].psf_rate_emp;
+							var rate_com = data[0].psf_rate_com;
+						}
+						
+						var tbl=''; 
+						var i1;
+						for (i1=1; i1 <= 12; i1++) { 
+
+							var monthss = short_months[i1];
+							var monthssLower = monthss.toLowerCase();
+							
+							var psf_emp_val = 0.00;
+							var psf_com_val = 0.00;
+
+							if(psf_calc_sso == 1 && i1 >= data[0].month){
+								//var psf_emp_val = psf_emp;
+								//var psf_com_val = psf_com;
+								psf_emp_val = payroll_datass[59][monthssLower];
+								psf_com_val = payroll_datass['psfemployer'][monthssLower];
 							}else{
-								psf_calc_emp = $('#psf_amt_thb_emp').text();
-							}
+								psf_emp_val = psf_emp;
+								psf_com_val = psf_com;
+							}	
+							 
+							tbl += '<tr>';
+								tbl += '<th class="tac">'+short_months[i1]+'-'+curryear+'</th>';
+								tbl += '<td class="tar">'+rate_emp+'</td>';
+								tbl += '<td class="tar">'+rate_com+'</td>';
+								tbl += '<td class="tar" style="padding:0px;"><input type="text" id="psfemp_'+i1+'" name="psfemp['+i1+']" class="float72 text-right" value="'+number_format(psf_emp_val)+'" style="background: #eeffee;" readonly></td>';
+								tbl += '<td class="tar" style="padding:0px;"><input type="text" id="psfcom_'+i1+'" name="psfcom['+i1+']" class="float72 text-right" value="'+number_format(psf_com_val)+'" style="background: #eeffee;" readonly></td>';
+							tbl += '</tr>';
+
+							total_Psf_emp = parseFloat(total_Psf_emp) + parseFloat(psf_emp_val);
+							total_Psf_com = parseFloat(total_Psf_com) + parseFloat(psf_com_val);
 						}
 
-						var psf_calc_emp_twodig = parseFloat(psf_calc_emp).toFixed(2);
-						$('#modalPSF #psf_calculate_emp').text(psf_calc_emp_twodig);
+					
 
-						var psf_manual_emp = $('#psf_manual_emp').val();
-						var psf_psf_emp = psf_calc_emp;
-						if(psf_manual_emp > 0){
-							psf_psf_emp = parseFloat(psf_calc_emp) + parseFloat(psf_manual_emp);
-						}
+						tbl += '<tr>';
+						tbl += '<th class="tac">Total</th>';
+						tbl += '<td class="tar"></td>';
+						tbl += '<td class="tar"></td>';
+						tbl += '<td class="tar font-weight-bold">'+number_format(total_Psf_emp)+'</td>';
+						tbl += '<td class="tar font-weight-bold">'+number_format(total_Psf_com)+'</td>';
+						
+						tbl += '</tr>';
 
-						var psf_psf_emp_twodig = parseFloat(psf_psf_emp).toFixed(2);
-						$('#modalPSF #psf_psf_emp').text(psf_psf_emp_twodig);
+						$('#append_full_table_psf tr').remove();
+						$('#append_full_table_psf').append(tbl);
+						//===================== SSO & PVF full year ================================//
 
-						//psf_income_comp
-						var psf_income_comp = $('#psf_income_comp').text();
-						var psf_rate_psf_comp = $('#psf_rate_psf_comp').text();
-						var rate_psf_comp = psf_rate_psf_comp.replace('%','');
-						var getvaluepsfCom = rate_psf_comp / 100;
-
-						var psf_calc_comp = 0;
-						if(psf_calc_sso == 1){
-							if(getvaluepsfCom > 0){
-								psf_calc_comp = parseFloat(psf_income_comp) + parseFloat(getvaluepsfCom);
-							}else{
-								psf_calc_comp = $('#psf_amt_thb_comp').text();
-							}
-						}
-
-						var psf_calc_comp_twodig = parseFloat(psf_calc_comp).toFixed(2);
-						$('#modalPSF #psf_calculate_comp').text(psf_calc_comp_twodig);
-
-						var psf_manual_comp = $('#psf_manual_comp').val();
-						var psf_psf_comp = psf_calc_comp;
-						if(psf_manual_comp > 0){
-							psf_psf_comp = parseFloat(psf_calc_comp) + parseFloat(psf_manual_comp);
-						}
-
-						var psf_psf_comp_twodig = parseFloat(psf_psf_comp).toFixed(2);
-						$('#modalPSF #psf_psf_comp').text(psf_psf_comp_twodig);
-
-
-						$('#modalPSF').modal('toggle');
+						$('#modalPSF').modal('show');
 					}
 				}
 			})
@@ -2593,16 +3133,27 @@
 		var psf_psf_comp_twodig = parseFloat(psf_psf_comp).toFixed(2);
 		$('#modalPSF #psf_psf_comp').text(psf_psf_comp_twodig);
 
+		if($("#modalPSF input[name='psfManual']").is(':checked')){
+			manualpsfinput(true);
+		}else{
+			manualpsfinput(false);
+		}
+
+		//fetch pvf again
+		modal_psf();
+
 	}
 
 
 	function modal_sso(){
 		var empids = $('#Salarycalculator #empids').text();
+		var mid = '<?=$_GET['mid']?>';
 		if(empids !=''){
+			var get_sso_pvf_full_year_thbss = get_sso_pvf_full_year_thb(empids);
 			$.ajax({
 				type: 'post',
 				url: "ajax/get_payroll_data.php",
-				data: {empid: empids},
+				data: {empid: empids,mid:mid},
 				success: function(result){
 
 					if(result == 'error'){
@@ -2618,13 +3169,17 @@
 						var data = JSON.parse(result);
 						//console.log(data);
 
+						var payroll_datas = data.payroll_data;
+
+
+						$('#modalSSO #ssoEmpid').val(data[0].emp_id);
 						$('#modalSSO #sso_empid').text(data[0].emp_id);
 						$('#modalSSO #sso_empname').text(data[0].emp_name_en);
 
 						$('#modalSSO select[name="ss_calc_sso"] option[value="'+data[0].calc_sso+'"]').attr('selected',true);
 						$('#modalSSO select[name="ss_paidby_sso"] option[value="'+data[0].sso_by+'"]').attr('selected',true);
 
-						$('#modalSSO #sso_total_sso_emp').text(data[0].total_sso);
+						$('#modalSSO #sso_total_sso_emp').text(number_format(data[0].total_sso));
 						$('#modalSSO #sso_total_sso_comp').text(data[0].total_sso);
 
 						$('#modalSSO #sso_manual_emp').val(data[0].sso_emp_manual);
@@ -2632,7 +3187,7 @@
 
 						//sso_calculate_sso_emp
 						var ss_calc_sso = $('select[name="ss_calc_sso"]').val();
-
+						
 						var sso_rate_emp = $('#sso_rate_emp').text();
 						var replace_percent = sso_rate_emp.replace('%','');
 
@@ -2719,8 +3274,147 @@
 						}
 						//alert(sso_sso_employer);
 						$('#sso_sso_employerss').text(sso_sso_employer);
+
+						//**************** SSO ****************//
+						var pperiods = <?=json_encode($pperiods)?>;
+						var short_months = <?=json_encode($short_months)?>;
+						var num_months = <?=json_encode($num_months)?>;
+						var curryear = <?=substr($_SESSION['rego']['cur_year'], -2)?>;
+						var ssoEmpRates = data['ssoEmpRates'];
+						var tbl = '';
+						var total_sso = 0.00;
+						var total_sso_employer = 0.00;
+						var total_ssobycompany = 0.00;
+						var k=0;
+
+						$.each(ssoEmpRates, function(k1,v){
+							k++;
+							var sso_thb=0.00;
+							var sso_employer=0.00;
+							var ssobycompany=0.00;
+							
+							/*if(get_sso_pvf_full_year_thbss[k] == '[object Object]'){ 
+								if(get_sso_pvf_full_year_thbss[k]['sso_employee'] > 0){
+									sso_thb = get_sso_pvf_full_year_thbss[k]['sso_employee'];
+								}
+							}else{*/
+								sso_thbs = (data[0].total_sso * v['rate']);
+
+								if(sso_thbs > v['max']){ sso_thbs = v['max'];}
+								else if(sso_thbs < v['min']){ sso_thbs = v['min'];}
+							/*}*/
+
+							//console.log(short_months);
+							var monthss = short_months[k];
+							var monthssLower = monthss.toLowerCase();
+							
+							if(ss_calc_sso == 1 && k >= data[0].month){
+
+								//sso_thb = sso_thbs;
+								//sso_employer = sso_thbs;
+								sso_thb = payroll_datas[57][monthssLower];
+								sso_employer = payroll_datas['ssoemployer'][monthssLower];
+							}
+
+							if(ss_paidby_sso == 1 && k >= data[0].month){
+								//ssobycompany = sso_thb;
+								ssobycompany = payroll_datas[28][monthssLower];
+							}
+
+							sso_thb = parseFloat(sso_thb).toFixed(2);
+							sso_employer = parseFloat(sso_employer).toFixed(2);
+							ssobycompany = parseFloat(ssobycompany).toFixed(2);
+
+							total_sso = parseFloat(total_sso) + parseFloat(sso_thb);
+							total_sso_employer = parseFloat(total_sso_employer) + parseFloat(sso_employer);
+							total_ssobycompany = parseFloat(total_ssobycompany) + parseFloat(ssobycompany);
+
+							tbl += '<tr>';
+							tbl += '<th class="tac">'+short_months[k]+'-'+curryear+'</th>';
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="erate_'+k+'" name="erate['+k+']" class="float72 text-right" value="'+v['rate']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="emin_'+k+'" name="emin['+k+']" class="float72 text-right" value="'+v['min']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="emax_'+k+'" name="emax['+k+']" class="float72 text-right" value="'+v['max']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="crate_'+k+'" name="crate['+k+']" class="float72 text-right" value="'+v['crate']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="cmin_'+k+'" name="cmin['+k+']" class="float72 text-right" value="'+v['cmin']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="cmax_'+k+'" name="cmax['+k+']" class="float72 text-right" value="'+v['cmax']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="ssothb_'+k+'" name="ssothb['+k+']" class="float72 text-right" value="'+sso_thb+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="ssoemployr_'+k+'" name="ssoemployr['+k+']" class="float72 text-right" value="'+sso_employer+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="ssobycompany_'+k+'" name="ssobycompany['+k+']" class="float72 text-right" value="'+ssobycompany+'" style="background: #eeffee;" readonly></td>';
+							tbl += '</tr>';
+
+						});
+						/*$.each(pperiods, function(k,v){
+
+							var sso_thb=0.00;
+							var ssobycompany=0.00;
+							
+							if(get_sso_pvf_full_year_thbss[k] == '[object Object]'){ 
+								if(get_sso_pvf_full_year_thbss[k]['sso_employee'] > 0){
+									sso_thb = get_sso_pvf_full_year_thbss[k]['sso_employee'];
+								}
+							}else{
+								sso_thb = (data[0].total_sso * v['sso_eRate']);
+
+								if(sso_thb > v['sso_eMax']){ sso_thb = v['sso_eMax'];}
+								else if(sso_thb < v['sso_eMin']){ sso_thb = v['sso_eMin'];}
+							}
+
+							if(data[0].sso_by == 1){
+								ssobycompany = sso_thb;
+							}
+
+							sso_thb = parseFloat(sso_thb).toFixed(2);
+							ssobycompany = parseFloat(ssobycompany).toFixed(2);
+
+							total_sso = parseFloat(total_sso) + parseFloat(sso_thb);
+							total_ssobycompany = parseFloat(total_ssobycompany) + parseFloat(ssobycompany);
+
+							tbl += '<tr>';
+							tbl += '<th class="tac">'+short_months[k]+'-'+curryear+'</th>';
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="erate_'+k+'" name="erate['+k+']" class="float72 text-right" value="'+v['sso_eRate']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="emin_'+k+'" name="emin['+k+']" class="float72 text-right" value="'+v['sso_eMin']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="emax_'+k+'" name="emax['+k+']" class="float72 text-right" value="'+v['sso_eMax']+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="ssothb_'+k+'" name="ssothb['+k+']" class="float72 text-right" value="'+sso_thb+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="ssoemployr_'+k+'" name="ssoemployr['+k+']" class="float72 text-right" value="'+sso_thb+'" style="background: #eeffee;" readonly></td>';
+
+							tbl += '<td class="tar" style="padding:0px;"><input type="text" id="ssobycompany_'+k+'" name="ssobycompany['+k+']" class="float72 text-right" value="'+ssobycompany+'" style="background: #eeffee;" readonly></td>';
+							tbl += '</tr>';
+
+						});*/
+
+						total_sso = parseFloat(total_sso).toFixed(2);
+						total_sso_employer = parseFloat(total_sso_employer).toFixed(2);
+						total_ssobycompany = parseFloat(total_ssobycompany).toFixed(2);
+
+						tbl += '<tr>';
+						tbl += '<th class="tac">Total</th>';
+						tbl += '<td></td>';
+						tbl += '<td></td>';
+						tbl += '<td></td>';
+						tbl += '<td></td>';
+						tbl += '<td></td>';
+						tbl += '<td></td>';
+						tbl += '<td class="tar font-weight-bold">'+number_format(total_sso)+'</td>';
+						tbl += '<td class="tar font-weight-bold">'+number_format(total_sso_employer)+'</td>';
+						tbl += '<td class="tar font-weight-bold">'+number_format(total_ssobycompany)+'</td>';
+						tbl += '</tr>';
+
+						$('#append_full_table tr').remove();
+						$('#append_full_table').append(tbl);
 						
-						$('#modalSSO').modal('toggle');
+						$('#modalSSO').modal('show');
 					}
 				}
 			})
@@ -2731,6 +3425,70 @@
 				message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: Error in employee id',
 				duration: 3,
 			})
+		}
+	}
+
+	function manualssoinput(that){
+		//alert(that);
+		var currmnth = '<?=$_SESSION['rego']['cur_month']?>';
+		var sss_paidby_sso = $('#modalSSO #sss_paidby_sso').val(); 
+		var sss_calc_sso = $('#modalSSO #sss_calc_sso').val(); 
+		//if($(that).is(':checked')){
+		if(that){
+
+			for(var i=currmnth; i<=12; i++){
+				//$('#modalSSO #erate_'+i).attr('readonly',false).addClass('borderCls');
+				//$('#modalSSO #emin_'+i).attr('readonly',false).addClass('borderCls');
+				//$('#modalSSO #emax_'+i).attr('readonly',false).addClass('borderCls');
+				$('#modalSSO #ssothb_'+i).attr('readonly',false).addClass('borderCls');
+				$('#modalSSO #ssoemployr_'+i).attr('readonly',false).addClass('borderCls');
+				if(sss_paidby_sso == 1){
+					$('#modalSSO #ssobycompany_'+i).attr('readonly',false).addClass('borderCls');
+				}else{
+					$('#modalSSO #ssobycompany_'+i).attr('readonly',true).removeClass('borderCls');
+				}
+			}
+
+		}else{
+
+			for(var i=currmnth; i<=12; i++){
+				$('#modalSSO #erate_'+i).attr('readonly',true).removeClass('borderCls');
+				$('#modalSSO #emin_'+i).attr('readonly',true).removeClass('borderCls');
+				$('#modalSSO #emax_'+i).attr('readonly',true).removeClass('borderCls');
+				$('#modalSSO #ssothb_'+i).attr('readonly',true).removeClass('borderCls');
+				$('#modalSSO #ssoemployr_'+i).attr('readonly',true).removeClass('borderCls');
+				$('#modalSSO #ssobycompany_'+i).attr('readonly',true).removeClass('borderCls');
+			}
+		}
+	}
+
+	function manualpvfinput(that){
+		var currmnth = '<?=$_SESSION['rego']['cur_month']?>';
+		if(that){
+			for(var i=currmnth; i<=12; i++){
+				$('#modalPVF #pvfemp_'+i).attr('readonly',false).addClass('borderCls');
+				$('#modalPVF #pvfcom_'+i).attr('readonly',false).addClass('borderCls');
+			}
+		}else{
+			for(var i=currmnth; i<=12; i++){
+				$('#modalPVF #pvfemp_'+i).attr('readonly',true).removeClass('borderCls');
+				$('#modalPVF #pvfcom_'+i).attr('readonly',true).removeClass('borderCls');
+			}
+		}
+	}
+
+	function manualpsfinput(that){
+		var currmnth = '<?=$_SESSION['rego']['cur_month']?>';
+		if(that){
+			for(var i=currmnth; i<=12; i++){
+				$('#modalPSF #psfemp_'+i).attr('readonly',false).addClass('borderCls');
+				$('#modalPSF #psfcom_'+i).attr('readonly',false).addClass('borderCls');
+			}
+		}else{
+			for(var i=currmnth; i<=12; i++){
+				$('#modalPSF #psfemp_'+i).attr('readonly',true).removeClass('borderCls');
+				$('#modalPSF #psfcom_'+i).attr('readonly',true).removeClass('borderCls');
+			}
 		}
 	}
 
@@ -2792,6 +3550,7 @@
 
 		var ss_paidby_sso = ss_paidby_ssos;
 		var sso_by_company = 0;	
+
 		if(ss_paidby_sso == 1){
 			sso_by_company = sso_emp_sso;
 			sso_by_company = parseFloat(sso_by_company).toFixed(2);
@@ -2835,6 +3594,16 @@
 		}
 		//alert(sso_sso_employer);
 		$('#sso_sso_employerss').text(sso_sso_employer);
+
+		if($("#modalSSO input[name='ssoManual']").is(':checked')){
+			manualssoinput(true);
+		}else{
+			manualssoinput(false);
+		}
+
+		//fetch sso again
+		modal_sso();
+		
 	}
 	
 	$(document).ready(function(){
@@ -2894,10 +3663,11 @@
 		//============== Save SSO DATA =============//
 
 		function calculate_payroll_again(empid){
+			var mid = '<?=$_GET['mid']?>';
 			 $.ajax({
 				type: 'POST',
 				url: "ajax/calculate_payroll.php",
-				data: {empid: empid},
+				data: {empid: empid,mid:mid},
 				success: function(result){
 
 					if(result == 'success'){
@@ -2907,7 +3677,7 @@
 							message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Payroll calculated successfuly']?>',
 							duration: 3,
 							callback: function(v){
-								window.location.reload();
+								//window.location.reload();
 							}
 						})
 
@@ -2928,24 +3698,32 @@
 
 		$('#SaveSSOdata').click(function(){
 			var empids = $('#sso_empid').text();
+			/*var mid = '<?=$_GET['mid']?>';
+			var currmnth = '<?=$_SESSION['rego']['cur_month']?>';*/
+
+			var frm = $('form#ssoAlldata');
+			var data = frm.serialize();
+
 			if(empids !=''){
 
-				var sss_calc_sso = $('#sss_calc_sso').val();
+				/*var sss_calc_sso = $('#sss_calc_sso').val();
 				var sss_paidby_sso = $('#sss_paidby_sso').val();
 
-				var sso_calculate_sso_emp = $('#sso_calculate_sso_emp').text();
-				var sso_manual_emp = $('#sso_manual_emp').val();
-				var sso_emp_sso = $('#sso_emp_sso').text();
-				var sso_sso_by_company = $('#sso_sso_by_company').text();
+				//var sso_calculate_sso_emp = $('#sso_calculate_sso_emp').text();
+				//var sso_manual_emp = $('#sso_manual_emp').val();
+				var sso_emp_sso = $('#ssothb_'+currmnth).val();
+				var sso_sso_by_company = $('#ssobycompany_'+currmnth).val();
 
-				var sso_calculate_sso_comp = $('#sso_calculate_sso_comp').text();
-				var sso_manual_comp = $('#sso_manual_comp').val();
-				var sso_sso_employerss = $('#sso_sso_employerss').text();
+
+				//var sso_calculate_sso_comp = $('#sso_calculate_sso_comp').text();
+				//var sso_manual_comp = $('#sso_manual_comp').val();
+				var sso_sso_employerss = $('#ssoemployr_'+currmnth).val();*/
 
 				$.ajax({
 					type: 'post',
 					url: "tabs/ajax/save_sso_data.php",
-					data: {empids: empids, sss_calc_sso: sss_calc_sso, sss_paidby_sso: sss_paidby_sso, sso_calculate_sso_emp: sso_calculate_sso_emp, sso_manual_emp: sso_manual_emp, sso_emp_sso:sso_emp_sso, sso_sso_by_company: sso_sso_by_company, sso_calculate_sso_comp: sso_calculate_sso_comp, sso_manual_comp: sso_manual_comp, sso_sso_employerss: sso_sso_employerss},
+					//data: {empids: empids, mid:mid, sss_calc_sso: sss_calc_sso, sss_paidby_sso: sss_paidby_sso, sso_emp_sso:sso_emp_sso, sso_sso_by_company: sso_sso_by_company, sso_sso_employerss: sso_sso_employerss},
+					data: data,
 					success: function(result){
 
 						if(result == 'success'){
@@ -2970,21 +3748,26 @@
 		//============== Save PVF DATA =============//
 		$('#SavePVFdata').click(function(){
 			var empids = $('#pvf_empid').text();
+
+			var frm = $('form#formpvfdata');
+			var data = frm.serialize();
+
 			if(empids !=''){
 
-				var pvfss_calc_pvf = $('#pvfss_calc_pvf').val();
+				/*var pvfss_calc_pvf = $('#pvfss_calc_pvf').val();
 				var pvf_calculate_emp = $('#pvf_calculate_emp').text();
 				var pvf_manual_emp = $('#pvf_manual_emp').val();
 				var pvf_pvfemp_emp = $('#pvf_pvfemp_emp').text();
 
 				var pvf_calculate_comp = $('#pvf_calculate_comp').text();
 				var pvf_manual_comp = $('#pvf_manual_comp').val();
-				var pvf_pvfcom_comp = $('#pvf_pvfcom_comp').text();
+				var pvf_pvfcom_comp = $('#pvf_pvfcom_comp').text();*/
 
 				$.ajax({
 					type: 'post',
 					url: "tabs/ajax/save_pvf_data.php",
-					data: {empids: empids, pvfss_calc_pvf: pvfss_calc_pvf, pvf_calculate_emp: pvf_calculate_emp, pvf_manual_emp: pvf_manual_emp, pvf_pvfemp_emp: pvf_pvfemp_emp, pvf_calculate_comp: pvf_calculate_comp, pvf_manual_comp: pvf_manual_comp, pvf_pvfcom_comp: pvf_pvfcom_comp},
+					//data: {empids: empids, pvfss_calc_pvf: pvfss_calc_pvf, pvf_calculate_emp: pvf_calculate_emp, pvf_manual_emp: pvf_manual_emp, pvf_pvfemp_emp: pvf_pvfemp_emp, pvf_calculate_comp: pvf_calculate_comp, pvf_manual_comp: pvf_manual_comp, pvf_pvfcom_comp: pvf_pvfcom_comp},
+					data: data,
 					success: function(result){
 
 						if(result == 'success'){
@@ -3010,21 +3793,26 @@
 		//============== Save PSF DATA =============//
 		$('#SavePSFdata').click(function(){
 			var empids = $('#psf_empid').text();
+
+			var frm = $('form#formpsfdata');
+			var data = frm.serialize();
+
 			if(empids !=''){
 
-				var psfss_calc_sso = $('#psfss_calc_sso').val();
+				/*var psfss_calc_sso = $('#psfss_calc_sso').val();
 				var psf_calculate_emp = $('#psf_calculate_emp').text();
 				var psf_manual_emp = $('#psf_manual_emp').val();
 				var psf_psf_emp = $('#psf_psf_emp').text();
 
 				var psf_calculate_comp = $('#psf_calculate_comp').text();
 				var psf_manual_comp = $('#psf_manual_comp').val();
-				var psf_psf_comp = $('#psf_psf_comp').text();
+				var psf_psf_comp = $('#psf_psf_comp').text();*/
 
 				$.ajax({
 					type: 'post',
 					url: "tabs/ajax/save_psf_data.php",
-					data: {empids: empids, psfss_calc_sso: psfss_calc_sso, psf_calculate_emp: psf_calculate_emp, psf_manual_emp: psf_manual_emp, psf_psf_emp: psf_psf_emp, psf_calculate_comp: psf_calculate_comp, psf_manual_comp: psf_manual_comp, psf_psf_comp: psf_psf_comp},
+					//data: {empids: empids, psfss_calc_sso: psfss_calc_sso, psf_calculate_emp: psf_calculate_emp, psf_manual_emp: psf_manual_emp, psf_psf_emp: psf_psf_emp, psf_calculate_comp: psf_calculate_comp, psf_manual_comp: psf_manual_comp, psf_psf_comp: psf_psf_comp},
+					data: data,
 					success: function(result){
 
 						if(result == 'success'){
@@ -3385,13 +4173,13 @@
 			// alert(currTotD);
 			var rhs = parseFloat(currTot) + parseFloat(currTotD);
 
-			if(lhs != rhs){
+			/*if(lhs != rhs){
 				$("body").overhang({
 					type: "error",
 					message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Error']?>: Both side totals are not equal<br> LHS = '+lhs+'<br> RHS = '+rhs+'',
 					duration: 1,
 				})
-			}
+			}*/
 		}
 
 		$('.closebtn').click(function(){

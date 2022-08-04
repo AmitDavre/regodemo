@@ -181,49 +181,8 @@ foreach ($select_banner_location_array as $key_filter2 => $value_filter2) {
 		</div>
 	</div> -->
 
-	<!--  -->
-	<div class="rightTable_scan_login_screen_logo" id="rightTable_scan_login_screen_logo" style=" background: url('../images/admin_uploads/<?php echo $scan_login_screen_logo['bg_image_link']?>')no-repeat;background-position: bottom;background-size: cover;  overflow-y: auto; padding: 15px 15px 100px; padding-top: 0px!important;display:none;">
-	
-	<div class='appHeader1' style="text-align:center;background-color:#0066b2 !important;font-size: 30px;font-weight: 600;color: #fff;line-height: 80px; padding:4%">
-	<div id="brand_title">
-		<img id="scan_logo_selection_logo_and_headers" style="margin:2%;display:<?php if($combineLogoHeadersArray['scan_login_screen_logo']['show_hide_logo_common_field'] != '1'){echo 'none';}?>;height:<?php echo $combineLogoHeadersArray['scan_login_screen_logo']['admin_login_screen_logo_size'].'px'?>;" src="<?php echo ROOT;?>images/admin_uploads/<?php echo $combineLogoHeadersArray['scan_login_screen_logo']['image_link']?> ">
-	</div>
-		<span style="margin:2%;font-family:Monospace!important; font-size: 30px; font-weight: 600; color: #fff; line-height: 80px; width:100%">Rego Demo Time registration</span> 
-	</div>
-	
-	<div class="log-wrapper">
 
-		<div class="log-body">
-			
-			<div style="background:#0066b2!important; " class="log-title"><span style="font-family:Monospace!important;">Login to our secure server</span></div>
-			<!-- scan_logo_selection_logo_and_headers -->
-			<div>	
-					
-					<label style='font-weight: 650;font-size: 20px;'>Username</label>
-					<input id="username" name="username" type="text" value="" style='width: 100%;padding: 4px 15px;border: 1px #ddd solid;margin: 3px 0 10px;line-height: normal;box-sizing: border-box;font-size: 24px;'>
-					
-					<label style='font-weight: 650;font-size: 20px;'>Password</label>
-					<input id="password" name="password" type="password" value="" style='width: 100%;padding: 4px 15px;border: 1px #ddd solid;margin: 3px 0 10px;line-height: normal;box-sizing: border-box;font-size: 24px;'>
-					
-					<div id="logMsg"></div>
-					
-					<button onclick='return false' style="margin-top:20px; font-weight:400; letter-spacing:1px;border-color:#0066b2!important;background:#0066b2!important; " class="btn btn-success btn-lg btn-block"><span style="font-family:Monospace!important;">Log-in</span> &nbsp;<i class="fa fa-sign-in fa-lg"></i></button>
 
-				
-				
-				
-			</div>
-			
-		</div>
-
-					<a data-lng="th" class="langbutton " style='margin-top: 3.75%;margin-right: 1%;margin-bottom: 3.75%;margin-left: 1%;'><img height="50px" src="../images/flag_th.png"></a>
-			
-	</div>
-	<div class="banner-img-div">
-		<img id="scan_logo_banner" style="top:100%;position:absolute;width: 100%;display:<?php if($combineLogoHeadersArray['scan_screen_banner_array']['show_hide_logo_common_field_banner'] != '1'){echo 'none';}?>" src="<?php echo ROOT;?>images/admin_uploads/<?php echo $combineLogoHeadersArray['scan_screen_banner_array']['image_link']; ?>">
-	</div> 
-	</div>
-	<!--  -->
 	<div class="rightTable_admin_login_screen_logo" id="rightTable_admin_login_screen_logo" style=" background: url('../images/admin_uploads/<?php echo $admin_login_screen_array['bg_image_link']?>')no-repeat;background-position: bottom;background-size: cover;  overflow-y: auto; padding: 15px 15px 100px; padding-top: 0px!important;display: none;">
 		<div class="dash-left" style="width: 100%!important;">
 			<div id="brand_logo">

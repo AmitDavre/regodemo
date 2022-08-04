@@ -281,6 +281,7 @@
 		$(".tax_id_number").mask("9-9999-99999-99-9", {placeholder: "*_****_*****_**_*"});
 		$(".sso_id_number").mask("99-9999999-9", {placeholder: "**_*******_*"});
 		//$(".hourFormat").mask("99:99", {placeholder: "00:00"});
+		$(".hourFormat2").mask("99:99", {placeholder: "00:00"});
 		$(".hourFormat").mask("999:99", {placeholder: "000:00"});
 		
 	})

@@ -14,17 +14,7 @@
 	
 	//var_dump($tmp); //exit;
 	//var_dump($_REQUEST); exit;
-	if(!empty($_REQUEST['same_sso'])){
-	    $same_as_id['same_sso']=$_REQUEST['same_sso'];
-	}
-	unset($_REQUEST['same_sso']);
-	if(!empty($_REQUEST['same_tax'])){
-	    $same_as_id['same_tax']=$_REQUEST['same_tax'];
-	}
-	unset($_REQUEST['same_tax']);
-	if(isset($same_as_id)){
-	    $_REQUEST['same_as_id']=serialize($same_as_id);
-	}
+	
 
 	$sql = "UPDATE ".$cid."_sys_settings SET ";
 	foreach($_REQUEST as $k=>$v){

@@ -36,6 +36,7 @@
 			<table id="holidayTable" class="dataTable inputs nowrap" border="0">
 				<thead>
 					<tr>
+						<th data-sortable="false"><?=$lng['Apply']?></th>
 						<th style="width:130px;" class="tal"><?=$lng['Date']?></th>
 						<th data-sortable="false" style="width:130px">Company date</th>
 						<th data-sortable="false"><?=$lng['Thai']?></th>
@@ -62,6 +63,9 @@
 					<div class="modal-body" style="padding:15px 20px 12px">
 					<form class="sform" id="holiForm">
 						<input name="id" type="hidden" value="0" />
+
+						<label class="mb-2"><?=$lng['Apply']?> <input class="checkbox-custom-blue" style="cursor:pointer" name="apply" type="checkbox" value="0" onclick="setCheckboxvalue(this);"></label>
+						
 						<label><?=$lng['Date']?><i class="man"></i></label>
 						<input readonly class="holiday_date_month nofocus" style="cursor:pointer" name="date" type="text" />
 						<label>Company <?=$lng['Date']?><i class="man"></i></label>
@@ -80,6 +84,35 @@
 	</div>
 
 <script>
+
+	function setCheckboxvalue(that){
+		if($(that).is(':checked')){
+			$('#modalHoliday input[name="apply"]').val(1);
+		}else{
+			$('#modalHoliday input[name="apply"]').val(0);
+		}
+	}
+
+	function setCheckboxvalueNew(that){
+		var apply;
+		if($(that).is(':checked')){
+			$(that).val(1);
+			apply = 1;
+		}else{
+			$(that).val(0);
+			apply = 0;
+		}
+
+		var getid = $(that).closest("tr").children("td").children("a").attr("data-id");
+		
+		$.ajax({
+				url: "def_settings/ajax/on_off_holidays.php",
+				data: {getid: getid, apply: apply},
+				success: function(data){
+					location.reload();
+				}
+			})
+	}
 
 	var headerCount = 1;
 
@@ -101,7 +134,7 @@
 			<?=$dtable_lang?>
 			processing: 	false,
 			serverSide: 	true,
-			order: [[0, 'asc']],
+			order: [[1, 'asc']],
 			ajax: {
 				url: "def_settings/ajax/server_get_default_holidays.php",
 				data: function(d){
@@ -109,8 +142,8 @@
 				}
 			},
 			columnDefs: [
-				{ targets: [4,5], class: 'tac',},
-				{ targets: [0,1,4,5], "width": '1px',},
+				{ targets: [5,6], class: 'tac',},
+				{ targets: [1,2,5,6], "width": '1px',},
 			],	
 			initComplete : function( settings, json ) {
 				$('#showTable').fadeIn(400)
@@ -125,7 +158,8 @@
 		
 		$('#addHoliday').on('click', function(){
 			$('input[name="id"]').val(0)
-			$('#modTitle').html('Add Holiday')
+			$('input[name="apply"]').val(0).attr('checked',false);
+			$('#myModalLabel').html('<i class="fa fa-calendar"></i>&nbsp;&nbsp;Add Holiday')
 			$('#modalHoliday').modal('toggle')
 		})
 		
@@ -137,8 +171,10 @@
 				dataType: 'json',
 				success: function(data){
 					//$("#dump").html(data);
-					$('#modTitle').html('Edit Holiday')
+					$('#myModalLabel').html('<i class="fa fa-calendar"></i>&nbsp;&nbsp;Edit Holiday')
 					$('input[name="id"]').val(data.id)
+					if(data.apply == 1){ var sel=true;}else{var sel=false;}
+					$('input[name="apply"]').val(data.apply).attr('checked',sel);
 					$('input[name="date"]').val(data.date)
 					$('input[name="cdate"]').val(data.cdate)
 					$('input[name="th"]').val(data.th)

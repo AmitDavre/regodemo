@@ -116,7 +116,7 @@
     	})		
     	$("table#showHideClmss2 .SumoSelect:first-child() li").bind('click.check', function(event) {
 			var nr = $(this).index()+2;
-
+			
 
 			if($(this).hasClass('selected') == true){
 
@@ -199,18 +199,6 @@
 				if(nr == '20')
 				{
 					$('ul li#modifydata_tax_id_li').removeClass('displayNone');		
-				}
-				if(nr == '21')
-				{
-					$('ul li#modifydata_sso_id_li').removeClass('displayNone');		
-				}
-				if(nr == '22')
-				{
-					$('ul li#modifydata_same_tax').removeClass('displayNone');		
-				}
-				if(nr == '23')
-				{
-					$('ul li#modifydata_same_sso').removeClass('displayNone');		
 				}
 
 			
@@ -302,18 +290,7 @@
 				{
 					$('ul li#modifydata_tax_id_li').addClass('displayNone');		
 				}
-				if(nr == '21')
-				{
-					$('ul li#modifydata_sso_id_li').addClass('displayNone');		
-				}
-				if(nr == '22')
-				{
-					$('ul li#modifydata_same_tax').addClass('displayNone');		
-				}
-				if(nr == '23')
-				{
-					$('ul li#modifydata_same_sso').addClass('displayNone');		
-				}
+			
 
 		
 
@@ -613,7 +590,7 @@
 
 			
 			if($(this).hasClass('selected') == true){
-
+				
 				dtable11.column(nr).visible(true);
 				dtable12.column(nr).visible(true);
 			}
@@ -931,3 +908,4 @@ $("table#showHideClmss2 select#showHideclm9").on('sumo:closing', function(o) {
 				}
 			});
 		}); 
+

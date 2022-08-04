@@ -24,6 +24,9 @@
 	
 	$months = array(1=>"January", 2=>"February", 3=>"March", 4=>"April", 5=>"May", 6=>"June", 7=>"July", 8=>"August", 9=>"September", 10=>"October", 11=>"November", 12=>"December");
 	$short_months = array(1=>"Jan", 2=>"Feb", 3=>"Mar", 4=>"Apr", 5=>"May", 6=>"Jun", 7=>"Jul", 8=>"Aug", 9=>"Sep", 10=>"Oct", 11=>"Nov", 12=>"Dec");
+
+	
+
 	$weekdays = array(1=>"Monday", 2=>"Tuesday", 3=>"Wednesday", 4=>"Thursday", 5=>"Friday", 6=>"Saturday", 7=>"Sunday");
 	$user_status = array(1=>'Active',2=>'Postponed');
 	//$permissions = array(1=>'None',2=>'Member',3=>'Author',4=>'Administrator',5=>'Developer');
@@ -91,6 +94,8 @@
 	$emp_type = array(1=>'Permanent', 2=>'Temporary', 3=>'Trainee', 4=>'Contractor(not included in payroll)', 5=>'Interim (not included in payroll)');
 	$emp_typeReverse = array('Permanent' => '1', 'Temporary' => '2','Trainee' => '3', 'Contractor(not included in payroll)' => '4', 'Interim (not included in payroll)' => '5');
 	$emp_status = array(1=>'Active', 2=>'Resigned', 3=>'Terminated', 0=>'Canceled', 7=>'in-Complete');
+	$emp_status2 = array( 2=>'Resigned', 3=>'Terminated');
+	$emp_status3 = array(1=>'Active', 0=>'Canceled', 7=>'in-Complete');
 	//$xxx = array(1=>'', 2=>'', 3=>'', 4=>'', 5=>'', 6=>'', 7=>'');
 	
 	$emp_pr_status = array(0=>'Complete', 1=>'inComplete');
@@ -165,7 +170,7 @@
 	
 	$deduct_group = array('ded_abs'=>'Absence', 'ded_fix'=>'Fixed deductions', 'ded_var'=>'Variable deductions', 'ded_oth'=>'Other deductions', 'ded_leg'=>'Legal deductions / Loans', 'ded_pay'=>'Advanced payments');
 	
-	$tax_base = array('fixpro'=>'Fixed - Pro rated', 'fix'=>'Fixed', 'var'=>'Variable', 'nontax'=>'Non-taxable');
+	$tax_base = array('fixpro'=>'Fixed - Pro rated', 'fix'=>'Fixed', 'var'=>'Variable', 'nontax'=>'Non-taxable', 'ssoby'=>'SSO by company', 'taxby'=>'Tax by Company');
 
 	$Announcementtype 	= array(1=>'Notification',2=>'Announcement',3=>'Event');
 	$AnnouncementMode  	= array(1=>'Email',2=>'Notification Box',3=>'Both');

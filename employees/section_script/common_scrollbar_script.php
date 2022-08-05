@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
-
+	$("div#datatables51_wrapper div.row:nth-last-child(1)").css('display','none');
+	
 	$("div#datatables11_wrapper div.row:nth-last-child(1)").css('display','none');
 	$("div#datatables13_wrapper div.row:nth-last-child(1)").css('display','none');
 	$("div#datatables15_wrapper div.row:nth-last-child(1)").css('display','none');
@@ -577,5 +578,16 @@ $(document).ready(function(){
 
 	// =================================== FOR FINANCIAL SECTION  ================================= //	
 
+	///ese hi///
+	var oldRst50 = 0;
+	$('div#hidediv2 table#scrolltable1').on('scroll', function () {
 
+	  l50 = $('div#datatables51_wrapper .dataTables_scrollBody');
+	  var lst50 = l50.scrollLeft();
+	  var rst50 = $(this).scrollLeft();
+	  l50.scrollLeft(lst50+(rst50-oldRst50));
+	  
+	  oldRst50 = rst50;
+	}); 
+	///ese hi///
 });

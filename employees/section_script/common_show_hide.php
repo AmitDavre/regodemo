@@ -116,11 +116,16 @@
     	})		
     	$("table#showHideClmss2 .SumoSelect:first-child() li").bind('click.check', function(event) {
 			var nr = $(this).index()+2;
-			
-
+			//console.log(dtable.column(nr));
+			//dtable50.column(nr).visisble(false);
+			//dtable50.column($('#dat1'+(nr-1))).visisble(true);
 			if($(this).hasClass('selected') == true){
-
-			
+					if(continue_sel){
+						//console.log('#dat1'+(nr-1));
+						//console.log(dtable.column(nr));
+						dtable50.column('#dat1'+(nr-1)).visible(true);
+					}
+					//console.log(dtable.column(nr).visible(true));
 					 dtable.column(nr).visible(true);
 					 dtable2.column(nr).visible(true);
 
@@ -205,10 +210,8 @@
 			}
 			else
 			{	
-
-			
+					if(continue_sel){dtable50.column($('#dat1'+(nr-1))).visible(false);}
 					
-
 					dtable.column(nr).visible(false);
 					dtable2.column(nr).visible(false);
 				

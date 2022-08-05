@@ -1058,6 +1058,227 @@
 								</tr>
 							</thead>
 						</table>
+						<div style= "display: ;">
+							<table id="datatables51" class="dataTable hoverable selectable nowrap" >
+
+								<thead>
+									<tr>
+										<th class="par30"><?=$lng['Emp. ID']?></th>
+										<th class="tal par30"><?=$lng['Employee name']?></th>
+										<th id='dat11' class="tal "><?=$lng['Scan ID']?></th>
+										<th id='dat12' class="tal "><?=$lng['Title']?></th>
+										<th id='dat13' class="tal "><?=$lng['First name']?></th>
+										<th id='dat14' class="tal "><?=$lng['Last name']?></th>
+										<th id='dat15' class="tal "><?=$lng['Name in English']?></th>
+										<th id='dat16' class="tal "><?=$lng['Birthdate']?></th>
+										<th id='dat17' class="tal "><?=$lng['Nationality']?></th>
+										<th id='dat18' class="tal "><?=$lng['Gender']?></th>
+										<th id='dat19' class="tal "><?=$lng['Maritial status']?></th>
+										<th id='dat110' class="tal "><?=$lng['Religion']?></th>
+										<th id='dat111' class="tal "><?=$lng['Military status']?></th>
+										<th id='dat112' class="tal "><?=$lng['Height']?></th>
+										<th id='dat113' class="tal "><?=$lng['Weight']?></th>
+										<th id='dat114' class="tal "><?=$lng['Blood type']?></th>
+										<th id='dat115' class="tal "><?=$lng['Driving license No.']?></th>
+										<th id='dat116' class="tal "><?=$lng['License expiry date']?></th>
+										<th id='dat117' class="tal "><?=$lng['ID card']?></th>
+										<th id='dat118' class="tal "><?=$lng['ID card expiry date']?></th>
+										<th id='dat119' class="tal "><?=$lng['Tax ID no.']?></th>
+										
+										<th id='dat21' class="tal "><?=$lng['Registered address']?></th>
+										<th id='dat22' class="tal "><?=$lng['Sub district']?></th>
+										<th class="tal " id='dat23'><?=$lng['District']?></th>
+										<th class="tal " id='dat24'><?=$lng['Province']?></th>
+										<th class="tal " id='dat25'><?=$lng['Postal code']?></th>
+										<th class="tal " id='dat26'><?=$lng['Country']?></th>
+										<th class="tal " id='dat27'><?=$lng['Latitude']?></th>
+										<th class="tal " id='dat28'><?=$lng['Longitude']?></th>
+										<th class="tal " id='dat29'><?=$lng['Current address']?></th>
+										<th class="tal " id='dat210'><?=$lng['Personal phone']?></th>
+										<th class="tal " id='dat211'><?=$lng['Work phone']?></th>
+										<th class="tal " id='dat212'><?=$lng['Personal email']?></th>
+										<th class="tal " id='dat213'><?=$lng['Work email']?></th>
+										<th class="tal " id='dat214'><?=$lng['Username Options']?></th>
+										<th class="tal " id='dat215'><?=$lng['Username']?></th>
+										
+										<th class="tal " id='dat31'><?=$lng['Joining date']?></th>
+										<th class="tal " id='dat32'><?=$lng['Probation due date']?></th>
+										<th class="tal " id='dat33'><?=$lng['Employee type']?></th>
+										<th class="tal " id='dat34'><?=$lng['Accounting code']?></th>
+										<th class="tal " id='dat35'><?=$lng['Groups']?></th>
+										
+										<th class="tal " id='dat41'><?=$lng['Time registration']?></th>
+										<th class="tal " id='dat42'><?=$lng['Take selfie']?></th>
+										<th class="tal " id='dat43'><?=$lng['Work From Home']?></th>
+										
+										<th class="tal " id='dat51'><?=$lng['Annual leave (days)']?></th>
+										
+										<th class="tal " id='dat61'><?=$lng['Company']?></th>
+										<th class="tal " id='dat62'><?=$lng['Location']?></th>
+										<th class="tal " id='dat63'><?=$lng['Division']?></th>
+										<th class="tal " id='dat64'><?=$lng['Department']?></th>
+										<th class="tal " id='dat65'><?=$lng['Teams']?></th>
+										
+										<th class="par30" id='dat71'><?=$lng['Contract type']?></th>
+										<th class="tal par30" id='dat72'><?=$lng['Calculation base']?></th>
+										<th class="tal " id='dat73'><?=$lng['Bank code']?></th>
+										<th class="tal " id='dat74'><?=$lng['Bank name']?></th>
+										<th class="tal " id='dat75'><?=$lng['Bank branch']?></th>
+										<th class="tal " id='dat76'><?=$lng['Bank account no.']?></th>
+										<th class="tal " id='dat77'><?=$lng['Bank account name']?></th>
+										<th class='tal' id='dat78'><?=$lng['Payment type']?></th>
+										<th class='tal' id='dat79'><?=$lng['Accounting code']?></th>
+										<th class='tal' id='dat710'><?=$lng['Groups']?></th>
+										<th class='tal' id='dat711'><?=$lng['Tax calculation method']?></th>
+										<th class='tal' id='dat712'><?='Calculate tax'?></th>
+										<th class='tal' id='dat713'><?=$lng['Tax Residency Status']?></th>
+										<th class='tal' id='dat714'><?='Income Section'?></th>
+										<th class='tal' id='dat715'><?=$lng['Modify Tax amount']?></th>
+										<th class='tal' id='dat716'><?=$lng['Calculate SSO']?></th>
+										<th class='tal' id='dat717'><?=$lng['SSO paid by']?></th>
+										<th class='tal' id='dat718'><?=$lng['Government house banking']?></th>
+										<th class='tal' id='dat719'><?=$lng['Savings']?></th>
+										<th class='tal' id='dat720'><?=$lng['Legal execution deduction']?></th>
+										<th class='tal' id='dat721'><?=$lng['Kor.Yor.Sor (Student loan)']?></th>
+										
+									</tr>
+								</thead>
+								<tbody >
+
+									<? if(isset($alltempdata) && is_array($alltempdata)){ 
+										foreach ($alltempdata as $key => $value) { ?>
+										 	
+											<tr data-id="<?=$value['emp_id']?>">
+												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
+												<td><?=$value['en_name'];?></td>
+												<td><?=$value['sid']?></td>
+												<td><?=$title[$value['title']];?></td>
+												<td><?=$value['firstname']?></td>
+												<td><?=$value['lastname']?></td>
+												<td><?=$value['en_name']?></td>
+												<td><?=$value['birthdate']?></td>
+												<td><?=$value['nationality']?></td>
+												<td><?=$gender[$value['gender']];?></td>
+												<td><?=$maritial[$value['maritial']];?></td>
+												<td><?=$religion[$value['religion']];?></td>
+												<td><?=$military_status[$value['military_status']];?></td>
+												<td><?=$value['height']?></td>
+												<td><?=$value['weight']?></td>
+												<td><?=$value['bloodtype']?></td>
+												<td><?=$value['drvlicense_nr']?></td>
+												<td><?=$value['drvlicense_exp']?></td>
+												<td><?=$value['idcard_nr']?></td>
+												<td><?=$value['idcard_exp']?></td>
+												<td><?=$value['tax_id']?></td>
+												
+												<td><?=$value['reg_address'];?></td>
+												<td><?=$value['sub_district'];?></td>
+												<td><?=$value['district'];?></td>
+												<td><?=$value['province'];?></td>
+												<td><?=$value['postnr'];?></td>
+												<td><?=$value['country'];?></td>
+												<td><?=$value['latitude'];?></td>
+												<td><?=$value['longitude'];?></td>
+												<td><?=$value['cur_address'];?></td>
+												<td><?=$value['personal_phone'];?></td>
+												<td><?=$value['work_phone'];?></td>
+												<td><?=$value['personal_email'];?></td>
+												<td><?=$value['work_email'];?></td>
+												<td><?=$username_option[$value['username_option']]?></td>
+												<td><?=$value['username'];?></td>
+												
+												<td><?=$value['joining_date'];?></td>
+												<td><?=$value['probation_date'];?></td>
+												<td><?=$emp_type[$value['emp_type']];?></td>
+												<td><?php
+
+												if($value['account_code'] == '1')
+												{
+													echo $lng['Indirect'];
+												}
+												else if($value['account_code'] == '0')
+												{
+													echo $lng['Direct'];
+												}
+
+
+												?></td>
+												<td><?=$getAllGroups[$value['groups']];?></td>
+												
+												<td>
+													<?php 
+														if($value['time_reg'] == '0')
+														{
+															echo  $lng['No'] ;
+														}
+														else if($value['time_reg'] == '1')
+														{
+															echo  $lng['Yes'] ;
+														}
+													?>
+												</td>												
+												<td>
+													<?php 
+														if($value['selfie'] == '0')
+														{
+															echo  $lng['No'] ;
+														}
+														else if($value['selfie'] == '1')
+														{
+															echo  $lng['Yes'] ;
+														}
+													?>
+												</td>												
+												<td>
+													<?php 
+														if($value['workFromHome'] == '0')
+														{
+															echo  $lng['No'] ;
+														}
+														else if($value['workFromHome'] == '1')
+														{
+															echo  $lng['Yes'] ;
+														}
+													?>
+												</td>
+												
+												<td><?=$value['annual_leave'];?></td>
+												
+												<td><?=$company_name_data[$value['company']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$branch_name_data[$value['location']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$division_name_data[$value['division']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$department_name_data[$value['department']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$teams_name_data[$value['team']][$_SESSION['rego']['lang']];?></td>
+												
+												<td><?=$contract_type[$value['contract_type']];?></td>
+												<td><?=$calc_base[$value['calc_base']]?></td>
+            									<td><?=$value['bank_code']?></td>
+            									<td><?=$bank_codes[$value['bank_name']]['en']?></td>
+            									<td><?=$value['bank_branch']?></td>
+            									<td><?=$value['bank_account']?></td>
+            									<td><?=$value['bank_account_name']?></td>
+            									<td><?=$pay_type[$value['pay_type']]?></td>
+            									<td><?=$accountCodeArray[$value['account_code']]?></td>
+            									<td><?=$getAllGroups[$value['groups']]?></td>
+            									<td><?=$calcmethod[$value['calc_method']]?></td>
+            									<td><?=$calctax[$value['calc_tax']]?></td>
+            									<td><?=$tax_residency_status[$value['tax_residency_status']]?></td>
+            									<td><?=$income_section[$value['income_section']]?></td>
+            									<td><?=$value['modify_tax']?></td>
+            									<td><?=$noyes01[$value['calc_sso']]?></td>
+            									<td><?=$sso_paidby[$value['sso_by']]?></td>
+            									<td><?=$value['gov_house_banking']?></td>
+            									<td><?=$value['savings']?></td>
+            									<td><?=$value['legal_execution']?></td>
+            									<td><?=$value['kor_yor_sor']?></td>
+											</tr>
+
+									<? } } ?>
+
+								</tbody>
+							</table>
+						</div>
+						
 						<div style= "display: none;" id="div_personal">
 							<table id="datatables11" class="dataTable hoverable selectable nowrap" >
 
@@ -1393,26 +1614,26 @@
 												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
 												<td><?=$value['en_name'];?></td>
 												<td><?=$contract_type[$value['contract_type']];?></td>
-												<td><?=$calc_base[$value['calc_base']]?></th>
-            									<td><?=$value['bank_code']?></th>
-            									<td><?=$bank_codes[$value['bank_name']]['en']?></th>
-            									<td><?=$value['bank_branch']?></th>
-            									<td><?=$value['bank_account']?></th>
-            									<td><?=$value['bank_account_name']?></th>
-            									<td><?=$pay_type[$value['pay_type']]?></th>
-            									<td><?=$accountCodeArray[$value['account_code']]?></th>
-            									<td><?=$getAllGroups[$value['groups']]?></th>
-            									<td><?=$calcmethod[$value['calc_method']]?></th>
-            									<td><?=$calctax[$value['calc_tax']]?></th>
-            									<td><?=$tax_residency_status[$value['tax_residency_status']]?></th>
-            									<td><?=$income_section[$value['income_section']]?></th>
-            									<td><?=$value['modify_tax']?></th>
-            									<td><?=$noyes01[$value['calc_sso']]?></th>
-            									<td><?=$sso_paidby[$value['sso_by']]?></th>
-            									<td><?=$value['gov_house_banking']?></th>
-            									<td><?=$value['savings']?></th>
-            									<td><?=$value['legal_execution']?></th>
-            									<td><?=$value['kor_yor_sor']?></th>
+												<td><?=$calc_base[$value['calc_base']]?></td>
+            									<td><?=$value['bank_code']?></td>
+            									<td><?=$bank_codes[$value['bank_name']]['en']?></td>
+            									<td><?=$value['bank_branch']?></td>
+            									<td><?=$value['bank_account']?></td>
+            									<td><?=$value['bank_account_name']?></td>
+            									<td><?=$pay_type[$value['pay_type']]?></td>
+            									<td><?=$accountCodeArray[$value['account_code']]?></td>
+            									<td><?=$getAllGroups[$value['groups']]?></td>
+            									<td><?=$calcmethod[$value['calc_method']]?></td>
+            									<td><?=$calctax[$value['calc_tax']]?></t>
+            									<td><?=$tax_residency_status[$value['tax_residency_status']]?></td>
+            									<td><?=$income_section[$value['income_section']]?></td>
+            									<td><?=$value['modify_tax']?></td>
+            									<td><?=$noyes01[$value['calc_sso']]?></td>
+            									<td><?=$sso_paidby[$value['sso_by']]?></dh>
+            									<td><?=$value['gov_house_banking']?></td>
+            									<td><?=$value['savings']?></td>
+            									<td><?=$value['legal_execution']?></td>
+            									<td><?=$value['kor_yor_sor']?></td>
 												
 											</tr>
 
@@ -1486,8 +1707,16 @@
 									</td>
 								</tr>
 							</table>
+							<table class="table-responsive" id="scrolltable1" style='overflow:auto'>
+								<tr>
+									<td style="visibility: hidden;min-width:8500px">
+									<br>
+									</td>
+								</tr>
+							</table>
 							
-						</div>						
+						</div>	
+										
 
 						<table id= "oldatatable">
 							<thead >

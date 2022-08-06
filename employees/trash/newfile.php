@@ -219,3 +219,22 @@
 								</tbody>
 							</table>
 						</div>
+						<script>
+						var selectionSelect = $('#section_select').val();
+
+						if(continue_sel){
+							let i1=0;
+							$("table#showHideClmss2 div.SumoSelect:nth-child("+selectionSelect+") li").each(function(){
+								console.log($(this));
+								i1++;
+								if($(this).hasClass('selected')){
+									if(inArray('#dat'+selectionSelect+i1)==-1)
+									new_show_hide_cols_list.push('#dat'+selectionSelect+i1);
+								}else{
+									while($.inArray('#dat'+selectionSelect+i1)!=-1)
+										new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('#dat'+selectionSelect+i1),1);
+								}
+							});
+						}
+											
+						</script>

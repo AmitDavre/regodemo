@@ -2335,7 +2335,7 @@
 
 <script type="text/javascript">
 
-	var continue_sel=false,show_hide_columns_obj={};
+	var continue_sel=false,new_show_hide_cols_list=[];
 	$( document ).ready(function() {
 
 		var tempdatas = "<?=$tempdata?>";
@@ -3672,7 +3672,7 @@
 
 
 		}
-
+		
 		// show sumo selected selection option only in the list 
 		var notInSumoSelect = <?=json_encode($notInSumoSelect)?>;
 
@@ -3765,7 +3765,7 @@
 
 
 		$(document).on("change", ".getdatadivclass", function(e) {
-
+			console.log(new_show_hide_cols_list);
 			 $(".preloader").fadeIn(800);
 			 $(".preloader").fadeOut(500);
 			
@@ -4336,6 +4336,23 @@
 function getDataDiv(){
 	var selectionSelect = $('#section_select').val();
 
+	if(continue_sel){
+		let i1=0;
+		$("table#showHideClmss2 div.SumoSelect:nth-child("+selectionSelect+") li").each(function(){
+			//console.log($(this));
+			i1++;
+			if($(this).hasClass('selected')){
+				if($.inArray('#dat'+selectionSelect+i1,new_show_hide_cols_list)==-1)
+				new_show_hide_cols_list.push('#dat'+selectionSelect+i1);
+				$('#datatables51').DataTable().column('#dat'+selectionSelect+(i1)).visible(true);
+			}else{
+				while($.inArray('#dat'+selectionSelect+i1,new_show_hide_cols_list)!=-1)
+					new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('#dat'+selectionSelect+i1),1);
+				$('#datatables51').DataTable().column('#dat'+selectionSelect+(i1)).visible(false);
+			}
+		});
+	}
+	
 	if(selectionSelect == '1')
 	{
 		$('#personal_div_data').css('display','');
@@ -5175,6 +5192,24 @@ $(document).on("click", ".getTheErrors", function(e){
 
 $(document).on("click","#continue_selection",function(){
 	continue_sel=!continue_sel;
+	//dtable50.columns().visible(false);
+	$('#datatables51').DataTable().columns().visible(false);
+	let sect_sel=$('#section_select').val();
+	let i1=0;
+	$("table#showHideClmss2 div.SumoSelect:nth-child("+sect_sel+") li").each(function(){
+		i1++;
+		if($(this).hasClass('selected')){
+			if($.inArray('#dat'+sect_sel+i1,new_show_hide_cols_list)==-1)
+			new_show_hide_cols_list.push('#dat'+sect_sel+i1);
+			$('#datatables51').DataTable().column('#dat'+sect_sel+(i1)).visible(true);
+		}else{
+			while($.inArray('#dat'+sect_sel+i1,new_show_hide_cols_list)!=-1)
+				new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('#dat'+sect_sel+i1),1);
+			$('#datatables51').DataTable().column('#dat'+sect_sel+(i1)).visible(false);
+		}
+	});
+	$('#datatables51').DataTable().column(1).visible(true);
+	$('#datatables51').DataTable().column(0).visible(true);
 })
 
 

@@ -1058,88 +1058,88 @@
 								</tr>
 							</thead>
 						</table>
-						<div style= "display: ;">
+						<div class="new_datatables" style= "display: none;">
 							<table id="datatables51" class="dataTable hoverable selectable nowrap" >
 
 								<thead>
 									<tr>
 										<th class="par30"><?=$lng['Emp. ID']?></th>
 										<th class="tal par30"><?=$lng['Employee name']?></th>
-										<th id='dat11' class="tal "><?=$lng['Scan ID']?></th>
-										<th id='dat12' class="tal "><?=$lng['Title']?></th>
-										<th id='dat13' class="tal "><?=$lng['First name']?></th>
-										<th id='dat14' class="tal "><?=$lng['Last name']?></th>
-										<th id='dat15' class="tal "><?=$lng['Name in English']?></th>
-										<th id='dat16' class="tal "><?=$lng['Birthdate']?></th>
-										<th id='dat17' class="tal "><?=$lng['Nationality']?></th>
-										<th id='dat18' class="tal "><?=$lng['Gender']?></th>
-										<th id='dat19' class="tal "><?=$lng['Maritial status']?></th>
-										<th id='dat110' class="tal "><?=$lng['Religion']?></th>
-										<th id='dat111' class="tal "><?=$lng['Military status']?></th>
-										<th id='dat112' class="tal "><?=$lng['Height']?></th>
-										<th id='dat113' class="tal "><?=$lng['Weight']?></th>
-										<th id='dat114' class="tal "><?=$lng['Blood type']?></th>
-										<th id='dat115' class="tal "><?=$lng['Driving license No.']?></th>
-										<th id='dat116' class="tal "><?=$lng['License expiry date']?></th>
-										<th id='dat117' class="tal "><?=$lng['ID card']?></th>
-										<th id='dat118' class="tal "><?=$lng['ID card expiry date']?></th>
-										<th id='dat119' class="tal "><?=$lng['Tax ID no.']?></th>
+										<th class="dat11 tal "><?=$lng['Scan ID']?></th>
+										<th class="dat12 tal "><?=$lng['Title']?></th>
+										<th class="dat13 tal "><?=$lng['First name']?></th>
+										<th class="tal dat14 "><?=$lng['Last name']?></th>
+										<th  class="tal dat15"><?=$lng['Name in English']?></th>
+										<th  class="tal dat16"><?=$lng['Birthdate']?></th>
+										<th  class="tal dat17"><?=$lng['Nationality']?></th>
+										<th   class="tal dat18"><?=$lng['Gender']?></th>
+										<th   class="tal dat19"><?=$lng['Maritial status']?></th>
+										<th   class="tal dat110"><?=$lng['Religion']?></th>
+										<th    class="tal dat111"><?=$lng['Military status']?></th>
+										<th  class="tal dat112"><?=$lng['Height']?></th>
+										<th   class="tal dat113"><?=$lng['Weight']?></th>
+										<th   class="tal dat114"><?=$lng['Blood type']?></th>
+										<th   class="tal dat115"><?=$lng['Driving license No.']?></th>
+										<th   class="tal dat116"><?=$lng['License expiry date']?></th>
+										<th   class="tal dat117"><?=$lng['ID card']?></th>
+										<th   class="tal dat118"><?=$lng['ID card expiry date']?></th>
+										<th  class="tal dat119"><?=$lng['Tax ID no.']?></th>
 										
-										<th id='dat21' class="tal "><?=$lng['Registered address']?></th>
-										<th id='dat22' class="tal "><?=$lng['Sub district']?></th>
-										<th class="tal " id='dat23'><?=$lng['District']?></th>
-										<th class="tal " id='dat24'><?=$lng['Province']?></th>
-										<th class="tal " id='dat25'><?=$lng['Postal code']?></th>
-										<th class="tal " id='dat26'><?=$lng['Country']?></th>
-										<th class="tal " id='dat27'><?=$lng['Latitude']?></th>
-										<th class="tal " id='dat28'><?=$lng['Longitude']?></th>
-										<th class="tal " id='dat29'><?=$lng['Current address']?></th>
-										<th class="tal " id='dat210'><?=$lng['Personal phone']?></th>
-										<th class="tal " id='dat211'><?=$lng['Work phone']?></th>
-										<th class="tal " id='dat212'><?=$lng['Personal email']?></th>
-										<th class="tal " id='dat213'><?=$lng['Work email']?></th>
-										<th class="tal " id='dat214'><?=$lng['Username Options']?></th>
-										<th class="tal " id='dat215'><?=$lng['Username']?></th>
+										<th  class="tal dat21"><?=$lng['Registered address']?></th>
+										<th  class="tal dat22"><?=$lng['Sub district']?></th>
+										<th class="tal dat23"><?=$lng['District']?></th>
+										<th class="tal dat24"><?=$lng['Province']?></th>
+										<th class="tal dat25"><?=$lng['Postal code']?></th>
+										<th class="tal dat26"><?=$lng['Country']?></th>
+										<th class="tal dat27"><?=$lng['Latitude']?></th>
+										<th class="tal dat28"><?=$lng['Longitude']?></th>
+										<th class="tal dat29"><?=$lng['Current address']?></th>
+										<th class="tal dat210"><?=$lng['Personal phone']?></th>
+										<th class="tal dat211"><?=$lng['Work phone']?></th>
+										<th class="tal dat212"><?=$lng['Personal email']?></th>
+										<th class="tal dat213"><?=$lng['Work email']?></th>
+										<th class="tal dat214"><?=$lng['Username Options']?></th>
+										<th class="tal dat215"><?=$lng['Username']?></th>
 										
-										<th class="tal " id='dat31'><?=$lng['Joining date']?></th>
-										<th class="tal " id='dat32'><?=$lng['Probation due date']?></th>
-										<th class="tal " id='dat33'><?=$lng['Employee type']?></th>
-										<th class="tal " id='dat34'><?=$lng['Accounting code']?></th>
-										<th class="tal " id='dat35'><?=$lng['Groups']?></th>
+										<th class="tal dat31"><?=$lng['Joining date']?></th>
+										<th class="tal dat32"><?=$lng['Probation due date']?></th>
+										<th class="tal dat33"><?=$lng['Employee type']?></th>
+										<th class="tal dat34"><?=$lng['Accounting code']?></th>
+										<th class="tal dat35"><?=$lng['Groups']?></th>
 										
-										<th class="tal " id='dat41'><?=$lng['Time registration']?></th>
-										<th class="tal " id='dat42'><?=$lng['Take selfie']?></th>
-										<th class="tal " id='dat43'><?=$lng['Work From Home']?></th>
+										<th class="tal dat41"><?=$lng['Time registration']?></th>
+										<th class="tal dat42"><?=$lng['Take selfie']?></th>
+										<th class="tal dat43"><?=$lng['Work From Home']?></th>
 										
-										<th class="tal " id='dat51'><?=$lng['Annual leave (days)']?></th>
+										<th class="tal dat51"><?=$lng['Annual leave (days)']?></th>
 										
-										<th class="tal " id='dat61'><?=$lng['Company']?></th>
-										<th class="tal " id='dat62'><?=$lng['Location']?></th>
-										<th class="tal " id='dat63'><?=$lng['Division']?></th>
-										<th class="tal " id='dat64'><?=$lng['Department']?></th>
-										<th class="tal " id='dat65'><?=$lng['Teams']?></th>
+										<th class="tal dat61"><?=$lng['Company']?></th>
+										<th class="tal dat62"><?=$lng['Location']?></th>
+										<th class="tal dat63"><?=$lng['Division']?></th>
+										<th class="tal dat64"><?=$lng['Department']?></th>
+										<th class="tal dat65"><?=$lng['Teams']?></th>
 										
-										<th class="par30" id='dat71'><?=$lng['Contract type']?></th>
-										<th class="tal par30" id='dat72'><?=$lng['Calculation base']?></th>
-										<th class="tal " id='dat73'><?=$lng['Bank code']?></th>
-										<th class="tal " id='dat74'><?=$lng['Bank name']?></th>
-										<th class="tal " id='dat75'><?=$lng['Bank branch']?></th>
-										<th class="tal " id='dat76'><?=$lng['Bank account no.']?></th>
-										<th class="tal " id='dat77'><?=$lng['Bank account name']?></th>
-										<th class='tal' id='dat78'><?=$lng['Payment type']?></th>
-										<th class='tal' id='dat79'><?=$lng['Accounting code']?></th>
-										<th class='tal' id='dat710'><?=$lng['Groups']?></th>
-										<th class='tal' id='dat711'><?=$lng['Tax calculation method']?></th>
-										<th class='tal' id='dat712'><?='Calculate tax'?></th>
-										<th class='tal' id='dat713'><?=$lng['Tax Residency Status']?></th>
-										<th class='tal' id='dat714'><?='Income Section'?></th>
-										<th class='tal' id='dat715'><?=$lng['Modify Tax amount']?></th>
-										<th class='tal' id='dat716'><?=$lng['Calculate SSO']?></th>
-										<th class='tal' id='dat717'><?=$lng['SSO paid by']?></th>
-										<th class='tal' id='dat718'><?=$lng['Government house banking']?></th>
-										<th class='tal' id='dat719'><?=$lng['Savings']?></th>
-										<th class='tal' id='dat720'><?=$lng['Legal execution deduction']?></th>
-										<th class='tal' id='dat721'><?=$lng['Kor.Yor.Sor (Student loan)']?></th>
+										<th class="par30 dat71"><?=$lng['Contract type']?></th>
+										<th class="tal par30 dat72"><?=$lng['Calculation base']?></th>
+										<th class="tal dat73"><?=$lng['Bank code']?></th>
+										<th class="tal dat74"><?=$lng['Bank name']?></th>
+										<th class="tal dat75"><?=$lng['Bank branch']?></th>
+										<th class="tal dat76"><?=$lng['Bank account no.']?></th>
+										<th class="tal dat77"><?=$lng['Bank account name']?></th>
+										<th class='tal dat78'><?=$lng['Payment type']?></th>
+										<th class='tal dat79'><?=$lng['Accounting code']?></th>
+										<th class='tal dat710'><?=$lng['Groups']?></th>
+										<th class='tal dat711'><?=$lng['Tax calculation method']?></th>
+										<th class='tal dat712'><?='Calculate tax'?></th>
+										<th class='tal dat713'><?=$lng['Tax Residency Status']?></th>
+										<th class='tal dat714'><?='Income Section'?></th>
+										<th class='tal dat715'><?=$lng['Modify Tax amount']?></th>
+										<th class='tal dat716'><?=$lng['Calculate SSO']?></th>
+										<th class='tal dat717'><?=$lng['SSO paid by']?></th>
+										<th class='tal dat718'><?=$lng['Government house banking']?></th>
+										<th class='tal dat719'><?=$lng['Savings']?></th>
+										<th class='tal dat720'><?=$lng['Legal execution deduction']?></th>
+										<th class='tal dat721'><?=$lng['Kor.Yor.Sor (Student loan)']?></th>
 										
 									</tr>
 								</thead>
@@ -1727,7 +1727,228 @@
 								</tr>
 							</thead>
 						</table>
+						
+						<div class="new_datatables" style= "display: none;">
+							<table id="datatables52" class="dataTable hoverable selectable nowrap" >
 
+								<thead>
+									<tr>
+										<th class="par30"><?=$lng['Emp. ID']?></th>
+										<th class="tal par30"><?=$lng['Employee name']?></th>
+										<th class="dat11 tal "><?=$lng['Scan ID']?></th>
+										<th class="dat12 tal "><?=$lng['Title']?></th>
+										<th class="dat13 tal "><?=$lng['First name']?></th>
+										<th class="tal dat14 "><?=$lng['Last name']?></th>
+										<th  class="tal dat15"><?=$lng['Name in English']?></th>
+										<th  class="tal dat16"><?=$lng['Birthdate']?></th>
+										<th  class="tal dat17"><?=$lng['Nationality']?></th>
+										<th   class="tal dat18"><?=$lng['Gender']?></th>
+										<th   class="tal dat19"><?=$lng['Maritial status']?></th>
+										<th   class="tal dat110"><?=$lng['Religion']?></th>
+										<th    class="tal dat111"><?=$lng['Military status']?></th>
+										<th  class="tal dat112"><?=$lng['Height']?></th>
+										<th   class="tal dat113"><?=$lng['Weight']?></th>
+										<th   class="tal dat114"><?=$lng['Blood type']?></th>
+										<th   class="tal dat115"><?=$lng['Driving license No.']?></th>
+										<th   class="tal dat116"><?=$lng['License expiry date']?></th>
+										<th   class="tal dat117"><?=$lng['ID card']?></th>
+										<th   class="tal dat118"><?=$lng['ID card expiry date']?></th>
+										<th  class="tal dat119"><?=$lng['Tax ID no.']?></th>
+										
+										<th  class="tal dat21"><?=$lng['Registered address']?></th>
+										<th  class="tal dat22"><?=$lng['Sub district']?></th>
+										<th class="tal dat23"><?=$lng['District']?></th>
+										<th class="tal dat24"><?=$lng['Province']?></th>
+										<th class="tal dat25"><?=$lng['Postal code']?></th>
+										<th class="tal dat26"><?=$lng['Country']?></th>
+										<th class="tal dat27"><?=$lng['Latitude']?></th>
+										<th class="tal dat28"><?=$lng['Longitude']?></th>
+										<th class="tal dat29"><?=$lng['Current address']?></th>
+										<th class="tal dat210"><?=$lng['Personal phone']?></th>
+										<th class="tal dat211"><?=$lng['Work phone']?></th>
+										<th class="tal dat212"><?=$lng['Personal email']?></th>
+										<th class="tal dat213"><?=$lng['Work email']?></th>
+										<th class="tal dat214"><?=$lng['Username Options']?></th>
+										<th class="tal dat215"><?=$lng['Username']?></th>
+										
+										<th class="tal dat31"><?=$lng['Joining date']?></th>
+										<th class="tal dat32"><?=$lng['Probation due date']?></th>
+										<th class="tal dat33"><?=$lng['Employee type']?></th>
+										<th class="tal dat34"><?=$lng['Accounting code']?></th>
+										<th class="tal dat35"><?=$lng['Groups']?></th>
+										
+										<th class="tal dat41"><?=$lng['Time registration']?></th>
+										<th class="tal dat42"><?=$lng['Take selfie']?></th>
+										<th class="tal dat43"><?=$lng['Work From Home']?></th>
+										
+										<th class="tal dat51"><?=$lng['Annual leave (days)']?></th>
+										
+										<th class="tal dat61"><?=$lng['Company']?></th>
+										<th class="tal dat62"><?=$lng['Location']?></th>
+										<th class="tal dat63"><?=$lng['Division']?></th>
+										<th class="tal dat64"><?=$lng['Department']?></th>
+										<th class="tal dat65"><?=$lng['Teams']?></th>
+										
+										<th class="par30 dat71"><?=$lng['Contract type']?></th>
+										<th class="tal par30 dat72"><?=$lng['Calculation base']?></th>
+										<th class="tal dat73"><?=$lng['Bank code']?></th>
+										<th class="tal dat74"><?=$lng['Bank name']?></th>
+										<th class="tal dat75"><?=$lng['Bank branch']?></th>
+										<th class="tal dat76"><?=$lng['Bank account no.']?></th>
+										<th class="tal dat77"><?=$lng['Bank account name']?></th>
+										<th class='tal dat78'><?=$lng['Payment type']?></th>
+										<th class='tal dat79'><?=$lng['Accounting code']?></th>
+										<th class='tal dat710'><?=$lng['Groups']?></th>
+										<th class='tal dat711'><?=$lng['Tax calculation method']?></th>
+										<th class='tal dat712'><?='Calculate tax'?></th>
+										<th class='tal dat713'><?=$lng['Tax Residency Status']?></th>
+										<th class='tal dat714'><?='Income Section'?></th>
+										<th class='tal dat715'><?=$lng['Modify Tax amount']?></th>
+										<th class='tal dat716'><?=$lng['Calculate SSO']?></th>
+										<th class='tal dat717'><?=$lng['SSO paid by']?></th>
+										<th class='tal dat718'><?=$lng['Government house banking']?></th>
+										<th class='tal dat719'><?=$lng['Savings']?></th>
+										<th class='tal dat720'><?=$lng['Legal execution deduction']?></th>
+										<th class='tal dat721'><?=$lng['Kor.Yor.Sor (Student loan)']?></th>
+										
+									</tr>
+								</thead>
+								<tbody >
+
+									<? if(isset($allOlddata) && is_array($allOlddata)){ 
+										foreach ($allOlddata as $key => $value) { ?>
+										 	
+											<tr data-id="<?=$value['emp_id']?>">
+												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
+												<td><?=$value['en_name'];?></td>
+												<td><?=$value['sid']?></td>
+												<td><?=$title[$value['title']];?></td>
+												<td><?=$value['firstname']?></td>
+												<td><?=$value['lastname']?></td>
+												<td><?=$value['en_name']?></td>
+												<td><?=$value['birthdate']?></td>
+												<td><?=$value['nationality']?></td>
+												<td><?=$gender[$value['gender']];?></td>
+												<td><?=$maritial[$value['maritial']];?></td>
+												<td><?=$religion[$value['religion']];?></td>
+												<td><?=$military_status[$value['military_status']];?></td>
+												<td><?=$value['height']?></td>
+												<td><?=$value['weight']?></td>
+												<td><?=$value['bloodtype']?></td>
+												<td><?=$value['drvlicense_nr']?></td>
+												<td><?=$value['drvlicense_exp']?></td>
+												<td><?=$value['idcard_nr']?></td>
+												<td><?=$value['idcard_exp']?></td>
+												<td><?=$value['tax_id']?></td>
+												
+												<td><?=$value['reg_address'];?></td>
+												<td><?=$value['sub_district'];?></td>
+												<td><?=$value['district'];?></td>
+												<td><?=$value['province'];?></td>
+												<td><?=$value['postnr'];?></td>
+												<td><?=$value['country'];?></td>
+												<td><?=$value['latitude'];?></td>
+												<td><?=$value['longitude'];?></td>
+												<td><?=$value['cur_address'];?></td>
+												<td><?=$value['personal_phone'];?></td>
+												<td><?=$value['work_phone'];?></td>
+												<td><?=$value['personal_email'];?></td>
+												<td><?=$value['work_email'];?></td>
+												<td><?=$username_option[$value['username_option']]?></td>
+												<td><?=$value['username'];?></td>
+												
+												<td><?=$value['joining_date'];?></td>
+												<td><?=$value['probation_date'];?></td>
+												<td><?=$emp_type[$value['emp_type']];?></td>
+												<td><?php
+
+												if($value['account_code'] == '1')
+												{
+													echo $lng['Indirect'];
+												}
+												else if($value['account_code'] == '0')
+												{
+													echo $lng['Direct'];
+												}
+
+
+												?></td>
+												<td><?=$getAllGroups[$value['groups']];?></td>
+												
+												<td>
+													<?php 
+														if($value['time_reg'] == '0')
+														{
+															echo  $lng['No'] ;
+														}
+														else if($value['time_reg'] == '1')
+														{
+															echo  $lng['Yes'] ;
+														}
+													?>
+												</td>												
+												<td>
+													<?php 
+														if($value['selfie'] == '0')
+														{
+															echo  $lng['No'] ;
+														}
+														else if($value['selfie'] == '1')
+														{
+															echo  $lng['Yes'] ;
+														}
+													?>
+												</td>												
+												<td>
+													<?php 
+														if($value['workFromHome'] == '0')
+														{
+															echo  $lng['No'] ;
+														}
+														else if($value['workFromHome'] == '1')
+														{
+															echo  $lng['Yes'] ;
+														}
+													?>
+												</td>
+												
+												<td><?=$value['annual_leave'];?></td>
+												
+												<td><?=$company_name_data[$value['company']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$branch_name_data[$value['location']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$division_name_data[$value['division']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$department_name_data[$value['department']][$_SESSION['rego']['lang']];?></td>
+												<td><?=$teams_name_data[$value['team']][$_SESSION['rego']['lang']];?></td>
+												
+												<td><?=$contract_type[$value['contract_type']];?></td>
+												<td><?=$calc_base[$value['calc_base']]?></td>
+            									<td><?=$value['bank_code']?></td>
+            									<td><?=$bank_codes[$value['bank_name']]['en']?></td>
+            									<td><?=$value['bank_branch']?></td>
+            									<td><?=$value['bank_account']?></td>
+            									<td><?=$value['bank_account_name']?></td>
+            									<td><?=$pay_type[$value['pay_type']]?></td>
+            									<td><?=$accountCodeArray[$value['account_code']]?></td>
+            									<td><?=$getAllGroups[$value['groups']]?></td>
+            									<td><?=$calcmethod[$value['calc_method']]?></td>
+            									<td><?=$calctax[$value['calc_tax']]?></td>
+            									<td><?=$tax_residency_status[$value['tax_residency_status']]?></td>
+            									<td><?=$income_section[$value['income_section']]?></td>
+            									<td><?=$value['modify_tax']?></td>
+            									<td><?=$noyes01[$value['calc_sso']]?></td>
+            									<td><?=$sso_paidby[$value['sso_by']]?></td>
+            									<td><?=$value['gov_house_banking']?></td>
+            									<td><?=$value['savings']?></td>
+            									<td><?=$value['legal_execution']?></td>
+            									<td><?=$value['kor_yor_sor']?></td>
+											</tr>
+
+									<? } } ?>
+
+								</tbody>
+							</table>
+						</div>
+						
 						<div style="display: none;" id="personal_old_data"> 
 							<table id="datatables12" class="dataTable hoverable selectable nowrap " >
 								<thead>
@@ -3765,7 +3986,7 @@
 
 
 		$(document).on("change", ".getdatadivclass", function(e) {
-			console.log(new_show_hide_cols_list);
+			//console.log(new_show_hide_cols_list);
 			 $(".preloader").fadeIn(800);
 			 $(".preloader").fadeOut(500);
 			
@@ -3781,7 +4002,7 @@
 		
 
 			}
-			else if(this.value  == '1')
+			else if(this.value  == '1' && !contimue_sel)
 			{
 				// hide other table 
 				// show personal info table 
@@ -3857,7 +4078,7 @@
 				
 				
 			}			
-			else if(this.value  == '2')
+			else if(this.value  == '2' && !contimue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -3915,7 +4136,7 @@
 				dtable3.columns.adjust();
 				dtable4.columns.adjust();
 			}			
-			else if(this.value  == '3')
+			else if(this.value  == '3' && !contimue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -3977,7 +4198,7 @@
 
 
 			}			
-			else if(this.value  == '4')
+			else if(this.value  == '4' && !contimue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4041,7 +4262,7 @@
 
 
 			}			
-			else if(this.value  == '5')
+			else if(this.value  == '5' && !contimue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4103,7 +4324,7 @@
 				dtable10.columns.adjust();
 
 			}			
-			else if(this.value  == '6')
+			else if(this.value  == '6' && !contimue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4164,7 +4385,7 @@
 				dtable11.columns.adjust();
 				dtable12.columns.adjust();
 			}			
-			else if(this.value  == '7')
+			else if(this.value  == '7' && !contimue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4226,8 +4447,9 @@
 
 
 			}
-			else if(this.value  == '8')
+			else if(this.value  == '8' && !contimue_sel)
 			{
+				
 				// show contact table 
 				$('#div_personal').css("display","none");
 				$('#personal_old_data').css("display","none");
@@ -4286,7 +4508,7 @@
 				dtable13.columns.adjust();
 				dtable14.columns.adjust();
 			}
-			else
+			else if(!continue_sel)
 			{
 				var hideAllcolumn = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 					$.each(hideAllcolumn, function(key,val) {    
@@ -4343,12 +4565,16 @@ function getDataDiv(){
 			i1++;
 			if($(this).hasClass('selected')){
 				if($.inArray('#dat'+selectionSelect+i1,new_show_hide_cols_list)==-1)
-				new_show_hide_cols_list.push('#dat'+selectionSelect+i1);
-				$('#datatables51').DataTable().column('#dat'+selectionSelect+(i1)).visible(true);
+				new_show_hide_cols_list.push('.dat'+selectionSelect+i1);
+				console.log('.dat'+selectionSelect+i1);
+				$('#datatables51').DataTable().column('.dat'+selectionSelect+(i1)).visible(true);
+				$('#datatables52').DataTable().column('.dat'+selectionSelect+(i1)).visible(true);
 			}else{
-				while($.inArray('#dat'+selectionSelect+i1,new_show_hide_cols_list)!=-1)
-					new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('#dat'+selectionSelect+i1),1);
-				$('#datatables51').DataTable().column('#dat'+selectionSelect+(i1)).visible(false);
+				while($.inArray('.dat'+selectionSelect+i1,new_show_hide_cols_list)!=-1)
+					new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat'+selectionSelect+i1),1);
+				console.log('.dat'+selectionSelect+i1);
+				$('#datatables51').DataTable().column('.dat'+selectionSelect+(i1)).visible(false);
+				$('#datatables52').DataTable().column('.dat'+selectionSelect+(i1)).visible(false);
 			}
 		});
 	}
@@ -4363,7 +4589,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-
+		
 		// hide show dropdown display  none here 
 		// show perosnal div 
 		// hide other div
@@ -4380,8 +4606,9 @@ function getDataDiv(){
 		//dtable.columns.adjust();
 		//dtable2.columns.adjust();
 	}
-	else if(selectionSelect == '2')
+	else if(selectionSelect == '2' )
 	{
+		
 		$('#country_div_data').css('display','');
 		$('#personal_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
@@ -4391,7 +4618,7 @@ function getDataDiv(){
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
 		$(".commonhidebutton").css('display','');
-
+		
 
 
 		// show contact div 
@@ -4414,7 +4641,7 @@ function getDataDiv(){
 
 
 	}	
-	else if(selectionSelect == '3')
+	else if(selectionSelect == '3' )
 	{
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
@@ -4424,7 +4651,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-
+		
 		$("#showHideclm2").closest("div").css('display','none');
 		$("#showHideclm3").closest("div").css('display','none');
 		$("#showHideclm4").closest("div").css('display','');
@@ -4441,7 +4668,7 @@ function getDataDiv(){
 		// hide other div 
 
 	}	
-	else if(selectionSelect == '4')
+	else if(selectionSelect == '4' )
 	{
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
@@ -4451,7 +4678,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-
+		
 		// hide other div 
 
 		$("#showHideclm2").closest("div").css('display','none');
@@ -4480,7 +4707,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-
+		
 
 		// hide all div 
 		$("#showHideclm2").closest("div").css('display','none');
@@ -4510,7 +4737,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-
+		
 
 		// hide all div 
 		$("#showHideclm2").closest("div").css('display','none');
@@ -4561,7 +4788,7 @@ function getDataDiv(){
 
 
 	}	
-	else if(selectionSelect == '8')
+	else if(selectionSelect == '8' )
 	{
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
@@ -4571,7 +4798,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','');
-
+		
 
 		// hide all div 
 		$("#showHideclm2").closest("div").css('display','none');
@@ -5191,26 +5418,60 @@ $(document).on("click", ".getTheErrors", function(e){
 });
 
 $(document).on("click","#continue_selection",function(){
+	
 	continue_sel=!continue_sel;
 	//dtable50.columns().visible(false);
+	if(continue_sel){
+	$('.new_datatables').css("display","");
 	$('#datatables51').DataTable().columns().visible(false);
+	$('#datatables52').DataTable().columns().visible(false);
 	let sect_sel=$('#section_select').val();
 	let i1=0;
 	$("table#showHideClmss2 div.SumoSelect:nth-child("+sect_sel+") li").each(function(){
 		i1++;
 		if($(this).hasClass('selected')){
-			if($.inArray('#dat'+sect_sel+i1,new_show_hide_cols_list)==-1)
-			new_show_hide_cols_list.push('#dat'+sect_sel+i1);
-			$('#datatables51').DataTable().column('#dat'+sect_sel+(i1)).visible(true);
+			if($.inArray('.dat'+sect_sel+i1,new_show_hide_cols_list)==-1)
+			new_show_hide_cols_list.push('.dat'+sect_sel+i1);
+			$('#datatables51').DataTable().column('.dat'+sect_sel+(i1)).visible(true);
+			$('#datatables52').DataTable().column('.dat'+sect_sel+(i1)).visible(true);
 		}else{
-			while($.inArray('#dat'+sect_sel+i1,new_show_hide_cols_list)!=-1)
-				new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('#dat'+sect_sel+i1),1);
-			$('#datatables51').DataTable().column('#dat'+sect_sel+(i1)).visible(false);
+			while($.inArray('.dat'+sect_sel+i1,new_show_hide_cols_list)!=-1)
+				new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat'+sect_sel+i1),1);
+			$('#datatables51').DataTable().column('.dat'+sect_sel+(i1)).visible(false);
+			$('#datatables52').DataTable().column('.dat'+sect_sel+(i1)).visible(false);
 		}
 	});
 	$('#datatables51').DataTable().column(1).visible(true);
 	$('#datatables51').DataTable().column(0).visible(true);
-})
+	$('#datatables52').DataTable().column(1).visible(true);
+	$('#datatables52').DataTable().column(0).visible(true);
+
+	$('#div_personal').css("display","none");
+	$('#personal_old_data').css("display","none");
+	// contact section
+	$('#div_contacts').css("display","none");
+	$('#contacts_old_data').css("display","none");
+	// work data section
+	$('#div_work_data').css("display","none");
+	$('#work_data_old_data').css("display","none");
+	// time section
+	$('#div_time').css("display","none");
+	$('#time_old_data').css("display","none");
+	// leave section
+	$('#div_leave').css("display","none");
+	$('#leave_old_data').css("display","none");
+	// organization section
+	$('#div_organization').css("display","none");
+	$('#organization_old_data').css("display","none");
+
+
+	$('#div_financial').css("display","none");
+	$('#financial_old_data').css("display","none");
+	
+	$('#div_benfits').css("display","none");
+	$('#benefits_old_data').css("display","none");
+	}
+});
 
 
 //======================== VIEW ERROR DATA IN MODAL  =======================//

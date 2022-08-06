@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Bootstrap for PhpSpreadsheet classes.
- */
+
 
 // This sucks, but we have to try to find the composer autoloader
 

@@ -591,7 +591,8 @@ $(document).ready(function(){
 	  oldRst50 = rst50;
 	}); 
 	var oldRst51 = 0;
-	$('div#datatables52_wrapper .dataTables_scrollBody').on('scroll', function () {
+	$('div#hidediv2 table#scrolltable1').on('scroll', function () {
+	//$('div#datatables52_wrapper .dataTables_scrollBody').on('scroll', function () {
 	  l51 = $('div#datatables51_wrapper .dataTables_scrollBody');
 	  var lst51 = l51.scrollLeft();
 	  var rst51 = $(this).scrollLeft();

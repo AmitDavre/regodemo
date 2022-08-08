@@ -4002,7 +4002,7 @@
 		
 
 			}
-			else if(this.value  == '1' && !contimue_sel)
+			else if(this.value  == '1' && !continue_sel)
 			{
 				// hide other table 
 				// show personal info table 
@@ -4078,7 +4078,7 @@
 				
 				
 			}			
-			else if(this.value  == '2' && !contimue_sel)
+			else if(this.value  == '2' && !continue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4136,7 +4136,7 @@
 				dtable3.columns.adjust();
 				dtable4.columns.adjust();
 			}			
-			else if(this.value  == '3' && !contimue_sel)
+			else if(this.value  == '3' && !continue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4198,7 +4198,7 @@
 
 
 			}			
-			else if(this.value  == '4' && !contimue_sel)
+			else if(this.value  == '4' && !continue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4262,7 +4262,7 @@
 
 
 			}			
-			else if(this.value  == '5' && !contimue_sel)
+			else if(this.value  == '5' && !continue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4324,7 +4324,7 @@
 				dtable10.columns.adjust();
 
 			}			
-			else if(this.value  == '6' && !contimue_sel)
+			else if(this.value  == '6' && !continue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4385,7 +4385,7 @@
 				dtable11.columns.adjust();
 				dtable12.columns.adjust();
 			}			
-			else if(this.value  == '7' && !contimue_sel)
+			else if(this.value  == '7' && !continue_sel)
 			{
 				// show contact table 
 				$('#div_personal').css("display","none");
@@ -4447,10 +4447,10 @@
 
 
 			}
-			else if(this.value  == '8' && !contimue_sel)
+			else if(this.value  == '8' && !continue_sel)
 			{
 				
-				// show contact table 
+				//modifying///////modify show contact table 
 				$('#div_personal').css("display","none");
 				$('#personal_old_data').css("display","none");
 				// contact section
@@ -4582,6 +4582,7 @@ function getDataDiv(){
 	if(selectionSelect == '1')
 	{
 		$('#personal_div_data').css('display','');
+		if(!continue_sel){
 		$('#country_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
 		$('#time_div_data').css('display','none');
@@ -4589,7 +4590,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-		
+		}
 		// hide show dropdown display  none here 
 		// show perosnal div 
 		// hide other div
@@ -4608,8 +4609,8 @@ function getDataDiv(){
 	}
 	else if(selectionSelect == '2' )
 	{
-		
 		$('#country_div_data').css('display','');
+		if(!continue_sel){
 		$('#personal_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
 		$('#time_div_data').css('display','none');
@@ -4617,6 +4618,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+		}
 		$(".commonhidebutton").css('display','');
 		
 
@@ -4643,14 +4645,16 @@ function getDataDiv(){
 	}	
 	else if(selectionSelect == '3' )
 	{
+		if(!continue_sel){
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
-		$('#work_div_data').css('display','');
 		$('#time_div_data').css('display','none');
 		$('#leave_div_data').css('display','none');
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+		}
+		$('#work_div_data').css('display','');
 		
 		$("#showHideclm2").closest("div").css('display','none');
 		$("#showHideclm3").closest("div").css('display','none');
@@ -4670,15 +4674,16 @@ function getDataDiv(){
 	}	
 	else if(selectionSelect == '4' )
 	{
+		if(!continue_sel){
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
-		$('#time_div_data').css('display','');
 		$('#leave_div_data').css('display','none');
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-		
+		}
+		$('#time_div_data').css('display','');
 		// hide other div 
 
 		$("#showHideclm2").closest("div").css('display','none');
@@ -4699,15 +4704,16 @@ function getDataDiv(){
 	}	
 	else if(selectionSelect == '5')
 	{
+		if(!continue_sel){
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
 		$('#time_div_data').css('display','none');
-		$('#leave_div_data').css('display','');
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-		
+		}
+		$('#leave_div_data').css('display','');
 
 		// hide all div 
 		$("#showHideclm2").closest("div").css('display','none');
@@ -4729,15 +4735,16 @@ function getDataDiv(){
 	}	
 	else if(selectionSelect == '6')
 	{
+		if(!continue_sel){
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
 		$('#time_div_data').css('display','none');
 		$('#leave_div_data').css('display','none');
-		$('#organization_div_data').css('display','');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-		
+		}
+		$('#organization_div_data').css('display','');
 
 		// hide all div 
 		$("#showHideclm2").closest("div").css('display','none');
@@ -4758,15 +4765,17 @@ function getDataDiv(){
 
 	}else if(selectionSelect == '7')
 	{
+		if(!continue_sel){
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
 		$('#time_div_data').css('display','none');
 		$('#leave_div_data').css('display','none');
 		$('#organization_div_data').css('display','none');
-		$('#financial_div_data').css('display','');
-		$('#benefits_div_data').css('display','none');
 		
+		$('#benefits_div_data').css('display','none');
+		}
+		$('#financial_div_data').css('display','');
 
 
 		// hide all div 
@@ -4790,6 +4799,7 @@ function getDataDiv(){
 	}	
 	else if(selectionSelect == '8' )
 	{
+		if(!continue_sel){
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
 		$('#work_div_data').css('display','none');
@@ -4797,8 +4807,9 @@ function getDataDiv(){
 		$('#leave_div_data').css('display','none');
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
-		$('#benefits_div_data').css('display','');
 		
+		}
+		$('#benefits_div_data').css('display','');
 
 		// hide all div 
 		$("#showHideclm2").closest("div").css('display','none');

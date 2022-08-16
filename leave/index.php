@@ -35,7 +35,7 @@
 		$period = $periods['period'];
 		
 	}
-    /////////////help doc comments///////////////////
+    
 	/////////////////////////////// LOAD LAYOUT SETTINGS AND FUNCTIONS ////////////////////////////
 	include("../admin/company_layout/common_layout_functions_system.php"); 
 	/////////////////////////////// LOAD LAYOUT SETTINGS AND FUNCTIONS ////////////////////////////

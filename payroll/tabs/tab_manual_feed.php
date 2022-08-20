@@ -114,7 +114,7 @@ table#ManualFeedDT tbody tr td{
 					<?
 
 					foreach($dropdownArray as $k=>$v1){
-						if($k == 21){ $defsel="ddefsel";}else{$defsel="";}
+						if($v1 == 'Absence (hrs)'){ $defsel="ddefsel";}else{$defsel="";}
 						echo '<option class="optCol '.$defsel.'" value="'.$k.'" ';
 						if(in_array($k, $shColsmf)){echo 'selected ';}
 						echo '>'.$v1.'</option>';
@@ -128,140 +128,154 @@ table#ManualFeedDT tbody tr td{
 			</ul>
 		</div>
 	</div>
+	<?php
+	/*echo '<pre>';
+	print_r($dropdownArray);
+	print_r($dropdownArrayNew);
+	echo '</pre>';*/
+	?>
 
 	<form id="manualfeedData" method="post">
 	<input type="hidden" name="payroll_mdl_id" value="<?=$_GET['mid']?>">
-	<table id="ManualFeedDT" class="dataTable">
-		<thead>
-			<tr>
-				<th colspan="3" class="tac"><?=$lng['Employee']?></th>
-				<th colspan="<?=$countColumn + 2;?>" class="tac"><?=$lng['Attendance & Allowance Data']?></th>				
-				
-				<th colspan="<?=$countOuter+1;?>" class="tac"><?=$lng['Total allowance in THB']?></th>
-				
-			</tr>
-			<tr>
-				<th class="tal"><?=$lng['Emp. ID']?></th>
-				<th class="tal" style="width: 130px;"><?=$lng['Employee name']?></th>
-				<th class="tal"><?=$lng['Calc']?></th>
-
-				<th class="tac"><?=$lng['Paid'].'<br>'.$lng['days']?></th>
-				<th class="tac"><?=$lng['Paid'].'<br>'.$lng['hours']?></th>
-				<? foreach($dropdownArray as $key => $rows){ ?>
-					<th class="tal"><?=$rows?></th>
-				<? } ?>
-
-				<th class="tac"><?=$lng['Basic salary']?></th>
-				<? //if($checkValues > 0){
-					 foreach($outerArray as $key => $val){ ?>
-						<th class="tac"><?=$val?></th>
-				<? } //} ?>
-			</tr>
-		</thead>
-		<tbody>
-			<? 
-
-			$contract_type_check = array();
-			$checkEmpsalary_check = array();
-			$countRow = 0;
-			foreach($getSelmonPayrollDatass as $key => $row){ $countRow++; 
-					$manual_feed_data = unserialize($row['manual_feed_data']);
-					$manual_feed_total = unserialize($row['manual_feed_total']);
-
-					$checkEmpsalary = checkEmpsalaryForCalc($row['emp_id'],$_SESSION['rego']['curr_month']);
-					$checkEmpsalary_check[] = $checkEmpsalary;
-
-					if($row['contract_type'] == 'month'){
-						$clmroy='readonly'; $adcls='';
-						$empSalary = '';
-						$empPaid_day = '';
-						$hourFormat='';
-					}elseif($row['contract_type'] == 'day'){
-						$clmroy=''; $adcls='background: #f9f9e2 !important;';
-						$empSalary = number_format($row['mf_salary'],2);
-						$empPaid_day = $row['paid_days'];
-						$hourFormat = 'hourFormat';
-						$contract_type_check[] = 1;
-					}else{
-						$clmroy=''; $adcls=''; $hourFormat='';
-						$empSalary = '';
-						$empPaid_day = '';
-					}
-				?>
-				<tr data-eid="<?=$row['emp_id']?>" data-sal="<?=$row['salary']?>">
-					<td class="pad010 pl-2 font-weight-bold"><?=$row['emp_id']?></td>
-					<td class="pad010 pl-2 font-weight-bold"><?=$row['emp_name_'.$lang]?></td>
-					<td class="pad010 tac">
-						<? if($checkEmpsalary > 1){ ?>
-							<a class="manualfeedmdl" id="<?=$countRow;?>"><i class="fa fa-calculator fa-lg" ></i></a> 
-						<? } ?>
-					</td>
-
-					<td style="<?=$adcls?>">
-						<input style="float: right;width:70px !important;<?=$adcls?>" class="tar float72" type="text" id="paidDays_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidDays]" autocomplete="off" value="<?=$empPaid_day?>" <?=$clmroy?>>
-					</td>
-					<td style="<?=$adcls?>">
-						<input style="float: right;width:70px !important;<?=$adcls?>" class="tar <?=$hourFormat?>" type="text" id="paidHours_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidHours]" autocomplete="off" value="<?=$row['mf_paid_hour']?>" <?=$clmroy?>>
-					</td>
-
-					<?  foreach($dropdownArrayNew as $key => $rows){ 
-
-							if($position = stripos($rows[0],"hrs", 3) == true){
-								$ids = 'hrs_'.$rows[1].'_'.$countRow;
-								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hrs]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hrs'][$rows[1]].'"></td>';
-							}elseif($position = stripos($rows[0],"hours", 5) == true){
-								//$newClass = 'float72';
-								//if($payrollparametersformonth[$rows[1]]['unitarr'] == 4){ $newClass = 'hourFormat';}
-								$ids = 'hours_'.$rows[1].'_'.$countRow;
-								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hours]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hours'][$rows[1]].'"></td>';
-							}elseif($position = stripos($rows[0],"times", 5) == true){
-								//$newClass = 'float72';
-								//if($payrollparametersformonth[$rows[1]]['unitarr'] == 4){ $newClass = 'hourFormat';}
-								$ids = 'times_'.$rows[1].'_'.$countRow;
-								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][times]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['times'][$rows[1]].'"></td>';
-							}elseif($position = stripos($rows[0],"thb", 3) == true){
-								$ids = 'thb_'.$rows[1].'_'.$countRow;
-								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][thb]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['thb'][$rows[1]].'"></td>';
-							}else{
-								echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][other]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['other'][$rows[1]].'"></td>';
-							}
-						?>
-						<? $totalids = 'total_'.$rows[1].'_'.$countRow;?>
-						<input style="width: 70px !important;" class="float72" type="hidden" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$rows[1]?>]" autocomplete="off" value="<?=$manual_feed_total[$rows[1]]?>">
-					<? } ?>
-
-					<td>
-						<input style="float: right;width: 100% !important;" class="tar float72" type="text" id="basicSal_<?=$countRow?>" autocomplete="off" value="<?=$empSalary?>" readonly>
-					</td>
-					<? //if($checkValues > 0){
-						 foreach($outerArray as $key => $val){ 
-							$totalids = 'total_'.$key.'_'.$countRow;
-						?>
-						<td>
-							<input style="float: right;width: 100% !important;" class="tar float72" type="text" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$key?>]" autocomplete="off" value="<?=number_format($manual_feed_total[$key],2)?>">
-						</td>
-					<? } //} ?>
+	
+		<table id="ManualFeedDT" class="dataTable">
+			<thead>
+				<tr>
+					<th colspan="4" class="tac"><?=$lng['Employee']?></th>
+					<th colspan="<?=$countColumn + 2;?>" class="tac"><?=$lng['Attendance & Allowance Data']?></th>				
+					
+					<th colspan="<?=$countOuter+1;?>" class="tac"><?=$lng['Total allowance in THB']?></th>
 					
 				</tr>
-			<? } ?>
-		</tbody>
-	</table>
+				<tr>
+					<th class="tal"><?=$lng['Emp. ID']?></th>
+					<th class="tal" style="width: 130px;"><?=$lng['Employee name']?></th>
+					<th class="tac" style="cursor: pointer;">
+						<i data-toggle="tooltip" title="Select all" class="SelallManualFeedData fa fa-thumbs-up fa-lg"></i>
+						<i data-toggle="tooltip" title="Unselect all" class="unSelallManualFeedData fa fa-thumbs-down fa-lg" style="display:none;"></i>
+					</th>
+					<th class="tal"><?=$lng['Calc']?></th>
+					<th class="tac"><?=$lng['Paid'].'<br>'.$lng['days']?></th>
+					<th class="tac"><?=$lng['Paid'].'<br>'.$lng['hours']?></th>
+					<? foreach($dropdownArray as $key => $rows){ ?>
+						<th class="tal"><?=$rows?></th>
+					<? } ?>
+
+					<th class="tac"><?=$lng['Basic salary']?></th>
+					<? //if($checkValues > 0){
+						 foreach($outerArray as $key => $val){ ?>
+							<th class="tac"><?=$val?></th>
+					<? } //} ?>
+				</tr>
+			</thead>
+			<tbody>
+				<? 
+
+				$contract_type_check = array();
+				$checkEmpsalary_check = array();
+				$countRow = 0;
+				foreach($getSelmonPayrollDatass as $key => $row){ $countRow++; 
+						$manual_feed_data = unserialize($row['manual_feed_data']);
+						$manual_feed_total = unserialize($row['manual_feed_total']);
+
+						$checkEmpsalary = checkEmpsalaryForCalc($row['emp_id'],$_SESSION['rego']['curr_month']);
+						$checkEmpsalary_check[] = $checkEmpsalary;
+
+						if($row['contract_type'] == 'month'){
+							$clmroy='readonly'; $adcls='';
+							$empSalary = '';
+							$empPaid_day = '';
+							$hourFormat='';
+						}elseif($row['contract_type'] == 'day'){
+							$clmroy=''; $adcls='background: #f9f9e2 !important;';
+							$empSalary = number_format($row['mf_salary'],2);
+							$empPaid_day = $row['paid_days'];
+							$hourFormat = 'hourFormat';
+							$contract_type_check[] = 1;
+						}else{
+							$clmroy=''; $adcls=''; $hourFormat='';
+							$empSalary = '';
+							$empPaid_day = '';
+						}
+					?>
+					<tr data-eid="<?=$row['emp_id']?>" data-sal="<?=$row['salary']?>">
+						<td class="pad010 pl-2 font-weight-bold"><?=$row['emp_id']?></td>
+						<td class="pad010 pl-2 font-weight-bold"><?=$row['emp_name_'.$lang]?></td>
+						<td class="tac">
+							<input type="checkbox" name="chkmfget[]" class="checkbox-custom-blue mfchkboxData emp_<?=$row['emp_id']?>" id="<?=$row['emp_id']?>" onclick="CHeckmfChkbox(this)" style="left:0px !important;">
+						</td>
+						<td class="pad010 tac">
+							<? if($checkEmpsalary > 1){ ?>
+								<a class="manualfeedmdl" id="<?=$countRow;?>"><i class="fa fa-calculator fa-lg" ></i></a> 
+							<? } ?>
+						</td>
+
+						<td style="<?=$adcls?>">
+							<input style="float: right;width:70px !important;<?=$adcls?>" class="tar float72" type="text" id="paidDays_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidDays]" autocomplete="off" value="<?=$empPaid_day?>" <?=$clmroy?>>
+						</td>
+						<td style="<?=$adcls?>">
+							<input style="float: right;width:70px !important;<?=$adcls?>" class="tar <?=$hourFormat?>" type="text" id="paidHours_<?=$countRow?>" name="emp[<?=$row['emp_id']?>][paidHours]" autocomplete="off" value="<?=$row['mf_paid_hour']?>" <?=$clmroy?>>
+						</td>
+
+						<?  foreach($dropdownArrayNew as $key => $rows){ 
+
+								if($position = stripos($rows[0],"hrs", 3) == true){
+									$ids = 'hrs_'.$rows[1].'_'.$countRow;
+									echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hrs]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hrs'][$rows[1]].'"></td>';
+								}elseif($position = stripos($rows[0],"hours", 5) == true){
+									//$newClass = 'float72';
+									//if($payrollparametersformonth[$rows[1]]['unitarr'] == 4){ $newClass = 'hourFormat';}
+									$ids = 'hours_'.$rows[1].'_'.$countRow;
+									echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar hourFormat '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][hours]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['hours'][$rows[1]].'"></td>';
+								}elseif($position = stripos($rows[0],"times", 5) == true){
+									//$newClass = 'float72';
+									//if($payrollparametersformonth[$rows[1]]['unitarr'] == 4){ $newClass = 'hourFormat';}
+									$ids = 'times_'.$rows[1].'_'.$countRow;
+									echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][times]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['times'][$rows[1]].'"></td>';
+								}elseif($position = stripos($rows[0],"thb", 3) == true){
+									$ids = 'thb_'.$rows[1].'_'.$countRow;
+									echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][thb]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['thb'][$rows[1]].'"></td>';
+								}else{
+									echo '<td style="background: #f9f9e2 !important;"><input style="float: right;width: 100% !important;background: #f9f9e2 !important;" class="tar float72 '.$ids.'" type="text"  onchange="Manualfeedcalc('.$rows[1].','.$countRow.')" name="emp['.$row['emp_id'].'][allow_deduct][other]['.$rows[1].']" autocomplete="off" value="'.$manual_feed_data['other'][$rows[1]].'"></td>';
+								}
+							?>
+							<? $totalids = 'total_'.$rows[1].'_'.$countRow;?>
+							<input style="width: 70px !important;" class="float72" type="hidden" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$rows[1]?>]" autocomplete="off" value="<?=$manual_feed_total[$rows[1]]?>">
+						<? } ?>
+
+						<td>
+							<input style="float: right;width: 100% !important;" class="tar float72" type="text" id="basicSal_<?=$countRow?>" autocomplete="off" value="<?=$empSalary?>" readonly>
+						</td>
+						<? //if($checkValues > 0){
+							 foreach($outerArray as $key => $val){ 
+								$totalids = 'total_'.$key.'_'.$countRow;
+							?>
+							<td>
+								<input style="float: right;width: 100% !important;" class="tar float72" type="text" id="<?=$totalids?>" name="emp[<?=$row['emp_id']?>][total][<?=$key?>]" autocomplete="off" value="<?=number_format($manual_feed_total[$key],2)?>">
+							</td>
+						<? } //} ?>
+						
+					</tr>
+				<? } ?>
+			</tbody>
+		</table>
+	
 	</form>
 
 	<?php
 	if(in_array(2, $checkEmpsalary_check)){
-		$hide2='{"targets": [2], "visible": true, "searchable": true}';
+		$hide2='{"targets": [3], "visible": true, "searchable": true}';
 	}else{
-		$hide2='{"targets": [2], "visible": false, "searchable": false}';
+		$hide2='{"targets": [3], "visible": false, "searchable": false}';
 	}
 
 	$array_slice=false;
 	if(in_array(1, $contract_type_check)){
-		$eColsMFd11='{"targets": [3,4], "visible": true, "searchable": true},';
+		$eColsMFd11='{"targets": [4,5], "visible": true, "searchable": true},';
 		$array_slice=true;
 	}else{
-		$darr = count($dropdownArray) + 5;
-		$eColsMFd11='{"targets": [3,4,'.$darr.'], "visible": false, "searchable": false},';
+		$darr = count($dropdownArray) + 6;
+		$eColsMFd11='{"targets": [4,5,'.$darr.'], "visible": false, "searchable": false},';
 	}
 
 
@@ -520,6 +534,26 @@ table#ManualFeedDT tbody tr td{
 <script type="text/javascript">
 
 
+	$(document).ready(function(){
+		$('.SelallManualFeedData').click(function(){
+			$('.mfchkboxData').prop('checked',false);
+			$('.mfchkboxData').removeClass('selectedChk');
+
+			$('.mfchkboxData').prop('checked',true);
+			$('.mfchkboxData').addClass('selectedChk');
+
+			$('.unSelallManualFeedData').css('display','block');
+			$('.SelallManualFeedData').css('display','none');
+		});
+
+		$('.unSelallManualFeedData').click(function(){
+			$('.mfchkboxData').prop('checked',false);
+			$('.mfchkboxData').removeClass('selectedChk');
+
+			$('.unSelallManualFeedData').css('display','none');
+			$('.SelallManualFeedData').css('display','block');
+		});
+	});
 
 	$(document).ready(function() {
 

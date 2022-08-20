@@ -270,7 +270,7 @@
 
 					$countColumn++;
 					//$valColumn = $countColumn + 2;
-					$valColumn = $countColumn + 4;
+					$valColumn = $countColumn + 5;
 					$dropdownArray[$valColumn] = $allowDdt[$rows['itemid']].' ('.$valss.')';
 					$dropdownArrayNew[$valColumn] = array($allowDdt[$rows['itemid']].' ('.$valss.')',$rows['itemid']);
 
@@ -374,7 +374,7 @@
 	//===================== tab employee data section code ========== //
 
 	//echo "<pre>";
-	//print_r($manualrates_default);
+	//print_r($rules);
 	//print_r($getAttendAllowDeduct);
 	// print_r($dropdownArrayNew);
 	//echo "</pre>";
@@ -3134,10 +3134,12 @@
 			pagingType: 'full_numbers',
 			pageLength: 15,
 			filter: true,
+			//autoWidth: false,
 			info: true,
 			<?=$dtable_lang?>
 			columnDefs: [
 				{"targets": eColsmf, "visible": false, "searchable": false},
+				{"width": 200, "targets": 0},
 				<?=$eColsMFd?>
 				<?=$eColsMFd11?>
 				<?=$hide2?>
@@ -3190,7 +3192,7 @@
   		})*/
   		
   		var totl=$("#mfeedsel .SumoSelect li").length;
-		for(let i=5;i<totl+5;i++){
+		for(let i=6;i<totl+6;i++){
 			if($.inArray(i,eColsmf)==-1){  // && dtmanual.column(i+totl)!=-1
 				dtmanual.column(i+totl+1).visible(true);
 			}else if(dtmanual.column(i+totl+1).visible()!=undefined)
@@ -3200,7 +3202,7 @@
 		}
 
 		$("#mfeedsel .SumoSelect li").bind('click.check', function(event) {
-			var nr = $(this).index()+5; //alert(nr);
+			var nr = $(this).index()+6; //alert(nr);
 			if($(this).hasClass('selected') == true){
 				try{dtmanual.column(nr).visible(true);}catch(error){console.log(error);}
 				try{dtmanual.column(nr+totl+1).visible(true);}catch(error){console.log(error);}
@@ -3508,6 +3510,16 @@
 	}
 
 	function CHeckEmpChkboc(that){
+		
+		var id = that.id;
+		if($(that).is(':checked')){
+			$(that).addClass('selectedChk').attr('checked',true);
+		}else{
+			$(that).removeClass('selectedChk').attr('checked',false);
+		}
+	}
+
+	function CHeckmfChkbox(that){
 		
 		var id = that.id;
 		if($(that).is(':checked')){

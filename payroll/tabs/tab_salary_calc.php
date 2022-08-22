@@ -147,14 +147,14 @@
 </div>
 
 <div class="modal fade" id="Salarycalculator" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="top: 0px;">
-	<div class="modal-dialog modal-xl" role="document" style="min-width: 1350px !important;">
+	<div class="modal-dialog modal-xl" role="document" style="min-width: 1375px !important;">
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 5px 13px">
 				<h5 class="modal-title" style="padding: 0px;"><i class="fa fa-calculator"></i>&nbsp; <?=$lng['Calculate Payroll']?></h5>
 				<div style=" position:absolute; right:40px; padding:3px 0">
 					<a title="Print" href="#" style="margin-right:5px"><i class="fa fa-print fa-lg" style="margin-top: 5px;"></i></a>
 				</div>
-				<a title="Close" onclick="closeBtn();" type="button" class="close" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
+				<a title="Close" onclick="closeBtn1();" type="button" class="close" aria-label="Close"><i class="fa fa-times text-danger"></i></a>
 			</div>
 			<div class="modal-body mb-4" style="padding: 5px 20px 5px !important;overflow: hidden;overflow-y: scroll;">
 
@@ -1329,7 +1329,7 @@
 							<tbody>
 								<tr>
 									<th colspan="2" class="tac text-primary"><?=$lng['Calculation Standard deduction']?></th>
-									<th colspan="3" class="tac text-primary" style="border-right: 1px solid #ccc;"><?=$lng['Calculation Personal Care']?></th>
+									<th colspan="3" class="tac text-primary"><?=$lng['Calculation Personal Care']?></th>
 								</tr>
 								<tr>
 									<td colspan="2" class="tac small">Assessed income *50% max 100,000</td>
@@ -1339,7 +1339,7 @@
 									<td class="tal"><?=$lng['Fixed actual income']?></td>
 									<td class="tar" id="fixed_actual_income_std"></td>
 									<td></td>
-									<td class="tar"><?=$lng['Fixed actual income']?></td>
+									<td class="tal"><?=$lng['Fixed actual income']?></td>
 									<td class="tar" id="fixed_actual_income_pcare"></td>
 								</tr>
 								<tr>
@@ -1352,12 +1352,12 @@
 								<tr>
 									<td class="tal"><?=$lng['Manual correction']?></td>
 									<td style="background:#fdf4bd;padding: 0px !important;">
-										<input type="text" id="td_manual_std" onchange="tax_deduct_calc(this)" class="tar float72" style="background:#fdf4bd;">
+										<input type="text" id="td_manual_std" onchange="tax_deduct_calc(this)" class="tar float72" style="background:#fdf4bd;min-width:100%;padding-right: 4px;">
 									</td>
 									<td></td>
 									<td class="tal"><?=$lng['Manual correction']?></td>
 									<td style="background:#fdf4bd;padding: 0px !important;">
-										<input type="text" id="td_manual_pcare" onchange="tax_deduct_calc(this)" class="tar float72" style="background:#fdf4bd;">
+										<input type="text" id="td_manual_pcare" onchange="tax_deduct_calc(this)" class="tar float72" style="background:#fdf4bd;min-width:100%;padding-right: 4px;">
 									</td>
 								</tr>
 								<tr>
@@ -1392,6 +1392,7 @@
 		var empid = that.id;
 		var currmnth = <?=$_SESSION['rego']['cur_month']?>;
 		var mid = '<?=$_GET['mid']?>';
+		$('#getlinkeddata tbody td').removeClass('borderCls');
 
 		$.ajax({
 			type: 'post',
@@ -1411,9 +1412,10 @@
 				}else{
 
 					var data = JSON.parse(result);
-					var payroll_datas = data.payroll_data;
+					var payroll_datas = data.payroll_data_coulmn;
+					var payroll_datas_prev = data.payroll_data_coulmn_prev;
 
-					//console.log(payroll_datas);
+					//console.log(data);
 
 					//===================== Right side table data start (Allowances) ======================//
 					var eColsMdlA = <?=$eColsMdlA?>;
@@ -1427,7 +1429,7 @@
 					var curryear = <?=substr($_SESSION['rego']['cur_year'], -2)?>;
 					var remaining_mnth = 12 - currmnth + 1;
 					var ssoEmpRates = data[0].ssoEmpRates;
-
+					
 					//console.log(payrollparametersformonth);
 					//console.log(payroll_datas);
 
@@ -1462,7 +1464,9 @@
 						var countClm = 0;
 						var clmnval;
 						$.each(payroll_datas, function(k1,v){
+
 							if(v['allow_deduct_ids'] !=''){
+								var k1=v['allow_deduct_ids'];
 								if(v['classifications'] == 0){
 									countClm++;
 
@@ -1480,8 +1484,15 @@
 							for(i=1; i <=12 ; i++){
 
 								allow_and_deduct_data +='<tr><td class="tac font-weight-bold">'+short_months[i]+'-'+curryear+'</td>';
-								
 								var currMnths = '';
+								if(i == currmnth){
+									currMnths='currMnths';
+								}else if(i > currmnth){
+									currMnths='upcommMnths';
+								}else{
+									currMnths='prevMnth';
+								}
+																
 								var crmth_manual_feed = 0.00;
 								var prmth_manual_feed = 0.00;
 								var pnd1 = '';
@@ -1493,17 +1504,28 @@
 								var tax_basev = '';
 								var tax_basent = '';
 								var taxbycom = '';
+								var ssobycom = '';
 
 								$.each(payroll_datas, function(k1,v){
 
 									if(v['allow_deduct_ids'] !=''){
-										var k = k1;
+										var k = v['allow_deduct_ids'];
 										if(v['classifications'] == 0){
 
 											var monthss = short_months[i];
 											var monthssLower = monthss.toLowerCase();
-											crmth_manual_feed = v[monthssLower];
-											if(crmth_manual_feed == ''){crmth_manual_feed=0.00;};
+
+											if(currMnths == 'prevMnth'){
+												if(payroll_datas_prev[i].hasOwnProperty(k)){
+													crmth_manual_feed = payroll_datas_prev[i][k][monthssLower]; 
+												}else{
+													crmth_manual_feed = 0.00;
+												}
+											}else{
+												crmth_manual_feed = v[monthssLower];
+											}
+											
+											if(crmth_manual_feed == ''){crmth_manual_feed=0.00;}
 											
 											if(v['pnd'] == 1){ pnd1 = 'pnd1';}else{ pnd1 = '';}
 											if(data[0].calc_sso == 1 && v['sso'] == 1){ sso = 'sso';}else{ sso = '';}
@@ -1513,8 +1535,10 @@
 											if(v['tax_base'] == 'fix'){ tax_basef = 'fix';}else{ tax_basef = '';}
 											if(v['tax_base'] == 'var'){ tax_basev = 'var';}else{ tax_basev = '';}
 											if(v['tax_base'] == 'nontax'){ tax_basent = 'nontax';}else{ tax_basent = '';}
+											if(v['allow_deduct_ids'] == 27){taxbycom="taxbycom";}else{ taxbycom="";}
+											if(v['allow_deduct_ids'] == 28){ssobycom="ssobycom";}else{ ssobycom="";}
 
-											allow_and_deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+taxbycom+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
+											allow_and_deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+taxbycom+' '+ssobycom+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 										}
 									}
 								})
@@ -1539,7 +1563,7 @@
 						var countClm = 0;
 						$.each(payroll_datas, function(k1,v){
 							if(v['allow_deduct_ids'] !=''){
-								var k = k1;
+								var k = v['allow_deduct_ids'];
 								if(v['classifications'] == 1){
 									countClm++;
 									if(allowance_deduct_name[k] == undefined){ clmnval = allowDdtEmp_name[k];}else{ clmnval = allowance_deduct_name[k];}
@@ -1554,9 +1578,18 @@
 						deduct_data +='<tbody>';
 							var i;
 							for(i=1; i <=12 ; i++){
+
 								deduct_data +='<tr><td class="tac font-weight-bold">'+short_months[i]+'-'+curryear+'</td>';
-								
+
 								var currMnths = '';
+								if(i == currmnth){
+									currMnths='currMnths';
+								}else if(i > currmnth){
+									currMnths='upcommMnths';
+								}else{
+									currMnths='prevMnth';
+								}
+
 								var crmth_manual_feed = 0.00;
 								var prmth_manual_feed = 0.00;
 								var pnd1 = '';
@@ -1573,12 +1606,21 @@
 								$.each(payroll_datas, function(k1,v){
 
 									if(v['allow_deduct_ids'] !=''){
-										var k = k1;
+										var k = v['allow_deduct_ids'];
 										if(v['classifications'] == 1){
 
 											var monthss = short_months[i];
 											var monthssLower = monthss.toLowerCase();
-											crmth_manual_feed = v[monthssLower];
+											
+											if(currMnths == 'prevMnth'){
+												if(payroll_datas_prev[i].hasOwnProperty(k)){
+													crmth_manual_feed = payroll_datas_prev[i][k][monthssLower]; 
+												}else{
+													crmth_manual_feed = 0.00;
+												}
+											}else{
+												crmth_manual_feed = v[monthssLower];
+											}
 
 											if(v['pnd'] == 1){ pnd1 = 'pnd1';}else{ pnd1 = '';}
 											if(data[0].calc_sso == 1 && v['sso'] == 1){ sso = 'sso';}else{ sso = '';}
@@ -1588,6 +1630,8 @@
 											if(v['tax_base'] == 'fix'){ tax_basef = 'fix';}else{ tax_basef = '';}
 											if(v['tax_base'] == 'var'){ tax_basev = 'var';}else{ tax_basev = '';}
 											if(v['tax_base'] == 'nontax'){ tax_basent = 'nontax';}else{ tax_basent = '';}
+											if(v['allow_deduct_ids'] == 57){extracls="ssocurr";}else{ extracls="";}
+											if(v['allow_deduct_ids'] == 60){extraTax="exTax";}else{ extraTax="";}
 
 											deduct_data +='<td class="tar '+currMnths+' '+pnd1+' '+sso+' '+pvf+' '+psf+' '+tax_basefp+' '+tax_basef+' '+tax_basev+' '+tax_basent+' '+extracls+' '+extraTax+' '+v['groups']+'">'+number_format(crmth_manual_feed)+'</td>';
 
@@ -1786,7 +1830,7 @@
 		})
 	}
 
-	function closeBtn(){
+	function closeBtn1(){
 
 		$('#linkedcolumnsSC').DataTable().destroy();
 		$('#linkedcolumnsSCD').DataTable().destroy();
@@ -2561,18 +2605,24 @@
 						$('#modalTAXDeduction #td_pvf_clcthb').text(data.calc_on_pf);
 						$('#modalTAXDeduction #td_sso_clcthb').text(data.calc_on_ssf);
 
-						$('#modalTAXDeduction #fixed_actual_income_std').text(data[0].fixed_actual_yearly);
-						$('#modalTAXDeduction #fixed_actual_income_pcare').text(data[0].fixed_actual_yearly);
+						$('#modalTAXDeduction #fixed_actual_income_std').text(data[0].tax_standard_deduction);
+						$('#modalTAXDeduction #fixed_actual_income_pcare').text(data[0].tax_personal_allowance);
 
 						//Calculation Standard deduction
 						var std_fixed_actual = $('#fixed_actual_income_std').text();
-						var multiply_bys = (std_fixed_actual * 0.5);
 
 						var subtotal_std = std_fixed_actual;
-						if(multiply_bys > 100000){
-							subtotal_std = 100000;
+						if(data.calc_on_sd != 'THB'){
+							var multiply_bys = parseFloat(std_fixed_actual * 0.5);
+							subtotal_std = multiply_bys;
+
+							if(multiply_bys > 100000){
+								subtotal_std = 100000;
+							}
 						}
+
 						$('#modalTAXDeduction #subtotal_std').text(subtotal_std);
+
 
 						$('#modalTAXDeduction #td_manual_std').val(data[0].standard_deduction_manual);
 
@@ -2585,11 +2635,14 @@
 
 						//Calculation Personal Care
 						var pcare_fixed_actual = $('#fixed_actual_income_pcare').text();
-						var multiply_byp = (pcare_fixed_actual * 0.4);
-
 						var subtotal_pcare = pcare_fixed_actual;
-						if(multiply_byp > 60000){
-							subtotal_pcare = 60000;
+						if(data.calc_on_pc != 'THB'){
+
+							var multiply_byp = parseFloat(pcare_fixed_actual * 0.4);
+							subtotal_pcare = multiply_byp;
+							if(multiply_byp > 60000){
+								subtotal_pcare = 60000;
+							}
 						}
 						$('#modalTAXDeduction #subtotal_pcare').text(subtotal_pcare);
 						$('#modalTAXDeduction #td_manual_pcare').val(data[0].personal_care_manual);
@@ -2602,52 +2655,10 @@
 						$('#modalTAXDeduction #td_pcare_deduct').text(td_pcare_deduct);
 
 
-						$('#modalTAXDeduction #th_income_sso_mnth').text(data[0].total_sso);
-						$('#modalTAXDeduction #th_income_pvf_mnth').text(data[0].total_pvf);
-
-						var td_subtotal_sso = total_sso;
-						var td_subtotal_pvf = total_pvf;
-
-						$('#modalTAXDeduction #td_subtotal_sso').text(td_subtotal_sso);
-						$('#modalTAXDeduction #td_subtotal_pvf').text(td_subtotal_pvf);
-
-						$('#modalTAXDeduction #td_manual_ssod').val(data[0].allow_sso_manual);
-						var td_manual_ssod = $('#td_manual_ssod').val();
-						var td_sso_deduct = td_subtotal_sso;
-						if(td_manual_ssod > 0){
-							td_sso_deduct = parseFloat(td_subtotal_sso) + parseFloat(td_manual_ssod);
-						}
-
-						$('#modalTAXDeduction #td_sso_deduct').text(td_sso_deduct);
-						$('#modalTAXDeduction #td_manual_pvfd').val(data[0].allow_pvf_manual);
-
-						var td_manual_pvfd = $('#td_manual_pvfd').val();
-						var td_pvf_deduct = td_subtotal_pvf;
-						if(td_manual_pvfd > 0){
-							td_pvf_deduct = parseFloat(td_subtotal_pvf) + parseFloat(td_manual_pvfd);
-						}
-
-						$('#modalTAXDeduction #td_pvf_deduct').text(td_pvf_deduct);
-
-						/*var td_std_deduct1 = 0; 
-						if(data[0].tax_standard_deduction > 0){
-							td_std_deduct1 = data[0].tax_standard_deduction;
-						}
-						var td_pcare_deduct1 = 0; 
-						if(data[0].tax_personal_allowance > 0){
-							td_pcare_deduct1 = data[0].tax_personal_allowance;
-						}
-						var td_pvf_deduct1 = 0; 
-						if(data[0].tax_allow_pvf > 0){
-							td_pvf_deduct1 = data[0].tax_allow_pvf;
-						}
-						var td_sso_deduct1 = 0; 
-						if(data[0].tax_allow_sso > 0){
-							td_sso_deduct1 = data[0].tax_allow_sso;
-						}*/
-
 						$('#modalTAXDeduction #td_std_deduction').text(td_std_deduct);
 						$('#modalTAXDeduction #td_pers_care').text(td_pcare_deduct);
+						var td_pvf_deduct = data[0].full_year_pvf_employee;
+						var td_sso_deduct = data[0].full_year_sso_employee;
 						$('#modalTAXDeduction #td_pvf_empsss').text(td_pvf_deduct);
 						$('#modalTAXDeduction #td_sso_empsss').text(td_sso_deduct);
 
@@ -2655,11 +2666,11 @@
 
 						var sum_all_deduction = parseFloat(td_std_deduct) + parseFloat(td_pcare_deduct) + parseFloat(td_sso_deduct) + parseFloat(td_pvf_deduct) + parseFloat(data[0].total_other_tax_deductions);
 						var tb_sum_all = parseFloat(sum_all_deduction).toFixed(2);
-						$('#modalTAXDeduction #td_total_tax_deduct').text(tb_sum_all);
+						$('#modalTAXDeduction #td_total_tax_deduct').text(number_format(tb_sum_all));
 
-						$('#modalTAXDeduction #td_pvf_emp').text(data[0].pvf_rate_emp);
+						//$('#modalTAXDeduction #td_pvf_emp').text(data[0].pvf_rate_emp);
 
-						$('#modalTAXDeduction').modal('toggle');
+						$('#modalTAXDeduction').modal('show');
 					}
 				}
 			})
@@ -2692,13 +2703,19 @@
 
 	function tax_deduct_calc(that){
 
+		var td_std_clcthb = $('#td_std_clcthb').text();
+		var td_pcare_clcthb = $('#td_pcare_clcthb').text();
+
 		//Calculation Standard deduction
 		var std_fixed_actual = $('#fixed_actual_income_std').text();
-		var multiply_bys = (std_fixed_actual * 0.5);
-
 		var subtotal_std = std_fixed_actual;
-		if(multiply_bys > 100000){
-			subtotal_std = 100000;
+		if(td_std_clcthb != 'THB'){
+			var multiply_bys = parseFloat(std_fixed_actual * 0.5);
+
+			subtotal_std = multiply_bys;
+			if(multiply_bys > 100000){
+				subtotal_std = 100000;
+			}
 		}
 		$('#modalTAXDeduction #subtotal_std').text(subtotal_std);
 
@@ -2711,11 +2728,13 @@
 
 		//Calculation Personal Care
 		var pcare_fixed_actual = $('#fixed_actual_income_pcare').text();
-		var multiply_byp = (pcare_fixed_actual * 0.4);
-
 		var subtotal_pcare = pcare_fixed_actual;
-		if(multiply_byp > 60000){
-			subtotal_pcare = 60000;
+		if(td_pcare_clcthb != 'THB'){
+			var multiply_byp = (pcare_fixed_actual * 0.4);
+			subtotal_pcare = multiply_byp;
+			if(multiply_byp > 60000){
+				subtotal_pcare = 60000;
+			}
 		}
 		$('#modalTAXDeduction #subtotal_pcare').text(subtotal_pcare);
 
@@ -2727,38 +2746,16 @@
 		$('#modalTAXDeduction #td_pcare_deduct').text(td_pcare_deduct);
 
 
-		var td_subtotal_sso = $('#modalTAXDeduction #td_subtotal_sso').text();
-		var td_subtotal_pvf = $('#modalTAXDeduction #td_subtotal_pvf').text();
-
-		$('#modalTAXDeduction #td_subtotal_sso').text(td_subtotal_sso);
-		$('#modalTAXDeduction #td_subtotal_pvf').text(td_subtotal_pvf);
-
-		var td_manual_ssod = $('#td_manual_ssod').val();
-		var td_sso_deduct = td_subtotal_sso;
-		if(td_manual_ssod > 0){
-			td_sso_deduct = parseFloat(td_subtotal_sso) + parseFloat(td_manual_ssod);
-		}
-
-		$('#modalTAXDeduction #td_sso_deduct').text(td_sso_deduct);
-
-		var td_manual_pvfd = $('#td_manual_pvfd').val();
-		var td_pvf_deduct = td_subtotal_pvf;
-		if(td_manual_pvfd > 0){
-			td_pvf_deduct = parseFloat(td_subtotal_pvf) + parseFloat(td_manual_pvfd);
-		}
-
-		$('#modalTAXDeduction #td_pvf_deduct').text(td_pvf_deduct);
-
 		$('#modalTAXDeduction #td_std_deduction').text(td_std_deduct);
 		$('#modalTAXDeduction #td_pers_care').text(td_pcare_deduct);
-		$('#modalTAXDeduction #td_pvf_empsss').text(td_pvf_deduct);
-		$('#modalTAXDeduction #td_sso_empsss').text(td_sso_deduct);
-		//$('#modalTAXDeduction #td_other_deduct').text(data[0].total_other_tax_deduction);
-
+		
+		var td_pvf_deduct = $('#td_pvf_empsss').text();
+		var td_sso_deduct = $('#td_sso_empsss').text();
+		
 		var total_other_tax_deduction = $('#td_other_deduct').text();
 		var sum_all_deduction = parseFloat(td_std_deduct) + parseFloat(td_pcare_deduct) + parseFloat(td_sso_deduct) + parseFloat(td_pvf_deduct) + parseFloat(total_other_tax_deduction);
 		var tb_sum_all = parseFloat(sum_all_deduction).toFixed(2);
-		$('#modalTAXDeduction #td_total_tax_deduct').text(tb_sum_all);
+		$('#modalTAXDeduction #td_total_tax_deduct').text(number_format(tb_sum_all));
 	}
 
 	function modal_pvf(){
@@ -3170,6 +3167,10 @@
 						//console.log(data);
 
 						var payroll_datas = data.payroll_data;
+						var payroll_data_coulmn_prev = data.payroll_data_coulmn_prev;
+
+						$('#modalSSO select[name="ss_calc_sso"] option').attr('selected',false);
+						$('#modalSSO select[name="ss_paidby_sso"] option').attr('selected',false);
 
 
 						$('#modalSSO #ssoEmpid').val(data[0].emp_id);
@@ -3314,11 +3315,23 @@
 								//sso_employer = sso_thbs;
 								sso_thb = payroll_datas[57][monthssLower];
 								sso_employer = payroll_datas['ssoemployer'][monthssLower];
+								//alert(ssothb);
+							}else if(ss_calc_sso == 1 && k < data[0].month){
+
+								//sso_thb = sso_thbs;
+								//sso_employer = sso_thbs;
+								sso_thb = payroll_datas[57][monthssLower];
+								sso_employer = payroll_datas['ssoemployer'][monthssLower];
+								//alert(ssothb);
 							}
 
 							if(ss_paidby_sso == 1 && k >= data[0].month){
+								ssobycompany = sso_thb;
+								//ssobycompany = payroll_datas[28][monthssLower];
+							}else if(ss_paidby_sso == 1 && k < data[0].month){
 								//ssobycompany = sso_thb;
-								ssobycompany = payroll_datas[28][monthssLower];
+								//ssobycompany = payroll_datas[28][monthssLower];
+								ssobycompany = payroll_data_coulmn_prev[k][28][monthssLower];
 							}
 
 							sso_thb = parseFloat(sso_thb).toFixed(2);
@@ -3871,6 +3884,7 @@
 		//============== Save Tax Deduction DATA =============//
 		$('#SaveTDdata').click(function(){
 			var empids = $('#td_empid').text();
+			var mid = '<?=$_GET['mid']?>';
 			if(empids !=''){
 
 				var subtotal_std = $('#subtotal_std').text();
@@ -3888,11 +3902,13 @@
 				var td_subtotal_pvf = $('#td_subtotal_pvf').text();
 				var td_manual_pvfd = $('#td_manual_pvfd').val();
 				var td_pvf_deduct = $('#td_pvf_deduct').text();
+				var yearly_tax_deductions = $('#td_total_tax_deduct').text();
+				var total_yearly_tax_deductions = yearly_tax_deductions.replace(",", "");
 
 				$.ajax({
 					type: 'post',
 					url: "tabs/ajax/save_tax_deduction_data.php",
-					data: {empids: empids, subtotal_std: subtotal_std, td_manual_std: td_manual_std, td_std_deduct: td_std_deduct, subtotal_pcare: subtotal_pcare, td_manual_pcare: td_manual_pcare, td_pcare_deduct: td_pcare_deduct, td_subtotal_sso: td_subtotal_sso, td_manual_ssod: td_manual_ssod, td_sso_deduct: td_sso_deduct, td_subtotal_pvf: td_subtotal_pvf, td_manual_pvfd: td_manual_pvfd, td_pvf_deduct: td_pvf_deduct},
+					data: {empids: empids, mid:mid, subtotal_std: subtotal_std, td_manual_std: td_manual_std, td_std_deduct: td_std_deduct, subtotal_pcare: subtotal_pcare, td_manual_pcare: td_manual_pcare, td_pcare_deduct: td_pcare_deduct, td_subtotal_sso: td_subtotal_sso, td_manual_ssod: td_manual_ssod, td_sso_deduct: td_sso_deduct, td_subtotal_pvf: td_subtotal_pvf, td_manual_pvfd: td_manual_pvfd, td_pvf_deduct: td_pvf_deduct,total_yearly_tax_deductions:total_yearly_tax_deductions},
 					success: function(result){
 
 						if(result == 'success'){
@@ -3992,6 +4008,10 @@
 
 				if(this.id == 'taxbycom_curr_calc' || this.id == 'taxbycom_curr_mnth'){ 
 					$('#linkedcolumnsSC tbody td.currMnths.taxbycom').addClass('borderCls');
+				}
+
+				if(this.id == 'ssobycom_curr_calc' || this.id == 'ssobycom_curr_mnth'){ 
+					$('#linkedcolumnsSC tbody td.currMnths.ssobycom').addClass('borderCls');
 				}
 
 
@@ -4106,15 +4126,15 @@
 					$('#linkedcolumnsSC tbody td.prevMnth.pnd1').addClass('borderCls');
 					$('#linkedcolumnsSC tbody td.upcommMnths.pnd1').addClass('borderCls');
 
-					$('#linkedcolumnsD tbody td.currMnths.pnd1').addClass('borderCls');
-					$('#linkedcolumnsD tbody td.prevMnth.pnd1').addClass('borderCls');
-					$('#linkedcolumnsD tbody td.upcommMnths.pnd1').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.currMnths.pnd1').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.pnd1').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.pnd1').addClass('borderCls');
 				}
 
 				if(this.id == 'sso_full_year'){
-					$('#linkedcolumns tbody td.currMnths.sso').addClass('borderCls');
-					$('#linkedcolumns tbody td.prevMnth.sso').addClass('borderCls');
-					$('#linkedcolumns tbody td.upcommMnths.sso').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.currMnths.sso').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.sso').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.sso').addClass('borderCls');
 
 					$('#linkedcolumnsSCD tbody td.currMnths.sso').addClass('borderCls');
 					$('#linkedcolumnsSCD tbody td.prevMnth.sso').addClass('borderCls');
@@ -4139,6 +4159,82 @@
 					$('#linkedcolumnsSCD tbody td.currMnths.psf').addClass('borderCls');
 					$('#linkedcolumnsSCD tbody td.prevMnth.psf').addClass('borderCls');
 					$('#linkedcolumnsSCD tbody td.upcommMnths.psf').addClass('borderCls');
+				}
+
+
+				if(this.id == 'fixpro_full_year'){
+					$('#linkedcolumnsSC tbody td.currMnths.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.fixpro').addClass('borderCls');
+
+					$('#linkedcolumnsSCD tbody td.currMnths.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.fixpro').addClass('borderCls');
+				}
+
+				if(this.id == 'fix_full_year'){
+					$('#linkedcolumnsSC tbody td.currMnths.fix').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.fix').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.fix').addClass('borderCls');
+
+					$('#linkedcolumnsSCD tbody td.currMnths.fix').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.fix').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.fix').addClass('borderCls');
+				}
+
+				if(this.id == 'var_full_year'){
+					$('#linkedcolumnsSC tbody td.currMnths.var').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.var').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.var').addClass('borderCls');
+
+					$('#linkedcolumnsSCD tbody td.currMnths.var').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.var').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.var').addClass('borderCls');
+				}
+
+				if(this.id == 'totalffv_full_year'){
+
+					$('#linkedcolumnsSC tbody td.currMnths.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.currMnths.fix').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.fix').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.fix').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.currMnths.var').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.var').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.var').addClass('borderCls');
+
+					$('#linkedcolumnsSCD tbody td.currMnths.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.fixpro').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.currMnths.fix').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.fix').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.fix').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.currMnths.var').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.var').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.var').addClass('borderCls');
+				}
+
+				if(this.id == 'nontax_full_year'){
+					$('#linkedcolumnsSC tbody td.currMnths.nontax').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.prevMnth.nontax').addClass('borderCls');
+					$('#linkedcolumnsSC tbody td.upcommMnths.nontax').addClass('borderCls');
+
+					$('#linkedcolumnsSCD tbody td.currMnths.nontax').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.nontax').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.nontax').addClass('borderCls');
+				}
+
+				if(this.id == 'sso_emp_full_year'){ 
+					$('#linkedcolumnsSCD tbody td.currMnths.ssocurr').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.ssocurr').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.ssocurr').addClass('borderCls');
+				}
+
+				if(this.id == 'tax_emp_full_year'){ 
+					$('#linkedcolumnsSCD tbody td.currMnths.exTax').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.prevMnth.exTax').addClass('borderCls');
+					$('#linkedcolumnsSCD tbody td.upcommMnths.exTax').addClass('borderCls');
 				}
 
 

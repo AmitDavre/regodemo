@@ -121,7 +121,8 @@
 		$eom = date('t-m-Y', strtotime($d));
 
 		$data = array();
-		$sql = "SELECT * FROM ".$cid."_employee_career WHERE emp_id = '".$empid."' AND DATE(start_date) >= '".$som."' AND month >= '".$month."' ORDER BY id DESC";
+		//$sql = "SELECT * FROM ".$cid."_employee_career WHERE emp_id = '".$empid."' AND DATE(start_date) >= '".$som."' AND month >= '".$month."' ORDER BY id DESC";
+		$sql = "SELECT * FROM ".$cid."_employee_career WHERE emp_id = '".$empid."' AND DATE(start_date) >= ".$som." ORDER BY id DESC";
 		if($res = $dbc->query($sql)){
 			while($row = $res->fetch_assoc()){
 				$data[] = $row;
@@ -504,7 +505,7 @@
 		// print_r();
 		// echo "</pre>";
 
-		$nr = 4;
+		$nr = 5;
 		if($paid_hours == 0){$ecol[$nr] = $nr;} $nr++;
 
 		$checkmf = count($dropdownArray);

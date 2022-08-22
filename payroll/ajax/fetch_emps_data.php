@@ -48,6 +48,8 @@
 		$hrs_curr_wages_data = array();
 		$hrs_prev_wages_data = array();
 		$time_curr_wages = array();
+		$rate_wages = array();
+		$thb_wages = array();
 		foreach($data as $key => $row) {
 
 			$getpayrollinfo = getpayrollinfo($row['emp_id'],$_SESSION['rego']['cur_month']);
@@ -119,13 +121,11 @@
 			$tot_this_months = $this_month1 + $this_month2;
 			$tot_work_days = $calendar_days_prev + $calendar_days_prev1;
 
-			//echo $calendar_days_prev.' - '.$calendar_days_prev1.' - '.$row['emp_id'];
-			//echo '<br>';
-			//die();
-			
-
 			$fix_allow_from_emp = $getAllowances[0]['fix_allow'];
 			$fix_deduct_from_emp = $getAllowances[0]['fix_deduct'];
+
+			$fix_allow_unserial = unserialize($getAllowances[0]['fix_allow']);
+			$fix_deduct_unserial = unserialize($getAllowances[0]['fix_deduct']);
 
 			if($row['calc_on_sd']==1){$tsd='';}else{$tsd=$row['tax_standard_deduction'];}
 			if($row['calc_on_pc']==1){$tpa='';}else{$tpa=$row['tax_personal_allowance'];}
@@ -133,16 +133,32 @@
 			if($row['calc_on_ssf']==1){$tsf='';}else{$tsf=$row['tax_allow_sso'];}
 			$total_other_tax_deductions = $row['emp_tax_deductions'];
 
-			
-			if($row['contract_type'] == 'day'){
+			$condition = '';
+			if($row['contract_type'] == 'day'){ //FOR DAY CONTRACT TYPE
+
 				$paid_hours = decimalHours($tab_default['nrhrs']);
 				$rate_hrs = ($salary / $paid_hours);
 				$rate_hr = round($rate_hrs,2);
-				$condition = "day_daily_wage='".$salary."', paid_days='', paid_hours='', rate_hr='".$rate_hr."', ";
+
+				foreach ($payrollparametersformonth as $keyss => $valuess) {
+
+					if($valuess['man_att'] == 1 && $valuess['allowopt'] == 'hrs'){
+						$ratewage = ($rate_hr * $valuess['multiplicator']); 
+						$ratewages = round($ratewage,2);
+						$rate_wages[$valuess['itemid']] = $ratewages;
+					}
+
+					if($valuess['man_att'] == 1 && $valuess['allowopt'] == 'hrs'){
+						$thb_wages[$valuess['itemid']] = '';
+					}
+				}
+
+				//$condition = "day_daily_wage='".$salary."', paid_days='', paid_hours='', rate_hr='".$rate_hr."', ";
+				$condition = "day_daily_wage='".$salary."', rate_hr='".$rate_hr."', rate_wages='".serialize($rate_wages)."', thb_wages='".serialize($thb_wages)."', ";
 
 			}else{ //FOR MONTHLY CONTRACT TYPE
 
-				/*foreach ($payrollparametersformonth as $keyss => $valuess) {
+				foreach ($payrollparametersformonth as $keyss => $valuess) {
 
 					if($valuess['man_att'] == 1 && $valuess['allowopt'] == 'hrs'){
 						$pp_income_base = $valuess['pp_income_base'];
@@ -151,10 +167,10 @@
 						$TotalIncomessd = 0;
 						foreach ($tot_income_base as $key1 => $value1) {
 							$index = $value1;
-							if(isset($fix_allow_from_emp[$index])){
-								$TotalIncome += $fix_allow_from_emp[$index];
-							}elseif(isset($fix_deduct_from_emp[$index])){
-								$TotalIncomessd += $fix_deduct_from_emp[$index];
+							if(isset($fix_allow_unserial[$index])){
+								$TotalIncome += $fix_allow_unserial[$index];
+							}elseif(isset($fix_deduct_unserial[$index])){
+								$TotalIncomessd += $fix_deduct_unserial[$index];
 							}else{
 								if($index == 56){
 									$TotalIncome += $tot_this_months;
@@ -166,6 +182,7 @@
 						$nrhrsval = explode(':',$nrhrs);
 						$nrdayss = $valuess['nrdays'];
 						if($nrdayss < 1){$nrdayss=1;}
+
 
 						$currCalc = (($TotalIncome / $nrdayss / $nrhrsval[0]) * $valuess['multiplicator']); 
 						$currCalcs = round($currCalc,2);
@@ -180,8 +197,8 @@
 				}
 
 				$condition = "paid_days='".$tot_work_days."', hrs_curr_wages='".serialize($hrs_curr_wages_data)."', hrs_prev_wages='".serialize($hrs_prev_wages_data)."', times_curr_wages='".serialize($time_curr_wages)."', ";
-				*/
-				$condition = "paid_days='".$tot_work_days."', ";
+				
+				//$condition = "paid_days='".$tot_work_days."', ";
 			}
 
 			$sql = "UPDATE ".$sessionpayrollDbase." SET ".$condition." position='".$position."', basic_salary='".$salary."', salary='".$tot_this_months."', fix_allow_from_emp='".$fix_allow_from_emp."', fix_deduct_from_emp='".$fix_deduct_from_emp."', calc_tax='".$row['calc_tax']."', calc_sso='".$row['calc_sso']."', sso_by='".$row['sso_by']."', calc_pvf='".$row['calc_pvf']."', calc_psf='".$row['calc_psf']."', calc_method='".$row['calc_method']."', perc_thb_pvf='".$row['perc_thb_pvf']."', pvf_rate_emp='".$row['contri_emple_pvf']."', pvf_rate_com='".$row['contri_emplyer_pvf']."', perc_thb_psf='".$row['perc_thb_psf']."', psf_rate_emp='".$row['contri_emple_psf']."', psf_rate_com='".$row['contri_emplyer_psf']."', contract_type='".$row['contract_type']."', calc_base='".$row['calc_base']."', other_income='".$row['other_income']."', severance='".$row['severance']."', notice_payment='".$row['notice_payment']."', remaining_salary='".$row['remaining_salary']."', gov_house_banking='".$row['gov_house_banking']."', savings='".$row['savings']."', legal_execution='".$row['legal_execution']."', kor_yor_sor='".$row['kor_yor_sor']."', paid_leave='".$row['paid_leave']."', modify_tax='".$row['modify_tax']."', calc_on_sd='".$row['calc_on_sd']."', calc_on_pc='".$row['calc_on_pc']."', calc_on_pf='".$row['calc_on_pf']."', calc_on_ssf='".$row['calc_on_ssf']."', tax_standard_deduction='".$tsd."', tax_personal_allowance='".$tpa."', tax_allow_pvf='".$tpf."', tax_allow_sso='".$tsf."', total_other_tax_deductions='".$total_other_tax_deductions."', paid='C' WHERE emp_id = '".$row['emp_id']."' AND month = '".$_SESSION['rego']['cur_month']."' AND payroll_modal_id = '".$_REQUEST['mid']."' ";

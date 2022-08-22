@@ -16,6 +16,7 @@
 	$sessionpayrollDataTable = $_SESSION['rego']['cid'].'_payroll_data_'.$_SESSION['rego']['cur_year'];
 
 	$data=array();
+	
 	$getMonthdata = $dbc->query("SELECT * FROM ".$sessionpayrollDbase." WHERE emp_id = '".$empid."' AND month = '".$_SESSION['rego']['cur_month']."' AND payroll_modal_id='".$mid."' ");
 	if($getMonthdata->num_rows > 0){
 		while ($row = $getMonthdata->fetch_assoc()) {
@@ -59,28 +60,59 @@
 			$data['rate_wages'] = unserialize($row['rate_wages']);
 			$data['thb_wages'] = unserialize($row['thb_wages']);
 
+			//===== Get data from Payroll data table for current and upcomming month start ======//
 			$pdata = $dbc->query("SELECT * FROM ".$sessionpayrollDataTable." WHERE `emp_ids`='".$row['emp_id']."' AND `months`='".$row['month']."' AND `payroll_modal_ids`='".$row['payroll_modal_id']."' ORDER BY case when allow_deduct_ids in (56) then -1 else allow_deduct_ids end, allow_deduct_ids ");
 			if($pdata->num_rows > 0){
-				while ($row = $pdata->fetch_assoc()) {
+				while ($rowcc = $pdata->fetch_assoc()) {
 
-					$sumAll = ($row['jan'] + $row['feb'] + $row['mar'] + $row['apr'] + $row['may'] + $row['jun'] + $row['jul'] + $row['aug'] + $row['sep'] + $row['oct'] + $row['nov'] + $row['dec']);
+					$sumAll = ($rowcc['jan'] + $rowcc['feb'] + $rowcc['mar'] + $rowcc['apr'] + $rowcc['may'] + $rowcc['jun'] + $rowcc['jul'] + $rowcc['aug'] + $rowcc['sep'] + $rowcc['oct'] + $rowcc['nov'] + $rowcc['dec']);
 			
 					if($sumAll > 0){
-						if($row['allow_deduct_ids'] == ''){
-							if($row['classifications'] == 2){
+						if($rowcc['allow_deduct_ids'] == ''){
+							if($rowcc['classifications'] == 2){
 								$allow_deduct_ids='ssoemployer';
-							}elseif($row['classifications'] == 3){
+							}elseif($rowcc['classifications'] == 3){
 								$allow_deduct_ids='pvfemployer';
-							}elseif($row['classifications'] == 4){
+							}elseif($rowcc['classifications'] == 4){
 								$allow_deduct_ids='psfemployer';
 							}
 						}else{
-							$allow_deduct_ids=$row['allow_deduct_ids'];
+							$allow_deduct_ids=$rowcc['allow_deduct_ids'];
 						}
-						$data['payroll_data'][$allow_deduct_ids] = $row;
+
+						$data['payroll_data'][$allow_deduct_ids] = $rowcc;
+						$data['payroll_data_coulmn'][] = $rowcc;
 					}
 				}
 			} 
+			//===== Get data from Payroll data table for current and upcomming month end ======//
+
+			//===== Get data from Payroll data table for Previous month start ======//
+			/*echo "SELECT * FROM ".$sessionpayrollDataTable." WHERE `emp_ids`='".$row['emp_id']."' AND `months` < '".$row['month']."' AND `payroll_modal_ids`='".$row['payroll_modal_id']."' ORDER BY case when allow_deduct_ids in (56) then -1 else allow_deduct_ids end, allow_deduct_ids "; die();*/
+			$predata = $dbc->query("SELECT * FROM ".$sessionpayrollDataTable." WHERE `emp_ids`='".$row['emp_id']."' AND `months` < '".$row['month']."' AND `payroll_modal_ids`='".$row['payroll_modal_id']."' ORDER BY case when allow_deduct_ids in (56) then -1 else allow_deduct_ids end, allow_deduct_ids ");
+			if($predata->num_rows > 0){
+				while ($rowpre = $predata->fetch_assoc()) {
+
+					$sumAllpre = ($rowpre['jan'] + $rowpre['feb'] + $rowpre['mar'] + $rowpre['apr'] + $rowpre['may'] + $rowpre['jun'] + $rowpre['jul'] + $rowpre['aug'] + $rowpre['sep'] + $rowpre['oct'] + $rowpre['nov'] + $rowpre['dec']);
+			
+					if($sumAllpre > 0){
+						if($rowpre['allow_deduct_ids'] == ''){
+							if($rowpre['classifications'] == 2){
+								$allow_deduct_ids='ssoemployer';
+							}elseif($rowpre['classifications'] == 3){
+								$allow_deduct_ids='pvfemployer';
+							}elseif($rowpre['classifications'] == 4){
+								$allow_deduct_ids='psfemployer';
+							}
+						}else{
+							$allow_deduct_ids=$rowpre['allow_deduct_ids'];
+						}
+
+						$data['payroll_data_coulmn_prev'][$rowpre['months']][$allow_deduct_ids] = $rowpre;
+					}
+				}
+			} 
+			//===== Get data from Payroll data table for Previous month end ======//
 
 		}
 
@@ -222,6 +254,11 @@
 			//}*/
 			
 		/*** Payroll column for salary tab popup ****/
+
+		// echo '<pre>';
+		// 	print_r($data);
+		// 	echo '</pre>';
+		// 	die('ddd');
 
 		ob_clean();
 		echo json_encode($data);

@@ -16,8 +16,6 @@
 	$open_tickets = $tickets['open'];
 
 
-
-
 	
 ?>
 	<style type="text/css">

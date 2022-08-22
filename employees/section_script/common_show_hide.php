@@ -1,4 +1,5 @@
 //for show hide...
+		
 		$('#showHideclm').SumoSelect({
 			placeholder: '<?=$lng['Show Hide Columns']?>',
 			captionFormat: '<?=$lng['Show Hide Columns']?> ({0})',
@@ -116,11 +117,16 @@
     	})		
     	$("table#showHideClmss2 .SumoSelect:first-child() li").bind('click.check', function(event) {
 			var nr = $(this).index()+2;
-			
-
+			//console.log(dtable.column(nr));
+			//dtable50.column(nr).visisble(false);
+			//dtable50.column($('#dat1'+(nr-1))).visisble(true);
 			if($(this).hasClass('selected') == true){
-
-			
+					if(continue_sel){
+						dtable50.column('.dat1'+(nr-1)).visible(true);
+						dtable52.column('.dat1'+(nr-1)).visible(true);
+						new_show_hide_cols_list.push('.dat1'+(nr-1));
+					}
+					//console.log(dtable.column(nr).visible(true));
 					 dtable.column(nr).visible(true);
 					 dtable2.column(nr).visible(true);
 
@@ -205,10 +211,13 @@
 			}
 			else
 			{	
-
-			
-					
-
+					if(continue_sel){
+						dtable50.column($('.dat1'+(nr-1))).visible(false);
+						dtable52.column('.dat1'+(nr-1)).visible(false);
+						while($.inArray('.dat1'+(nr-1),new_show_hide_cols_list)!=-1)
+							new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat1'+(nr-1)),1);
+					}
+					//console.log('tgtgwr');
 					dtable.column(nr).visible(false);
 					dtable2.column(nr).visible(false);
 				
@@ -367,6 +376,11 @@
 
 				dtable3.column(nr).visible(true);
 				dtable4.column(nr).visible(true);
+				if(continue_sel){
+					dtable50.column('.dat2'+(nr-1)).visible(true);
+					dtable52.column('.dat2'+(nr-1)).visible(true);
+					new_show_hide_cols_list.push('.dat2'+(nr-1));
+				}
 			}
 			else
 			{	
@@ -434,7 +448,12 @@
 
 				dtable3.column(nr).visible(false);
 				dtable4.column(nr).visible(false);
-					
+				if(continue_sel){
+					dtable50.column($('.dat2'+(nr-1))).visible(false);
+					dtable52.column('.dat2'+(nr-1)).visible(false);
+					while($.inArray('.dat2'+(nr-1),new_show_hide_cols_list)!=-1)
+						new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat2'+(nr-1)),1);
+				}
 			}
     	})	
 
@@ -470,6 +489,11 @@
 
 				dtable5.column(nr).visible(true);
 				dtable6.column(nr).visible(true);
+				if(continue_sel){
+					dtable52.column('.dat3'+(nr-1)).visible(true);
+					dtable50.column('.dat3'+(nr-1)).visible(true);
+					new_show_hide_cols_list.push('.dat3'+(nr-1));
+				}
 			}
 			else
 			{	
@@ -498,7 +522,12 @@
 
 				 dtable5.column(nr).visible(false);
 				 dtable6.column(nr).visible(false);
-					
+				if(continue_sel){
+					dtable50.column('.dat3'+(nr-1)).visible(false);
+					dtable52.column('.dat3'+(nr-1)).visible(false);
+					while($.inArray('.dat3'+(nr-1),new_show_hide_cols_list)!=-1)
+						new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat3'+(nr-1)),1);
+				}
 			}
     	})	
 
@@ -527,6 +556,11 @@
 
 				dtable7.column(nr).visible(true);
 				dtable8.column(nr).visible(true);
+				if(continue_sel){
+					dtable52.column('.dat4'+(nr-1)).visible(true);
+					dtable50.column('.dat4'+(nr-1)).visible(true);
+					new_show_hide_cols_list.push('.dat4'+(nr-1));
+				}
 			}
 			else
 			{	
@@ -547,7 +581,12 @@
 
 				 dtable7.column(nr).visible(false);
 				 dtable8.column(nr).visible(false);
-					
+				if(continue_sel){
+					dtable52.column('.dat4'+(nr-1)).visible(false);
+					dtable50.column('.dat4'+(nr-1)).visible(false);
+					while($.inArray('.dat4'+(nr-1),new_show_hide_cols_list)!=-1)
+						new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat4'+(nr-1)),1);
+				}
 			}
     	})	
 
@@ -567,6 +606,11 @@
 			
 				dtable9.column(nr).visible(true);
 				dtable10.column(nr).visible(true);
+				if(continue_sel){
+					dtable52.column('.dat5'+(nr-1)).visible(true);
+					dtable50.column('.dat5'+(nr-1)).visible(true);
+					new_show_hide_cols_list.push('.dat5'+(nr-1));
+				}
 			}
 			else
 			{	
@@ -578,7 +622,12 @@
 			
 				 dtable9.column(nr).visible(false);
 				 dtable10.column(nr).visible(false);
-					
+				if(continue_sel){
+					dtable50.column('.dat5'+(nr-1)).visible(false);
+					dtable52.column('.dat5'+(nr-1)).visible(false);
+					while($.inArray('.dat5'+(nr-1),new_show_hide_cols_list)!=-1)
+						new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat5'+(nr-1)),1);
+				}
 			}
     	})	
 
@@ -593,11 +642,22 @@
 				
 				dtable11.column(nr).visible(true);
 				dtable12.column(nr).visible(true);
+				if(continue_sel){
+					dtable50.column('.dat6'+(nr-1)).visible(true);
+					dtable52.column('.dat6'+(nr-1)).visible(true);
+					new_show_hide_cols_list.push('.dat6'+(nr-1));
+				}
 			}
 			else
 			{	
 				dtable11.column(nr).visible(false);
 				dtable12.column(nr).visible(false);
+				if(continue_sel){
+					dtable50.column('.dat6'+(nr-1)).visible(false);
+					dtable52.column('.dat6'+(nr-1)).visible(false);
+					while($.inArray('.dat6'+(nr-1),new_show_hide_cols_list)!=-1)
+						new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat6'+(nr-1)),1);
+				}
 			}
     	})
     	
@@ -631,6 +691,11 @@
 				if(nr == '22'){	$('ul li#modifykor_yor_sor_li').removeClass('displayNone');	}	
 				dtable15.column(nr).visible(true);
 				dtable16.column(nr).visible(true);
+				if(continue_sel){
+					dtable50.column('.dat7'+(nr-1)).visible(true);
+					dtable52.column('.dat7'+(nr-1)).visible(true);
+					new_show_hide_cols_list.push('.dat7'+(nr-1));
+				}
 			}
 			else
 			{	
@@ -657,6 +722,12 @@
 				if(nr == '22'){	$('ul li#modifykor_yor_sor_li').addClass('displayNone');		}	
 				dtable15.column(nr).visible(false);
 				dtable16.column(nr).visible(false);
+				if(continue_sel){
+					dtable50.column('.dat7'+(nr-1)).visible(false);
+					dtable52.column('.dat7'+(nr-1)).visible(false);
+					while($.inArray('.dat7'+(nr-1),new_show_hide_cols_list)!=-1)
+						new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat7'+(nr-1)),1);
+				}
 			}
     	})	
 
@@ -670,11 +741,22 @@
 
 				dtable13.column(nr).visible(true);
 				dtable14.column(nr).visible(true);
+				if(continue_sel){
+					dtable50.column('.dat8'+(nr-1)).visible(true);
+					dtable52.column('.dat8'+(nr-1)).visible(true);
+					new_show_hide_cols_list.push('.dat8'+(nr-1));
+				}
 			}
 			else
 			{	
 				dtable13.column(nr).visible(false);
 				dtable14.column(nr).visible(false);
+				if(continue_sel){
+					dtable50.column('.dat8'+(nr-1)).visible(false);
+					dtable52.column('.dat8'+(nr-1)).visible(false);
+					while($.inArray('.dat8'+(nr-1),new_show_hide_cols_list)!=-1)
+						new_show_hide_cols_list.splice(new_show_hide_cols_list.indexOf('.dat8'+(nr-1)),1);
+				}
 			}
     	})
     	
@@ -908,4 +990,3 @@ $("table#showHideClmss2 select#showHideclm9").on('sumo:closing', function(o) {
 				}
 			});
 		}); 
-

@@ -1,4 +1,4 @@
-	
+////////////////new comment	
 	function checkPassword(password) {
 		var number = /([0-9])/;
 		var lowers = /([a-z])/;

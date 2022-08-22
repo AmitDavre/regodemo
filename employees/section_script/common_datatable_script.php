@@ -348,6 +348,41 @@
 
 
 		});	
+		//console.log($('#datatables51'));
+		var dtable50=$('#datatables51').DataTable({
+
+			lengthChange: false,
+			searching: true,
+			ordering: false,
+			pagingType: 'full_numbers',
+			pageLength: pagelengthval,
+			filter: true,
+			info: false,
+			scrollY:        scrollyValue,
+	        scrollCollapse: true,
+	        scrollX: true,
+	        paging:         true,
+	        <?=$dtable_lang?>
+	    });
+	    dtable50.columns.adjust();
+	    setTimeout(function(){dtable50.columns.adjust()},1000);
+	    var dtable52=$('#datatables52').DataTable({
+
+			lengthChange: false,
+			searching: true,
+			ordering: false,
+			pagingType: 'full_numbers',
+			pageLength: pagelengthval,
+			filter: true,
+			info: false,
+			scrollY:        scrollyValue,
+	        scrollCollapse: true,
+	        scrollX: true,
+	        paging:         true,
+	        <?=$dtable_lang?>
+	    });
+	    dtable50.columns.adjust();
+	    setTimeout(function(){dtable52.columns.adjust()},1000);
 
 		// switch layput case 
 

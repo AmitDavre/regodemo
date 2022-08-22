@@ -12,11 +12,24 @@
 		$total_sso_allow += $value11['max'];
 	}
 
+	function getAllowDeductTotals($mid,$empid){
+		global $dbc;
+		$data = array();
+		$getdata = $dbc->query("SELECT * FROM ".$_SESSION['rego']['cid']."_payroll_data_".$_SESSION['rego']['cur_year']." WHERE months='".$_SESSION['rego']['cur_month']."' AND payroll_modal_ids='".$mid."' AND emp_ids='".$empid."'");
+		if($getdata->num_rows > 0){
+			while ( $row = $getdata->fetch_assoc()) {
+				$data[] = $row;
+			}
+		}
+		return $data;
+	}
 
-	function saveAllowDeductdata($mid,$empid,$itemid,$v1){
+
+	function saveAllowDeductdata($mid,$empid,$itemid,$v1,$extraValue){
 		global $dbc;
 		$getAllowandDeductInfo = getAllowandDeductInfo();
 		$months_column = array(1=>"jan", 2=>"feb", 3=>"mar", 4=>"apr", 5=>"may", 6=>"jun", 7=>"jul", 8=>"aug", 9=>"sep", 10=>"oct", 11=>"nov", 12=>"dec");
+
 
 		//========== This is special condition for SSO, PVF & PSF EMPLOYER =========//
 		if($itemid == 'ssoemployer' || $itemid == 'pvfemployer' || $itemid == 'psfemployer'){ 
@@ -45,7 +58,7 @@
 				$dbc->query($ipdsql);
 			}
 
-		}else{
+		}else{ //========For allowances and Deductions ==========//
 
 			$k1 = $itemid;
 			$getPayrollData = $dbc->query("SELECT * FROM ".$_SESSION['rego']['cid']."_payroll_data_".$_SESSION['rego']['cur_year']." WHERE months='".$_SESSION['rego']['cur_month']."' AND payroll_modal_ids='".$mid."' AND emp_ids='".$empid."' AND allow_deduct_ids='".$itemid."'");
@@ -54,10 +67,25 @@
 				//update
 				if($k1 != 57 || $k1 != 28){ //skip update for sso employee & sso by company
 					$condition='';
-					if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro' || $k1 == 57 || $k1 == 58 || $k1 == 59 || $k1 == 28){
-						for ($i=1; $i <=12 ; $i++) { 
-							$condition .= " `".$months_column[$i]."`='".$v1."', ";
+					if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro' || $k1 == 57 || $k1 == 58 || $k1 == 59 || $k1 == 60 || $k1 == 27 || $k1 == 28){
+
+						if($k1 == 60 || $k1 == 27 || $k1 == 28){ //======== for Tax and Tax/sso by company ========//
+							for ($i=1; $i <=12 ; $i++) { 
+								if($i == $_SESSION['rego']['cur_month']){
+									$condition .= " `".$months_column[$i]."`='".$v1."', ";
+								}else{
+									
+									if($i > $_SESSION['rego']['cur_month']){
+										$condition .= " `".$months_column[$i]."`='".$extraValue."', ";
+									}
+								}
+							}
+						}else{
+							for ($i=1; $i <=12 ; $i++) { 
+								$condition .= " `".$months_column[$i]."`='".$v1."', ";
+							}
 						}
+						
 					}else{
 						for ($i=1; $i <=12 ; $i++) { 
 							if($i == $_SESSION['rego']['cur_month']){
@@ -72,14 +100,30 @@
 					$dbc->query($updsql);
 				}
 				
-			}else{
+			}else{ //====== INSERT DATA ======//
 
 				$condition='';
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro' || $k1 == 57){
-					for ($i=1; $i <=12 ; $i++) { 
-						$condition .= " '".$v1."', ";
+				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro' || $k1 == 57 || $k1 == 58 || $k1 == 59 || $k1 == 60 || $k1 == 27 || $k1 == 28){
+					
+					if($k1 == 60 || $k1 == 27 || $k1 == 28){ //======== for Tax and Tax/sso by company ========//
+						for ($i=1; $i <=12 ; $i++) { 
+							if($i == $_SESSION['rego']['cur_month']){
+								$condition .= " '".$v1."', ";
+							}else{
+								if($i > $_SESSION['rego']['cur_month']){
+									$condition .= " '".$extraValue."', ";
+								}else{
+									$condition .= " '0.00', ";
+								}
+							}
+						}
+					}else{
+						for ($i=1; $i <=12 ; $i++) { 
+							$condition .= " '".$v1."', ";
+						}
 					}
-				}else{
+
+				}else{ //======== for other tax base ========//
 					for ($i=1; $i <=12 ; $i++) { 
 						if($i == $_SESSION['rego']['cur_month']){
 							$condition .= " '".$v1."',";
@@ -89,7 +133,7 @@
 					}
 				}
 
-				$pdsql="INSERT INTO ".$_SESSION['rego']['cid']."_payroll_data_".$_SESSION['rego']['cur_year']." (`months`, `payroll_modal_ids`, `emp_ids`, `allow_deduct_ids`, `classifications`, `groups`, `tax_base`, `pnd`, `sso`, `hrs`, `pvf`, `psf`, `curr_calc`, `prev_calc`, `curr_month`, `jan`, `feb`, `mar`, `apr`, `may`, `jun`, `jul`, `aug`, `sep`, `oct`, `nov`, `dec`, `datetime`) VALUES ('".$_SESSION['rego']['cur_month']."', '".$mid."', '".$empid."', '".$itemid."', '".$getAllowandDeductInfo[$k1]['classification']."', '".$getAllowandDeductInfo[$k1]['group']."', '".$getAllowandDeductInfo[$k1]['tax_base']."', '".$getAllowandDeductInfo[$k1]['pnd1']."', '".$getAllowandDeductInfo[$k1]['sso']."', '".$getAllowandDeductInfo[$k1]['hour_daily_rate']."', '".$getAllowandDeductInfo[$k1]['pvf']."', '".$getAllowandDeductInfo[$k1]['psf']."', '".$v1."', '0.00', '".$v1."', ".$condition." '".date('Y-m-d H:i:s')."')";
+				$pdsql="INSERT INTO ".$_SESSION['rego']['cid']."_payroll_data_".$_SESSION['rego']['cur_year']." (`months`, `payroll_modal_ids`, `emp_ids`, `allow_deduct_ids`, `classifications`, `groups`, `tax_base`, `pnd`, `sso`, `hrs`, `pvf`, `psf`, `curr_calc`, `prev_calc`, `curr_month`, `jan`, `feb`, `mar`, `apr`, `may`, `jun`, `jul`, `aug`, `sep`, `oct`, `nov`, `dec`, `datetime`) VALUES ('".$_SESSION['rego']['cur_month']."', '".$mid."', '".$empid."', '".$itemid."', '".$getAllowandDeductInfo[$k1]['classification']."', '".$getAllowandDeductInfo[$k1]['group']."', '".$getAllowandDeductInfo[$k1]['tax_base']."', '".$getAllowandDeductInfo[$k1]['pnd1']."', '".$getAllowandDeductInfo[$k1]['sso']."', '".$getAllowandDeductInfo[$k1]['hour_daily_rate']."', '".$getAllowandDeductInfo[$k1]['pvf']."', '".$getAllowandDeductInfo[$k1]['psf']."', '".$v1."', '0.00', '".$v1."', ".$condition." '".date('Y-m-d H:i:s')."')"; 
 				$dbc->query($pdsql);
 			}
 		}
@@ -127,122 +171,15 @@
 			$empinfo = getEmployeeInfo($cid, $row['emp_id']);
 			$manual_feed_total = unserialize($row['manual_feed_total']);
 
-			//echo '<pre>';
-			//print_r($getAllowandDeductInfo);
-			//print_r($manual_feed_total);
-			//print_r($empinfo);
-			//print_r($row);
-			//echo '========== end ==========';
-			//echo '</pre>';
-			//die('ddddsssss');
-
 			$totals_array = array();
 			$totals_array_deduction = array();
+			$full_year_total = array();
 			$key = $row['emp_id'];
 
 			foreach($manual_feed_total as $k1 => $v1) {
 
 				//===== save data for allowance/deduction
-				saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$v1);	
-
-				//=== Salary ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_sal'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_sal'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_sal'][] = $v1;
-					}
-				}
-
-				//=== Overtime ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_ot'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_ot'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_ot'][] = $v1;
-					}
-				}
-
-				//=== Fixed income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_fix'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_fix'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_fix'][] = $v1;
-					}
-				}
-
-				//=== Variable income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_var'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_var'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_var'][] = $v1;
-					}
-				}
-
-				//=== Other income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_oth'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_oth'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_oth'][] = $v1;
-					}
-				}
-
-				//=== Absence ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_abs'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_abs'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_abs'][] = $v1;
-					}
-				}
-
-				//=== Fixed deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_fix'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_fix'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_fix'][] = $v1;
-					}
-				}
-
-				//=== Variable deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_var'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_var'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_var'][] = $v1;
-					}
-				}
-
-				//=== Other deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_oth'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_oth'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_oth'][] = $v1;
-					}
-				}
-
-				//=== Legal deductions / Loans ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_leg'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_leg'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_leg'][] = $v1;
-					}
-				}
-
-				//=== Advanced payments ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_pay'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_pay'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_pay'][] = $v1;
-					}
-				}
+				saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$v1,0);	
 
 				//=== Total earnings ===//
 				if($getAllowandDeductInfo[$k1]['earnings'] == 1){
@@ -254,219 +191,24 @@
 					$totals_array[$key]['deductions'][] = $v1;
 				}
 
-				//=== Total PND1 ===//
-				if($getAllowandDeductInfo[$k1]['pnd1'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['pnd1'][] = $v1;
-					}else{
-						$totals_array[$key]['pnd1'][] = $v1;
-					}
-				}
-
-				//=== Total SSO ===//
-				if($getAllowandDeductInfo[$k1]['sso'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['sso'][] = $v1;
-					}else{
-						$totals_array[$key]['sso'][] = $v1;
-					}
-				}
-
-				//=== Total PVF ===//
-				if($getAllowandDeductInfo[$k1]['pvf'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['pvf'][] = $v1;
-					}else{
-						$totals_array[$key]['pvf'][] = $v1;
-					}
-				}
-
-				//=== Total PSF ===//
-				if($getAllowandDeductInfo[$k1]['psf'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['psf'][] = $v1;
-					}else{
-						$totals_array[$key]['psf'][] = $v1;
-					}
-				}
-
 				//=== Total Tax income ===//
 				if($getAllowandDeductInfo[$k1]['tax_income'] == 1){
 					if($getAllowandDeductInfo[$k1]['classification'] == 1){
 						$totals_array_deduction[$key]['tax_income'][] = $v1;
 					}else{
 						$totals_array[$key]['tax_income'][] = $v1;
-					}
-				}
-
-				//=== Tax base (fixpro) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['fixpro'][] = $v1;
-					}else{
-						$totals_array[$key]['fixpro'][] = $v1;
-					}
-				}
-
-				//=== Tax base (fix) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fix'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['fix'][] = $v1;
-					}else{
-						$totals_array[$key]['fix'][] = $v1;
-					}
-				}
-
-				//=== Tax base (var) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'var'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['var'][] = $v1;
-					}else{
-						$totals_array[$key]['var'][] = $v1;
-					}
-				}
-
-				//=== Tax base (nontax) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'nontax'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['nontax'][] = $v1;
-					}else{
-						$totals_array[$key]['nontax'][] = $v1;
-					}
-				}
-
-				//=== Tax base (ssoby) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'ssoby'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ssoby'][] = $v1;
-					}else{
-						$totals_array[$key]['ssoby'][] = $v1;
-					}
-				}
-
-				//=== Tax base (taxby) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'taxby'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['taxby'][] = $v1;
-					}else{
-						$totals_array[$key]['taxby'][] = $v1;
 					}
 				}
 			}
 
-			//die('ewew');
-
-			/*$getAllowances = getEmployeeAllowances($key,$_SESSION['rego']['curr_month']);
-			$fix_allow = unserialize($getAllowances[0]['fix_allow']);
-			$fix_deduct = unserialize($getAllowances[0]['fix_deduct']);*/
 
 			$fix_allow = unserialize($row['fix_allow_from_emp']);
 			$fix_deduct = unserialize($row['fix_deduct_from_emp']);
 
-
 			foreach($fix_allow as $k1 => $v1) {
 
 				//===== save data for allowance/deduction
-				saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$v1);	
-				
-				//=== Salary ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_sal'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_sal'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_sal'][] = $v1;
-					}
-				}
-
-				//=== Overtime ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_ot'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_ot'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_ot'][] = $v1;
-					}
-				}
-
-				//=== Fixed income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_fix'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_fix'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_fix'][] = $v1;
-					}
-				}
-
-				//=== Variable income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_var'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_var'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_var'][] = $v1;
-					}
-				}
-
-				//=== Other income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_oth'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['inc_oth'][] = $v1;
-					}else{
-						$totals_array[$key]['inc_oth'][] = $v1;
-					}
-				}
-
-				//=== Absence ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_abs'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_abs'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_abs'][] = $v1;
-					}
-				}
-
-				//=== Fixed deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_fix'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_fix'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_fix'][] = $v1;
-					}
-				}
-
-				//=== Variable deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_var'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_var'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_var'][] = $v1;
-					}
-				}
-
-				//=== Other deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_oth'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_oth'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_oth'][] = $v1;
-					}
-				}
-
-				//=== Legal deductions / Loans ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_leg'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_leg'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_leg'][] = $v1;
-					}
-				}
-
-				//=== Advanced payments ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_pay'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ded_pay'][] = $v1;
-					}else{
-						$totals_array[$key]['ded_pay'][] = $v1;
-					}
-				}
+				saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$v1,0);	
 
 				//=== Total earnings ===//
 				if($getAllowandDeductInfo[$k1]['earnings'] == 1){
@@ -478,102 +220,12 @@
 					$totals_array[$key]['deductions'][] = $v1;
 				}
 
-				//=== Total PND1 ===//
-				if($getAllowandDeductInfo[$k1]['pnd1'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['pnd1'][] = $v1;
-					}else{
-						$totals_array[$key]['pnd1'][] = $v1;
-					}
-				}
-
-				//=== Total SSO ===//
-				if($getAllowandDeductInfo[$k1]['sso'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['sso'][] = $v1;
-					}else{
-						$totals_array[$key]['sso'][] = $v1;
-					}
-				}
-
-				//=== Total PVF ===//
-				if($getAllowandDeductInfo[$k1]['pvf'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['pvf'][] = $v1;
-					}else{
-						$totals_array[$key]['pvf'][] = $v1;
-					}
-				}
-
-				//=== Total PSF ===//
-				if($getAllowandDeductInfo[$k1]['psf'] == 1){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['psf'][] = $v1;
-					}else{
-						$totals_array[$key]['psf'][] = $v1;
-					}
-				}
-
 				//=== Total Tax income ===//
 				if($getAllowandDeductInfo[$k1]['tax_income'] == 1){
 					if($getAllowandDeductInfo[$k1]['classification'] == 1){
 						$totals_array_deduction[$key]['tax_income'][] = $v1;
 					}else{
 						$totals_array[$key]['tax_income'][] = $v1;
-					}
-				}
-
-				//=== Tax base (fixpro) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['fixpro'][] = $v1;
-					}else{
-						$totals_array[$key]['fixpro'][] = $v1;
-					}
-				}
-
-				//=== Tax base (fix) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fix'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['fix'][] = $v1;
-					}else{
-						$totals_array[$key]['fix'][] = $v1;
-					}
-				}
-
-				//=== Tax base (var) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'var'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['var'][] = $v1;
-					}else{
-						$totals_array[$key]['var'][] = $v1;
-					}
-				}
-
-				//=== Tax base (nontax) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'nontax'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['nontax'][] = $v1;
-					}else{
-						$totals_array[$key]['nontax'][] = $v1;
-					}
-				}
-
-				//=== Tax base (taxby) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'taxby'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['taxby'][] = $v1;
-					}else{
-						$totals_array[$key]['taxby'][] = $v1;
-					}
-				}
-
-				//=== Tax base (ssoby) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'ssoby'){
-					if($getAllowandDeductInfo[$k1]['classification'] == 1){
-						$totals_array_deduction[$key]['ssoby'][] = $v1;
-					}else{
-						$totals_array[$key]['ssoby'][] = $v1;
 					}
 				}
 			}
@@ -581,62 +233,7 @@
 			foreach($fix_deduct as $k1 => $v1) {
 
 				//===== save data for allowance/deduction
-				saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$v1);
-
-				//=== Salary ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_sal'){
-					$totals_array_deduction[$key]['inc_sal'][] = $v1;
-				}
-
-				//=== Overtime ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_ot'){
-					$totals_array_deduction[$key]['inc_ot'][] = $v1;
-				}
-
-				//=== Fixed income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_fix'){
-					$totals_array_deduction[$key]['inc_fix'][] = $v1;
-				}
-
-				//=== Variable income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_var'){
-					$totals_array_deduction[$key]['inc_var'][] = $v1;
-				}
-
-				//=== Other income ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'inc_oth'){
-					$totals_array_deduction[$key]['inc_oth'][] = $v1;
-				}
-
-				//=== Absence ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_abs'){
-					$totals_array_deduction[$key]['ded_abs'][] = $v1;
-				}
-
-				//=== Fixed deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_fix'){
-					$totals_array_deduction[$key]['ded_fix'][] = $v1;
-				}
-
-				//=== Variable deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_var'){
-					$totals_array_deduction[$key]['ded_var'][] = $v1;
-				}
-
-				//=== Other deductions ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_oth'){
-					$totals_array_deduction[$key]['ded_oth'][] = $v1;
-				}
-
-				//=== Legal deductions / Loans ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_leg'){
-					$totals_array_deduction[$key]['ded_leg'][] = $v1;
-				}
-
-				//=== Advanced payments ===//
-				if($getAllowandDeductInfo[$k1]['group'] == 'ded_pay'){
-					$totals_array_deduction[$key]['ded_pay'][] = $v1;
-				}
+				saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$v1,0);
 
 				//=== Total earnings ===//
 				if($getAllowandDeductInfo[$k1]['earnings'] == 1){
@@ -648,59 +245,9 @@
 					$totals_array_deduction[$key]['deductions'][] = $v1;
 				}
 
-				//=== Total PND1 ===//
-				if($getAllowandDeductInfo[$k1]['pnd1'] == 1){
-					$totals_array_deduction[$key]['pnd1'][] = $v1;
-				}
-
-				//=== Total SSO ===//
-				if($getAllowandDeductInfo[$k1]['sso'] == 1){
-					$totals_array_deduction[$key]['sso'][] = $v1;
-				}
-
-				//=== Total PVF ===//
-				if($getAllowandDeductInfo[$k1]['pvf'] == 1){
-					$totals_array_deduction[$key]['pvf'][] = $v1;
-				}
-
-				//=== Total PSF ===//
-				if($getAllowandDeductInfo[$k1]['psf'] == 1){
-					$totals_array_deduction[$key]['psf'][] = $v1;
-				}
-
 				//=== Total Tax income ===//
 				if($getAllowandDeductInfo[$k1]['tax_income'] == 1){
 					$totals_array_deduction[$key]['tax_income'][] = $v1;
-				}
-
-				//=== Tax base (fixpro) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro'){
-					$totals_array_deduction[$key]['fixpro'][] = $v1;
-				}
-
-				//=== Tax base (fix) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'fix'){
-					$totals_array_deduction[$key]['fix'][] = $v1;
-				}
-
-				//=== Tax base (var) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'var'){
-					$totals_array_deduction[$key]['var'][] = $v1;
-				}
-
-				//=== Tax base (nontax) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'nontax'){
-					$totals_array_deduction[$key]['nontax'][] = $v1;
-				}
-
-				//=== Tax base (ssoby) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'ssoby'){
-					$totals_array_deduction[$key]['ssoby'][] = $v1;
-				}
-
-				//=== Tax base (taxby) ===//
-				if($getAllowandDeductInfo[$k1]['tax_base'] == 'taxby'){
-					$totals_array_deduction[$key]['taxby'][] = $v1;
 				}
 			}
 
@@ -717,106 +264,7 @@
 				if($k1 == 56){ //for basic salary only
 
 					//===== save data for allowance/deduction
-					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$employeeAllowadedyctArr[$k1]);
-
-					//=== Salary ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'inc_sal'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['inc_sal'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['inc_sal'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Overtime ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'inc_ot'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['inc_ot'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['inc_ot'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Fixed income ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'inc_fix'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['inc_fix'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['inc_fix'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Variable income ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'inc_var'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['inc_var'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['inc_var'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Other income ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'inc_oth'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['inc_oth'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['inc_oth'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Absence ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'ded_abs'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['ded_abs'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['ded_abs'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Fixed deductions ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'ded_fix'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['ded_fix'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['ded_fix'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Variable deductions ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'ded_var'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['ded_var'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['ded_var'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Other deductions ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'ded_oth'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['ded_oth'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['ded_oth'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Legal deductions / Loans ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'ded_leg'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['ded_leg'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['ded_leg'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Advanced payments ===//
-					if($getAllowandDeductInfo[$k1]['group'] == 'ded_pay'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['ded_pay'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['ded_pay'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
+					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$employeeAllowadedyctArr[$k1],0);
 
 					//=== Total earnings ===//
 					if($getAllowandDeductInfo[$k1]['earnings'] == 1){
@@ -828,42 +276,6 @@
 						$totals_array[$key]['deductions'][] = $employeeAllowadedyctArr[$k1];
 					}
 
-					//=== Total PND1 ===//
-					if($getAllowandDeductInfo[$k1]['pnd1'] == 1){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['pnd1'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['pnd1'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Total SSO ===//
-					if($getAllowandDeductInfo[$k1]['sso'] == 1){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['sso'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['sso'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Total PVF ===//
-					if($getAllowandDeductInfo[$k1]['pvf'] == 1){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['pvf'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['pvf'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Total PSF ===//
-					if($getAllowandDeductInfo[$k1]['psf'] == 1){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['psf'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['psf'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
 					//=== Total Tax income ===//
 					if($getAllowandDeductInfo[$k1]['tax_income'] == 1){
 						if($getAllowandDeductInfo[$k1]['classification'] == 1){
@@ -872,61 +284,103 @@
 							$totals_array[$key]['tax_income'][] = $employeeAllowadedyctArr[$k1];
 						}
 					}
+				}
+			}
 
-					//=== Tax base (fixpro) ===//
-					if($getAllowandDeductInfo[$k1]['tax_base'] == 'fixpro'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['fixpro'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['fixpro'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
+			//========== Total of all PND, SSO and tax base =====//
+			$totalsofothers = getAllowDeductTotals($_REQUEST['mid'],$key);
+			foreach ($totalsofothers as $koth => $voth) {
 
-					//=== Tax base (fix) ===//
-					if($getAllowandDeductInfo[$k1]['tax_base'] == 'fix'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['fix'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['fix'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Tax base (var) ===//
-					if($getAllowandDeductInfo[$k1]['tax_base'] == 'var'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['var'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['var'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Tax base (nontax) ===//
-					if($getAllowandDeductInfo[$k1]['tax_base'] == 'nontax'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['nontax'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['nontax'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Tax base (taxby) ===//
-					if($getAllowandDeductInfo[$k1]['tax_base'] == 'taxby'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['taxby'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['taxby'][] = $employeeAllowadedyctArr[$k1];
-						}
-					}
-
-					//=== Tax base (ssoby) ===//
-					if($getAllowandDeductInfo[$k1]['tax_base'] == 'ssoby'){
-						if($getAllowandDeductInfo[$k1]['classification'] == 1){
-							$totals_array_deduction[$key]['ssoby'][] = $employeeAllowadedyctArr[$k1];
-						}else{
-							$totals_array[$key]['ssoby'][] = $employeeAllowadedyctArr[$k1];
-						}
+				//=== Total PND1 ===//
+				if($voth['pnd'] == 1){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['pnd1'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['pnd1'][] = $voth['curr_month'];
 					}
 				}
+
+				//=== Total SSO ===//
+				if($voth['sso'] == 1){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['sso'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['sso'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Total PVF ===//
+				if($voth['pvf'] == 1){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['pvf'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['pvf'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Total PSF ===//
+				if($voth['psf'] == 1){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['psf'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['psf'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Tax base (fixpro) ===//
+				if($voth['tax_base'] == 'fixpro'){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['fixpro'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['fixpro'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Tax base (fix) ===//
+				if($voth['tax_base'] == 'fix'){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['fix'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['fix'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Tax base (var) ===//
+				if($voth['tax_base'] == 'var'){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['var'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['var'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Tax base (nontax) ===//
+				if($voth['tax_base'] == 'nontax'){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['nontax'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['nontax'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Tax base (taxby) ===//
+				if($voth['tax_base'] == 'taxby'){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['taxby'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['taxby'][] = $voth['curr_month'];
+					}
+				}
+
+				//=== Tax base (ssoby) ===//
+				if($voth['tax_base'] == 'ssoby'){
+					if($voth['classifications'] == 1){
+						$totals_array_deduction[$key]['ssoby'][] = $voth['curr_month'];
+					}else{
+						$totals_array[$key]['ssoby'][] = $voth['curr_month'];
+					}
+				}
+
 			}
 
 
@@ -938,60 +392,6 @@
 			die('sdsdsdsd');*/
 
 
-			//salary group
-			$salary_group_total_allow = isset($totals_array[$key]['inc_sal']) ? array_sum($totals_array[$key]['inc_sal']) : 0;
-			$salary_group_total_deduct = isset($totals_array_deduction[$key]['inc_sal']) ? array_sum($totals_array_deduction[$key]['inc_sal']) : 0;
-			$salary_group_total = $salary_group_total_allow - $salary_group_total_deduct;
-
-			//overtime group
-			$overtime_group_total_allow = isset($totals_array[$key]['inc_ot']) ? array_sum($totals_array[$key]['inc_ot']) : 0;
-			$overtime_group_total_deduct = isset($totals_array_deduction[$key]['inc_ot']) ? array_sum($totals_array_deduction[$key]['inc_ot']) : 0;
-			$overtime_group_total = $overtime_group_total_allow - $overtime_group_total_deduct;
-
-			//fix_income group
-			$fix_income_group_total0 = isset($totals_array[$key]['inc_fix']) ? array_sum($totals_array[$key]['inc_fix']) : 0;
-			$fix_income_group_total1 = isset($totals_array_deduction[$key]['inc_fix']) ? array_sum($totals_array_deduction[$key]['inc_fix']) : 0;
-			$fix_income_group_total = $fix_income_group_total0 - $fix_income_group_total1;
-			
-			//var_income group
-			$var_income_group_total0 = isset($totals_array[$key]['inc_var']) ? array_sum($totals_array[$key]['inc_var']) : 0;
-			$var_income_group_total1 = isset($totals_array_deduction[$key]['inc_var']) ? array_sum($totals_array_deduction[$key]['inc_var']) : 0;
-			$var_income_group_total = $var_income_group_total0 - $var_income_group_total1;
-
-			//oth_income group
-			$other_income_group_total0 = isset($totals_array[$key]['inc_oth']) ? array_sum($totals_array[$key]['inc_oth']) : 0;
-			$other_income_group_total1 = isset($totals_array_deduction[$key]['inc_oth']) ? array_sum($totals_array_deduction[$key]['inc_oth']) : 0;
-			$other_income_group_total = $other_income_group_total0 - $other_income_group_total1;
-
-			//absence_income group
-			$absence_group_total0 = isset($totals_array[$key]['ded_abs']) ? array_sum($totals_array[$key]['ded_abs']) : 0;
-			$absence_group_total1 = isset($totals_array_deduction[$key]['ded_abs']) ? array_sum($totals_array_deduction[$key]['ded_abs']) : 0;
-			$absence_group_total = $absence_group_total0 + $absence_group_total1;
-
-			//fix_ded_income group
-			$fix_ded_group_total0 = isset($totals_array[$key]['ded_fix']) ? array_sum($totals_array[$key]['ded_fix']) : 0;
-			$fix_ded_group_total1 = isset($totals_array_deduction[$key]['ded_fix']) ? array_sum($totals_array_deduction[$key]['ded_fix']) : 0;
-			$fix_ded_group_total = $fix_ded_group_total0 + $fix_ded_group_total1;
-
-			//var_ded_income group
-			$var_ded_group_total0 = isset($totals_array[$key]['ded_var']) ? array_sum($totals_array[$key]['ded_var']) : 0;
-			$var_ded_group_total1 = isset($totals_array_deduction[$key]['ded_var']) ? array_sum($totals_array_deduction[$key]['ded_var']) : 0;
-			$var_ded_group_total = $var_ded_group_total0 + $var_ded_group_total1;
-
-			//oth_ded_income group
-			$other_ded_group_total0 = isset($totals_array[$key]['ded_oth']) ? array_sum($totals_array[$key]['ded_oth']) : 0;
-			$other_ded_group_total1 = isset($totals_array_deduction[$key]['ded_oth']) ? array_sum($totals_array_deduction[$key]['ded_oth']) : 0;
-			$other_ded_group_total = $other_ded_group_total0 + $other_ded_group_total1;
-
-			//legal_ded_income group
-			$legal_ded_group_total0 = isset($totals_array[$key]['ded_leg']) ? array_sum($totals_array[$key]['ded_leg']) : 0;
-			$legal_ded_group_total1 = isset($totals_array_deduction[$key]['ded_leg']) ? array_sum($totals_array_deduction[$key]['ded_leg']) : 0;
-			$legal_ded_group_total = $legal_ded_group_total0 + $legal_ded_group_total1;
-
-			//advance_ded_income group
-			$advance_pay_group_total0 = isset($totals_array[$key]['ded_pay']) ? array_sum($totals_array[$key]['ded_pay']) : 0;
-			$advance_pay_group_total1 = isset($totals_array_deduction[$key]['ded_pay']) ? array_sum($totals_array_deduction[$key]['ded_pay']) : 0;
-			$advance_pay_group_total = $advance_pay_group_total0 + $advance_pay_group_total1;
 
 			/*$total_earnings = isset($totals_array[$key]['earnings']) ? array_sum($totals_array[$key]['earnings']) : 0;
 			$total_deductions0 = isset($totals_array[$key]['deductions']) ? array_sum($totals_array[$key]['deductions']) : 0;
@@ -1056,11 +456,9 @@
 
 
 
-
 			$total_of_alltax = $total_tax_fixpro + $total_tax_fix + $total_tax_var;
 
-			$total_net_income = ($salary_group_total + $overtime_group_total + $fix_income_group_total + $var_income_group_total + $other_income_group_total) - ($absence_group_total + $fix_ded_group_total + $var_ded_group_total + $other_ded_group_total);
-			$total_net_pay = $total_net_income - $advance_pay_group_total - $legal_ded_group_total;
+			
 
 			
 			//========== PVF/PSF calculation ================//
@@ -1123,22 +521,22 @@
 			$sso_company = round($sso_company,2);
 
 			//for sso employer, pvf employer & psf employer (these are special cases)
-			saveAllowDeductdata($_REQUEST['mid'],$key,'ssoemployer',$sso_company);
-			saveAllowDeductdata($_REQUEST['mid'],$key,'pvfemployer',$pvf_company);
-			saveAllowDeductdata($_REQUEST['mid'],$key,'psfemployer',$psf_company);
+			saveAllowDeductdata($_REQUEST['mid'],$key,'ssoemployer',$sso_company,0);
+			saveAllowDeductdata($_REQUEST['mid'],$key,'pvfemployer',$pvf_company,0);
+			saveAllowDeductdata($_REQUEST['mid'],$key,'psfemployer',$psf_company,0);
 
 			foreach($fixedforMonth as $k1 => $v1) {
 				if($k1==57){
 					//===== save data for allowance/deduction
-					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$sso_employee);
+					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$sso_employee,0);
 				}
 				if($k1==58){
 					//===== save data for allowance/deduction
-					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$pvf_employee);
+					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$pvf_employee,0);
 				}
 				if($k1==59){
 					//===== save data for allowance/deduction
-					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$psf_employee);
+					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$psf_employee,0);
 				}
 			}
 
@@ -1237,9 +635,9 @@
 				$get_months = ((12 - (int)$emp_joining_date) + 1);
 			}
 
-			if($row['tax_by_company'] > 0 || $row['sso_by_company'] > 0){
+			/*if($row['tax_by_company'] > 0 || $row['sso_by_company'] > 0){
 				$total_tax_fixpro = ($total_tax_fixpro - $row['tax_by_company'] - $row['sso_by_company']);
-			}
+			}*/
 
 			$fixed_prorated_yearly = $total_tax_fixpro * $get_months; 
 			$fixed_yearly = $fixed_prorated_yearly + $total_tax_fix;
@@ -1248,7 +646,7 @@
 
 			
 
-			$fixed_actual_prorated_yearly = ($total_tax_fixpro_prev + $total_tax_fixpro) * $remaining_months;
+			$fixed_actual_prorated_yearly = ($total_tax_fixpro_prev + ($total_tax_fixpro * $remaining_months));
 			$fixed_actual_yearly = $fixed_actual_prorated_yearly + $total_tax_fix_prev + $total_tax_fix;
 
 			$variable_prev = $total_tax_var_prev;
@@ -1260,7 +658,7 @@
 			//============ Yearly Tax Deduction ================//
 			$total_yearly_standard_deduction = $row['tax_standard_deduction'];
 			if($row['calc_on_sd'] == 1){
-				$calc_standard_deduction = ($fixed_actual_yearly * (50/100));
+				$calc_standard_deduction = ($total_yearly_standard_deduction * 0.5);
 				if($calc_standard_deduction <= 100000){
 					$total_yearly_standard_deduction = $calc_standard_deduction;
 				}else{
@@ -1274,7 +672,7 @@
 
 			$total_yearly_personal_care = $row['tax_personal_allowance'];
 			if($row['calc_on_pc'] == 1){
-				$calc_personal_care = ($fixed_actual_yearly * (40/100));
+				$calc_personal_care = ($total_yearly_personal_care * 0.4);
 				if($calc_personal_care <= 60000){
 					$total_yearly_personal_care = $calc_personal_care;
 				}else{
@@ -1314,91 +712,19 @@
 
 
 			$total_other_tax_deductions = $row['total_other_tax_deductions'];
-			$total_yearly_tax_deductions = ($standard_deduction_total + $personal_care_total + $allow_pvf_total + $allow_sso_total + $total_other_tax_deductions);
+			//$total_yearly_tax_deductions = ($standard_deduction_total + $personal_care_total + $allow_pvf_total + $allow_sso_total + $total_other_tax_deductions);
 			$total_tax_deductions = ($standard_deduction_total + $personal_care_total + $allow_pvf_total + $allow_sso_total);
 			//echo '<br>';
-			$total_yearly_tax_deductions = round($total_yearly_tax_deductions,2);
+			//$total_yearly_tax_deductions = round($total_yearly_tax_deductions,2);
 
 			
 			//=============== Add extra item in Other income/deduction ==================//
 			//$other_income_group_total = $other_income_group_total + $sso_by_company;
 			//$other_ded_group_total = $other_ded_group_total + $sso_employee + $pvf_employee + $psf_employee;
-			$other_income_group_total = $other_income_group_total;
-			$other_ded_group_total = $other_ded_group_total;
-
-			//=============== Total Earnings and deduction ==============================//
-			$total_earnings = $salary_group_total + $overtime_group_total + $fix_income_group_total + $var_income_group_total + $other_income_group_total;
-			$total_earnings = round($total_earnings,2);
-			$total_deductions = $absence_group_total + $fix_ded_group_total + $var_ded_group_total + $other_ded_group_total + $legal_ded_group_total + $advance_pay_group_total;
-			$total_deductions = round($total_deductions,2);
+			//$other_income_group_total = $other_income_group_total;
+			//$other_ded_group_total = $other_ded_group_total;
 
 			
-			//=============== Full Year totals calculations =============================//
-			if($getAllowDeductAllLinkedInfo['inc_sal']['tax_base'] == 'fixpro'){
-				$full_year_salary_grp = ($salary_group_total_prev + ($salary_group_total * $remaining_months));
-			}else{
-				$full_year_salary_grp = ($salary_group_total_prev + ($salary_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['inc_ot']['tax_base'] == 'fixpro'){
-				$full_year_overtime_grp = ($overtime_group_total_prev + ($overtime_group_total * $remaining_months));
-			}else{
-				$full_year_overtime_grp = ($overtime_group_total_prev + ($overtime_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['inc_fix']['tax_base'] == 'fixpro'){
-				$full_year_fixincome_grp = ($fix_income_group_total_prev + ($fix_income_group_total * $remaining_months));
-			}else{
-				$full_year_fixincome_grp = ($fix_income_group_total_prev + ($fix_income_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['inc_var']['tax_base'] == 'fixpro'){
-				$full_year_varincome_grp = ($var_income_group_total_prev + ($var_income_group_total * $remaining_months));
-			}else{
-				$full_year_varincome_grp = ($var_income_group_total_prev + ($var_income_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['inc_oth']['tax_base'] == 'fixpro'){
-				$full_year_othincome_grp = ($other_income_group_total_prev + ($other_income_group_total * $remaining_months));
-			}else{
-				$full_year_othincome_grp = ($other_income_group_total_prev + ($other_income_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['ded_abs']['tax_base'] == 'fixpro'){
-				$full_year_absence_grp = ($absence_group_total_prev + ($absence_group_total * $remaining_months));
-			}else{
-				$full_year_absence_grp = ($absence_group_total_prev + ($absence_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['ded_fix']['tax_base'] == 'fixpro'){
-				$full_year_fixded_grp = ($fix_ded_group_total_prev + ($fix_ded_group_total * $remaining_months));
-			}else{
-				$full_year_fixded_grp = ($fix_ded_group_total_prev + ($fix_ded_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['ded_var']['tax_base'] == 'fixpro'){
-				$full_year_varded_grp = ($var_ded_group_total_prev + ($var_ded_group_total * $remaining_months));
-			}else{
-				$full_year_varded_grp = ($var_ded_group_total_prev + ($var_ded_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['ded_oth']['tax_base'] == 'fixpro'){
-				$full_year_othded_grp = ($other_ded_group_total_prev + ($other_ded_group_total * $remaining_months));
-			}else{
-				$full_year_othded_grp = ($other_ded_group_total_prev + ($other_ded_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['ded_leg']['tax_base'] == 'fixpro'){
-				$full_year_legal_grp = ($legal_ded_group_total_prev + ($legal_ded_group_total * $remaining_months));
-			}else{
-				$full_year_legal_grp = ($legal_ded_group_total_prev + ($legal_ded_group_total * ($remaining_months-1)));
-			}
-
-			if($getAllowDeductAllLinkedInfo['ded_pay']['tax_base'] == 'fixpro'){
-				$full_year_advpay_grp = ($advance_pay_group_total_prev + ($advance_pay_group_total * $remaining_months));
-			}else{
-				$full_year_advpay_grp = ($advance_pay_group_total_prev + ($advance_pay_group_total * ($remaining_months-1)));
-			}
 
 			//================ Full Year Tax Base calculations ====================//
 			$full_year_fixprorated = ($total_tax_fixpro_prev + ($total_tax_fixpro * $remaining_months));
@@ -1408,8 +734,8 @@
 			$full_year_non_taxable = ($total_tax_nontax_prev + ($total_tax_nontax * $remaining_months));
 
 			//================ Full Year SSO/PVF/PSF calculation ==================//
-			//$full_year_sso_employee = $sso_employee_prev + $sso_employee;
-			$full_year_sso_employee = $allow_sso_total;
+			$full_year_sso_employee = ($sso_employee_prev + ($sso_employee * $remaining_months));
+			//$full_year_sso_employee = $allow_sso_total;
 			$full_year_sso_by_company = ($sso_by_company_prev + ($sso_by_company * $remaining_months));
 			$full_year_pvf_employee = ($pvf_employee_prev + ($pvf_employee * $remaining_months));
 			$full_year_psf_employee = ($psf_employee_prev + ($psf_employee * $remaining_months));
@@ -1419,22 +745,17 @@
 			$full_year_pvf = ($total_pvf_prev + ($total_pvf * $remaining_months));
 			$full_year_psf = ($total_psf_prev + ($total_psf * $remaining_months));
 
-			//=============== Full Year Earnings and deduction ==============================//
-			$full_year_earnings = $full_year_salary_grp + $full_year_overtime_grp + $full_year_fixincome_grp + $full_year_varincome_grp + $full_year_othincome_grp;
-			$full_year_deductions = $full_year_absence_grp + $full_year_fixded_grp + $full_year_varded_grp + $full_year_othded_grp + $full_year_legal_grp + $full_year_advpay_grp;
+			
 
-			$full_year_earnings = round($full_year_earnings,2);
-			$full_year_deductions = round($full_year_deductions,2);
-
-			$total_net_income_prev = ($salary_group_total_prev + $overtime_group_total_prev + $fix_income_group_total_prev + $var_income_group_total_prev + $other_income_group_total_prev) - ($absence_group_total_prev + $fix_ded_group_total_prev + $var_ded_group_total_prev + $other_ded_group_total_prev);
-			$total_net_pay_prev = $total_net_income_prev - $legal_ded_group_total_prev - $advance_pay_group_total_prev;
-
-			$fullyear_net_income = ($full_year_salary_grp + $full_year_overtime_grp + $full_year_fixincome_grp + $full_year_varincome_grp + $full_year_othincome_grp) - ($full_year_absence_grp + $full_year_fixded_grp + $full_year_varded_grp + $full_year_othded_grp);
-			$fullyear_net_pay = $fullyear_net_income - $full_year_legal_grp - $full_year_advpay_grp;
+			//================ TAX Deduction total =============================//
+			$total_yearly_tax_deductions = ($standard_deduction_total + $personal_care_total + $full_year_pvf_employee + $full_year_sso_employee + $total_other_tax_deductions);
+			//$total_tax_deductions = ($standard_deduction_total + $personal_care_total + $allow_pvf_total + $allow_sso_total);
+			//echo '<br>';
+			$total_yearly_tax_deductions = round($total_yearly_tax_deductions,2);
 
 			//================ TAX Claculation =============================//
-			$sso_year = $allow_sso_total;
-			$pvf_year = $allow_pvf_total;
+			$sso_year = $full_year_sso_employee;
+			$pvf_year = $full_year_pvf_employee;
 			if($row['sso_by']){$sso = $sso_year;}else{$sso = 0;}
 
 			//============== Year income ===================
@@ -1462,7 +783,10 @@
 			
 			$acm_fix_prev_tax_calc = calculateAnualTax($acm_fix_prev, $row['calc_base'], $sso, $pvf_year);
 			$acm_fix_prev_var_tax_calc = calculateAnualTax($acm_fix_prev_var, $row['calc_base'], $sso, $pvf_year);
-			//die('stop');
+
+			// echo $sso.'<br>';
+			// echo $acm_fix_prev_var_tax_calc.'<br>';
+			// die('stop');
 
 			$cam_fix_tax_calc = calculateAnualTax($cam_fix, $row['calc_base'], $sso, $pvf_year);
 			$cam_fix_prev_tax_calc = calculateAnualTax($cam_fix_prev, $row['calc_base'], $sso, $pvf_year);
@@ -1548,9 +872,9 @@
 				}
 			}else{
 				//$net_month = $gross_income_month;
-				//$gross_income_month += $tax_this_month;
+				$total_earnings += $tax_this_month;
 				if($row['sso_by']){
-					//$gross_income_month += $sso_employee;
+					$total_earnings += $sso_employee;
 					$sso_by_company = $sso_employee;
 				}else{
 					//$net_month -= $sso_employee;
@@ -1558,19 +882,272 @@
 				$tax_by_company = $tax_this_month;
 			}
 
-			$sso_tax_by_com = array(27=>$tax_by_company, 28=>$sso_by_company);
+			$sso_tax_by_com = array(27=>$tax_by_company, 28=>$sso_by_company, 60=>$tax_this_month);
 			foreach($fixedforMonth as $k1 => $v1) {
-				if($k1==27 || $k1==28){
+				if($k1==27 || $k1==28 || $k1==60){
 					//===== save data for allowance/deduction
-					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$sso_tax_by_com[$k1]);
+					if($k1 == 60){
+						$extravalue = $tax_next_month;
+					}elseif($k1 == 27){
+						if($tax_by_company > 0){
+							$extravalue = $tax_next_month;
+						}else{
+							$extravalue = 0;
+						}
+					}else{
+						if($sso_by_company > 0){
+							$extravalue = $sso_employee;
+						}else{
+							$extravalue = 0;
+						}
+					}
+
+					saveAllowDeductdata($_REQUEST['mid'],$key,$k1,$sso_tax_by_com[$k1],$extravalue);
 				}
 			}
 
-			/*echo $total_tax_fixpro;
-			die('<br>stop');*/
+			//die('dsdsd');
+			//========== Total of all groups =====//
+			$totalsofgroups = getAllowDeductTotals($_REQUEST['mid'],$key);
+			foreach ($totalsofgroups as $ktot => $vtot) {
+				
+				//=== Salary ===//
+				if($vtot['groups'] == 'inc_sal'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['inc_sal'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['inc_sal'][] = $vtot['curr_month'];
+					}
+				}
+
+				//=== Overtime ===//
+				if($vtot['groups'] == 'inc_ot'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['inc_ot'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['inc_ot'][] = $vtot['curr_month'];
+					}
+				}
+
+				//=== Fixed income ===//
+				if($vtot['groups'] == 'inc_fix'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['inc_fix'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['inc_fix'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Variable income =====//
+				if($vtot['groups'] == 'inc_var'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['inc_var'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['inc_var'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Other income =====//
+				if($vtot['groups'] == 'inc_oth'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['inc_oth'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['inc_oth'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Absence =====//
+				if($vtot['groups'] == 'ded_abs'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['ded_abs'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['ded_abs'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Fixed deductions =====//
+				if($vtot['groups'] == 'ded_fix'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['ded_fix'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['ded_fix'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Variable deductions =====//
+				if($vtot['groups'] == 'ded_var'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['ded_var'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['ded_var'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Other deductions =====//
+				if($vtot['groups'] == 'ded_oth'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['ded_oth'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['ded_oth'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Legal deductions / Loans =====//
+				if($vtot['groups'] == 'ded_leg'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['ded_leg'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['ded_leg'][] = $vtot['curr_month'];
+					}
+				}
+
+				//==== Advanced payments =====//
+				if($vtot['groups'] == 'ded_pay'){
+					if($vtot['classifications'] == 1){
+						$totals_array_deduction[$key]['ded_pay'][] = $vtot['curr_month'];
+					}else{
+						$totals_array[$key]['ded_pay'][] = $vtot['curr_month'];
+					}
+				}
+
+				//===== Full year total for all groups =====//
+				if($vtot['groups'] != ''){
+					$allmonthsum = $vtot['jan'] + $vtot['feb'] + $vtot['mar'] + $vtot['apr'] + $vtot['may'] + $vtot['jun'] + $vtot['jul'] + $vtot['aug'] + $vtot['sep'] + $vtot['oct'] + $vtot['nov'] + $vtot['dec'];
+					$full_year_total[$key][$vtot['groups']][] = $allmonthsum;
+				}
+			}
+
+			/*echo '<pre>';
+			//print_r($fixedforMonth);
+			echo '==============Allowance========';
+			print_r($totals_array);
+			echo '==============deduction========';
+			print_r($totals_array_deduction);
+			echo '==============full year========';
+			print_r($full_year_total);
+			echo '</pre>';
+			die('sdsdsdsd');*/
+			
+			//========== Total of all groups =====//
+
+			//salary group
+			$salary_group_total_allow = isset($totals_array[$key]['inc_sal']) ? array_sum($totals_array[$key]['inc_sal']) : 0;
+			$salary_group_total_deduct = isset($totals_array_deduction[$key]['inc_sal']) ? array_sum($totals_array_deduction[$key]['inc_sal']) : 0;
+			$salary_group_total = $salary_group_total_allow - $salary_group_total_deduct;
+
+			//overtime group
+			$overtime_group_total_allow = isset($totals_array[$key]['inc_ot']) ? array_sum($totals_array[$key]['inc_ot']) : 0;
+			$overtime_group_total_deduct = isset($totals_array_deduction[$key]['inc_ot']) ? array_sum($totals_array_deduction[$key]['inc_ot']) : 0;
+			$overtime_group_total = $overtime_group_total_allow - $overtime_group_total_deduct;
+
+			//fix_income group
+			$fix_income_group_total0 = isset($totals_array[$key]['inc_fix']) ? array_sum($totals_array[$key]['inc_fix']) : 0;
+			$fix_income_group_total1 = isset($totals_array_deduction[$key]['inc_fix']) ? array_sum($totals_array_deduction[$key]['inc_fix']) : 0;
+			$fix_income_group_total = $fix_income_group_total0 - $fix_income_group_total1;
+			
+			//var_income group
+			$var_income_group_total0 = isset($totals_array[$key]['inc_var']) ? array_sum($totals_array[$key]['inc_var']) : 0;
+			$var_income_group_total1 = isset($totals_array_deduction[$key]['inc_var']) ? array_sum($totals_array_deduction[$key]['inc_var']) : 0;
+			$var_income_group_total = $var_income_group_total0 - $var_income_group_total1;
+
+			//oth_income group
+			$other_income_group_total0 = isset($totals_array[$key]['inc_oth']) ? array_sum($totals_array[$key]['inc_oth']) : 0;
+			$other_income_group_total1 = isset($totals_array_deduction[$key]['inc_oth']) ? array_sum($totals_array_deduction[$key]['inc_oth']) : 0;
+			$other_income_group_total = $other_income_group_total0 - $other_income_group_total1;
+
+			//absence_income group
+			$absence_group_total0 = isset($totals_array[$key]['ded_abs']) ? array_sum($totals_array[$key]['ded_abs']) : 0;
+			$absence_group_total1 = isset($totals_array_deduction[$key]['ded_abs']) ? array_sum($totals_array_deduction[$key]['ded_abs']) : 0;
+			$absence_group_total = $absence_group_total0 + $absence_group_total1;
+
+			//fix_ded_income group
+			$fix_ded_group_total0 = isset($totals_array[$key]['ded_fix']) ? array_sum($totals_array[$key]['ded_fix']) : 0;
+			$fix_ded_group_total1 = isset($totals_array_deduction[$key]['ded_fix']) ? array_sum($totals_array_deduction[$key]['ded_fix']) : 0;
+			$fix_ded_group_total = $fix_ded_group_total0 + $fix_ded_group_total1;
+
+			//var_ded_income group
+			$var_ded_group_total0 = isset($totals_array[$key]['ded_var']) ? array_sum($totals_array[$key]['ded_var']) : 0;
+			$var_ded_group_total1 = isset($totals_array_deduction[$key]['ded_var']) ? array_sum($totals_array_deduction[$key]['ded_var']) : 0;
+			$var_ded_group_total = $var_ded_group_total0 + $var_ded_group_total1;
+
+			//oth_ded_income group
+			$other_ded_group_total0 = isset($totals_array[$key]['ded_oth']) ? array_sum($totals_array[$key]['ded_oth']) : 0;
+			$other_ded_group_total1 = isset($totals_array_deduction[$key]['ded_oth']) ? array_sum($totals_array_deduction[$key]['ded_oth']) : 0;
+			$other_ded_group_total = $other_ded_group_total0 + $other_ded_group_total1;
+
+			//legal_ded_income group
+			$legal_ded_group_total0 = isset($totals_array[$key]['ded_leg']) ? array_sum($totals_array[$key]['ded_leg']) : 0;
+			$legal_ded_group_total1 = isset($totals_array_deduction[$key]['ded_leg']) ? array_sum($totals_array_deduction[$key]['ded_leg']) : 0;
+			$legal_ded_group_total = $legal_ded_group_total0 + $legal_ded_group_total1;
+
+			//advance_ded_income group
+			$advance_pay_group_total0 = isset($totals_array[$key]['ded_pay']) ? array_sum($totals_array[$key]['ded_pay']) : 0;
+			$advance_pay_group_total1 = isset($totals_array_deduction[$key]['ded_pay']) ? array_sum($totals_array_deduction[$key]['ded_pay']) : 0;
+			$advance_pay_group_total = $advance_pay_group_total0 + $advance_pay_group_total1;
 
 
-			$upsql = "UPDATE ".$sessionpayrollDbase." SET `salary_group_total`='".$salary_group_total."', `overtime_group_total`='".$overtime_group_total."', `fix_income_group_total`='".$fix_income_group_total."', `var_income_group_total`='".$var_income_group_total."', `other_income_group_total`='".$other_income_group_total."', `absence_group_total`= '".$absence_group_total."', `fix_ded_group_total`='".$fix_ded_group_total."', `var_ded_group_total`='".$var_ded_group_total."', `other_ded_group_total`='".$other_ded_group_total."', `legal_ded_group_total`='".$legal_ded_group_total."', `advance_pay_group_total`='".$advance_pay_group_total."', `total_earnings`='".$total_earnings."', `total_deductions`='".$total_deductions."', `total_pnd1`='".$total_pnd1."', `total_sso`='".$total_sso."', `total_pvf`='".$total_pvf."', `total_psf`='".$total_psf."', `total_tax_income` = '".$total_tax_income."', `total_tax_fixpro`='".$total_tax_fixpro."', `total_tax_fix`='".$total_tax_fix."', `total_tax_var`='".$total_tax_var."', `total_tax_nontax`='".$total_tax_nontax."', `total_of_alltax`='".$total_of_alltax."', `sso_emp_calc` = '".$sso_emp."', `sso_comp_calc` = '".$sso_com."', `sso_employee`='".$sso_employee."', `sso_company`='".$sso_company."', `pvf_emp_calc`='".$pvf_emp."', `pvf_comp_calc`='".$pvf_com."', `pvf_employee`='".$pvf_employee."', `pvf_company`='".$pvf_company."', `psf_emp_calc`='".$psf_emp."', `psf_comp_calc`='".$psf_com."', `psf_employee`='".$psf_employee."', `psf_company`='".$psf_company."', `salary_group_total_prev`='".$salary_group_total_prev."', `overtime_group_total_prev`='".$overtime_group_total_prev."', `fix_income_group_total_prev`='".$fix_income_group_total_prev."', `var_income_group_total_prev`='".$var_income_group_total_prev."', `other_income_group_total_prev`='".$other_income_group_total_prev."', `absence_group_total_prev`='".$absence_group_total_prev."', `fix_ded_group_total_prev`='".$fix_ded_group_total_prev."', `var_ded_group_total_prev`='".$var_ded_group_total_prev."', `other_ded_group_total_prev`='".$other_ded_group_total_prev."', `legal_ded_group_total_prev`='".$legal_ded_group_total_prev."', `advance_pay_group_total_prev`='".$advance_pay_group_total_prev."', `total_earnings_prev`='".$total_earnings_prev."', `total_deductions_prev`='".$total_deductions_prev."', `total_pnd1_prev`='".$total_pnd1_prev."', `total_sso_prev`='".$total_sso_prev."', `total_pvf_prev`='".$total_pvf_prev."', `total_psf_prev`='".$total_psf_prev."', `total_tax_income_prev`='".$total_tax_income_prev."', `total_tax_fixpro_prev`='".$total_tax_fixpro_prev."', `total_tax_fix_prev`='".$total_tax_fix_prev."', `total_tax_var_prev`='".$total_tax_var_prev."', `total_tax_nontax_prev`='".$total_tax_nontax_prev."', `total_of_alltax_prev`='".$total_of_alltax_prev."', `fixed_prorated_yearly`='".$fixed_prorated_yearly."', `fixed_yearly`='".$fixed_yearly."', `fixed_actual_prorated_yearly`='".$fixed_actual_prorated_yearly."', `fixed_actual_yearly`='".$fixed_actual_yearly."', `variable_prev`='".$variable_prev."', `variable_curr`='".$variable_curr."', `income_YTD`='".$income_YTD."', `tax_standard_deduction`='".$total_yearly_standard_deduction."', `standard_deduction_manual`='".$standard_deduction_manual."', `standard_deduction_total`='".$standard_deduction_total."', `tax_personal_allowance`='".$total_yearly_personal_care."', `personal_care_manual`='".$personal_care_manual."', `personal_care_total`='".$personal_care_total."', `tax_allow_pvf`='".$total_yearly_provident_fund."', `allow_pvf_manual`='".$allow_pvf_manual."', `allow_pvf_total`='".$allow_pvf_total."', `tax_allow_sso`='".$total_yearly_social_security_fund."', `allow_sso_manual`='".$allow_sso_manual."', `allow_sso_total`='".$allow_sso_total."', `total_other_tax_deductions` ='".$total_other_tax_deductions."', `total_yearly_tax_deductions`='".$total_yearly_tax_deductions."', `tax_by_company`='".$tax_by_company."', `sso_by_company`='".$sso_by_company."', `sso_by_company_prev`='".$sso_by_company_prev."', `sso_employee_prev`='".$sso_employee_prev."', `pvf_employee_prev`='".$pvf_employee_prev."', `psf_employee_prev`='".$psf_employee_prev."', `full_year_salary_grp`='".$full_year_salary_grp."', `full_year_overtime_grp`='".$full_year_overtime_grp."', `full_year_fixincome_grp`='".$full_year_fixincome_grp."', `full_year_varincome_grp`='".$full_year_varincome_grp."', `full_year_othincome_grp`='".$full_year_othincome_grp."', `full_year_absence_grp`='".$full_year_absence_grp."', `full_year_fixded_grp`='".$full_year_fixded_grp."', `full_year_varded_grp`='".$full_year_varded_grp."', `full_year_othded_grp`='".$full_year_othded_grp."', `full_year_legal_grp`='".$full_year_legal_grp."', `full_year_advpay_grp`='".$full_year_advpay_grp."', `full_year_fixprorated`='".$full_year_fixprorated."', `full_year_fixed`='".$full_year_fixed."', `full_year_var`='".$full_year_var."', `full_year_taxableincome`='".$full_year_taxableincome."', `full_year_non_taxable`='".$full_year_non_taxable."', `full_year_sso_employee`='".$full_year_sso_employee."', `full_year_sso_by_company`='".$full_year_sso_by_company."', `full_year_pvf_employee`='".$full_year_pvf_employee."', `full_year_psf_employee`='".$full_year_psf_employee."', `full_year_pnd`='".$full_year_pnd."', `full_year_sso`='".$full_year_sso."', `full_year_pvf`='".$full_year_pvf."', `full_year_psf`='".$full_year_psf."', `full_year_earnings`='".$full_year_earnings."', `full_year_deductions`='".$full_year_deductions."', `acm_fix`='".$acm_fix."', `acm_fix_prev`='".$acm_fix_prev."', `acm_fix_prev_var`='".$acm_fix_prev_var."', `cam_fix`='".$cam_fix."', `cam_fix_prev`='".$cam_fix_prev."', `cam_fix_prev_var`='".$cam_fix_prev_var."', `ytd_income`='".$ytd_income."', `acm_fix_tax_calc`='".$acm_fix_tax_calc."', `acm_fix_prev_tax_calc`='".$acm_fix_prev_tax_calc."', `acm_fix_prev_var_tax_calc`='".$acm_fix_prev_var_tax_calc."', `cam_fix_tax_calc`='".$cam_fix_tax_calc."', `cam_fix_prev_tax_calc`='".$cam_fix_prev_tax_calc."', `cam_fix_prev_var_tax_calc`='".$cam_fix_prev_var_tax_calc."', `tax_ytd`='".$tax_ytd."', `total_tax_year`='".$total_tax_year."', `tax_previous`='".$tax_previous."', `tax_remaining`='".$tax_remaining."', `tax_fix_month`='".$tax_fix_month."', `tax_var_month`='".$tax_var_month."', `tax_this_month`='".$tax_this_month."', `tax_next_month`='".$tax_next_month."', `tax_tot_next_month`='".$tax_tot_next_month."', `total_net_income`= '".$total_net_income."', `total_net_pay`='".$total_net_pay."', `total_net_income_prev`='".$total_net_income_prev."', `total_net_pay_prev`='".$total_net_pay_prev."', `fullyear_net_income`='".$fullyear_net_income."', `fullyear_net_pay`='".$fullyear_net_pay."' WHERE `emp_id` = '".$key."' AND `payroll_modal_id`='".$_REQUEST['mid']."' AND `month` = '".$_SESSION['rego']['cur_month']."' ";
+			//=============== Total Earnings and deduction ==============================//
+			$total_earnings = $salary_group_total + $overtime_group_total + $fix_income_group_total + $var_income_group_total + $other_income_group_total;
+			$total_earnings = round($total_earnings,2);
+			$total_deductions = $absence_group_total + $fix_ded_group_total + $var_ded_group_total + $other_ded_group_total + $legal_ded_group_total + $advance_pay_group_total;
+			$total_deductions = round($total_deductions,2);
+
+			
+			//=============== Full Year totals calculations =============================//
+			$full_year_salary_grp = isset($full_year_total[$key]['inc_sal']) ? array_sum($full_year_total[$key]['inc_sal']) : 0;
+			$full_year_salary_grp += $salary_group_total_prev;
+
+			$full_year_overtime_grp = isset($full_year_total[$key]['inc_ot']) ? array_sum($full_year_total[$key]['inc_ot']) : 0;
+			$full_year_overtime_grp += $overtime_group_total_prev;
+
+			$full_year_fixincome_grp = isset($full_year_total[$key]['inc_fix']) ? array_sum($full_year_total[$key]['inc_fix']) : 0;
+			$full_year_fixincome_grp += $fix_income_group_total_prev;
+
+			$full_year_varincome_grp = isset($full_year_total[$key]['inc_var']) ? array_sum($full_year_total[$key]['inc_var']) : 0;
+			$full_year_varincome_grp += $var_income_group_total_prev;
+
+			$full_year_othincome_grp = isset($full_year_total[$key]['inc_oth']) ? array_sum($full_year_total[$key]['inc_oth']) : 0;
+			$full_year_othincome_grp += $other_income_group_total_prev;
+
+			$full_year_absence_grp = isset($full_year_total[$key]['ded_abs']) ? array_sum($full_year_total[$key]['ded_abs']) : 0;
+			$full_year_absence_grp += $absence_group_total_prev;
+
+			$full_year_fixded_grp = isset($full_year_total[$key]['ded_fix']) ? array_sum($full_year_total[$key]['ded_fix']) : 0;
+			$full_year_fixded_grp += $fix_ded_group_total_prev;
+
+			$full_year_varded_grp = isset($full_year_total[$key]['ded_var']) ? array_sum($full_year_total[$key]['ded_var']) : 0;
+			$full_year_varded_grp += $var_ded_group_total_prev;
+
+			$full_year_othded_grp = isset($full_year_total[$key]['ded_oth']) ? array_sum($full_year_total[$key]['ded_oth']) : 0;
+			$full_year_othded_grp += $other_ded_group_total_prev;
+
+			$full_year_legal_grp = isset($full_year_total[$key]['ded_leg']) ? array_sum($full_year_total[$key]['ded_leg']) : 0;
+			$full_year_legal_grp += $legal_ded_group_total_prev;
+
+			$full_year_advpay_grp = isset($full_year_total[$key]['ded_pay']) ? array_sum($full_year_total[$key]['ded_pay']) : 0;
+			$full_year_advpay_grp += $advance_pay_group_total_prev;
+
+			
+			//============ Net income or net pay calculation ============//
+			$total_net_income = ($salary_group_total + $overtime_group_total + $fix_income_group_total + $var_income_group_total + $other_income_group_total) - ($absence_group_total + $fix_ded_group_total + $var_ded_group_total + $other_ded_group_total);
+			$total_net_pay = $total_net_income - $advance_pay_group_total - $legal_ded_group_total;
+
+			//=============== Full Year Earnings and deduction ==============================//
+			$full_year_earnings = $full_year_salary_grp + $full_year_overtime_grp + $full_year_fixincome_grp + $full_year_varincome_grp + $full_year_othincome_grp;
+			$full_year_deductions = $full_year_absence_grp + $full_year_fixded_grp + $full_year_varded_grp + $full_year_othded_grp + $full_year_legal_grp + $full_year_advpay_grp;
+
+			$full_year_earnings = round($full_year_earnings,2);
+			$full_year_deductions = round($full_year_deductions,2);
+
+			$total_net_income_prev = ($salary_group_total_prev + $overtime_group_total_prev + $fix_income_group_total_prev + $var_income_group_total_prev + $other_income_group_total_prev) - ($absence_group_total_prev + $fix_ded_group_total_prev + $var_ded_group_total_prev + $other_ded_group_total_prev);
+			$total_net_pay_prev = $total_net_income_prev - $legal_ded_group_total_prev - $advance_pay_group_total_prev;
+
+			$fullyear_net_income = ($full_year_salary_grp + $full_year_overtime_grp + $full_year_fixincome_grp + $full_year_varincome_grp + $full_year_othincome_grp) - ($full_year_absence_grp + $full_year_fixded_grp + $full_year_varded_grp + $full_year_othded_grp);
+			$fullyear_net_pay = $fullyear_net_income - $full_year_legal_grp - $full_year_advpay_grp;
+
+
+			//=========== query for saving data
+			$upsql = "UPDATE ".$sessionpayrollDbase." SET `salary_group_total`='".$salary_group_total."', `overtime_group_total`='".$overtime_group_total."', `fix_income_group_total`='".$fix_income_group_total."', `var_income_group_total`='".$var_income_group_total."', `other_income_group_total`='".$other_income_group_total."', `absence_group_total`= '".$absence_group_total."', `fix_ded_group_total`='".$fix_ded_group_total."', `var_ded_group_total`='".$var_ded_group_total."', `other_ded_group_total`='".$other_ded_group_total."', `legal_ded_group_total`='".$legal_ded_group_total."', `advance_pay_group_total`='".$advance_pay_group_total."', `total_earnings`='".$total_earnings."', `total_deductions`='".$total_deductions."', `total_pnd1`='".$total_pnd1."', `total_sso`='".$total_sso."', `total_pvf`='".$total_pvf."', `total_psf`='".$total_psf."', `total_tax_income` = '".$total_tax_income."', `total_tax_fixpro`='".$total_tax_fixpro."', `total_tax_fix`='".$total_tax_fix."', `total_tax_var`='".$total_tax_var."', `total_tax_nontax`='".$total_tax_nontax."', `total_of_alltax`='".$total_of_alltax."', `sso_emp_calc` = '".$sso_emp."', `sso_comp_calc` = '".$sso_com."', `sso_employee`='".$sso_employee."', `sso_company`='".$sso_company."', `pvf_emp_calc`='".$pvf_emp."', `pvf_comp_calc`='".$pvf_com."', `pvf_employee`='".$pvf_employee."', `pvf_company`='".$pvf_company."', `psf_emp_calc`='".$psf_emp."', `psf_comp_calc`='".$psf_com."', `psf_employee`='".$psf_employee."', `psf_company`='".$psf_company."', `salary_group_total_prev`='".$salary_group_total_prev."', `overtime_group_total_prev`='".$overtime_group_total_prev."', `fix_income_group_total_prev`='".$fix_income_group_total_prev."', `var_income_group_total_prev`='".$var_income_group_total_prev."', `other_income_group_total_prev`='".$other_income_group_total_prev."', `absence_group_total_prev`='".$absence_group_total_prev."', `fix_ded_group_total_prev`='".$fix_ded_group_total_prev."', `var_ded_group_total_prev`='".$var_ded_group_total_prev."', `other_ded_group_total_prev`='".$other_ded_group_total_prev."', `legal_ded_group_total_prev`='".$legal_ded_group_total_prev."', `advance_pay_group_total_prev`='".$advance_pay_group_total_prev."', `total_earnings_prev`='".$total_earnings_prev."', `total_deductions_prev`='".$total_deductions_prev."', `total_pnd1_prev`='".$total_pnd1_prev."', `total_sso_prev`='".$total_sso_prev."', `total_pvf_prev`='".$total_pvf_prev."', `total_psf_prev`='".$total_psf_prev."', `total_tax_income_prev`='".$total_tax_income_prev."', `total_tax_fixpro_prev`='".$total_tax_fixpro_prev."', `total_tax_fix_prev`='".$total_tax_fix_prev."', `total_tax_var_prev`='".$total_tax_var_prev."', `total_tax_nontax_prev`='".$total_tax_nontax_prev."', `total_of_alltax_prev`='".$total_of_alltax_prev."', `fixed_prorated_yearly`='".$fixed_prorated_yearly."', `fixed_yearly`='".$fixed_yearly."', `fixed_actual_prorated_yearly`='".$fixed_actual_prorated_yearly."', `fixed_actual_yearly`='".$fixed_actual_yearly."', `variable_prev`='".$variable_prev."', `variable_curr`='".$variable_curr."', `income_YTD`='".$income_YTD."', `standard_deduction_manual`='".$standard_deduction_manual."', `standard_deduction_total`='".$standard_deduction_total."', `personal_care_manual`='".$personal_care_manual."', `personal_care_total`='".$personal_care_total."', `tax_allow_pvf`='".$total_yearly_provident_fund."', `allow_pvf_manual`='".$allow_pvf_manual."', `allow_pvf_total`='".$allow_pvf_total."', `tax_allow_sso`='".$total_yearly_social_security_fund."', `allow_sso_manual`='".$allow_sso_manual."', `allow_sso_total`='".$allow_sso_total."', `total_other_tax_deductions` ='".$total_other_tax_deductions."', `total_yearly_tax_deductions`='".$total_yearly_tax_deductions."', `tax_by_company`='".$tax_by_company."', `sso_by_company`='".$sso_by_company."', `sso_by_company_prev`='".$sso_by_company_prev."', `sso_employee_prev`='".$sso_employee_prev."', `pvf_employee_prev`='".$pvf_employee_prev."', `psf_employee_prev`='".$psf_employee_prev."', `full_year_salary_grp`='".$full_year_salary_grp."', `full_year_overtime_grp`='".$full_year_overtime_grp."', `full_year_fixincome_grp`='".$full_year_fixincome_grp."', `full_year_varincome_grp`='".$full_year_varincome_grp."', `full_year_othincome_grp`='".$full_year_othincome_grp."', `full_year_absence_grp`='".$full_year_absence_grp."', `full_year_fixded_grp`='".$full_year_fixded_grp."', `full_year_varded_grp`='".$full_year_varded_grp."', `full_year_othded_grp`='".$full_year_othded_grp."', `full_year_legal_grp`='".$full_year_legal_grp."', `full_year_advpay_grp`='".$full_year_advpay_grp."', `full_year_fixprorated`='".$full_year_fixprorated."', `full_year_fixed`='".$full_year_fixed."', `full_year_var`='".$full_year_var."', `full_year_taxableincome`='".$full_year_taxableincome."', `full_year_non_taxable`='".$full_year_non_taxable."', `full_year_sso_employee`='".$full_year_sso_employee."', `full_year_sso_by_company`='".$full_year_sso_by_company."', `full_year_pvf_employee`='".$full_year_pvf_employee."', `full_year_psf_employee`='".$full_year_psf_employee."', `full_year_pnd`='".$full_year_pnd."', `full_year_sso`='".$full_year_sso."', `full_year_pvf`='".$full_year_pvf."', `full_year_psf`='".$full_year_psf."', `full_year_earnings`='".$full_year_earnings."', `full_year_deductions`='".$full_year_deductions."', `acm_fix`='".$acm_fix."', `acm_fix_prev`='".$acm_fix_prev."', `acm_fix_prev_var`='".$acm_fix_prev_var."', `cam_fix`='".$cam_fix."', `cam_fix_prev`='".$cam_fix_prev."', `cam_fix_prev_var`='".$cam_fix_prev_var."', `ytd_income`='".$ytd_income."', `acm_fix_tax_calc`='".$acm_fix_tax_calc."', `acm_fix_prev_tax_calc`='".$acm_fix_prev_tax_calc."', `acm_fix_prev_var_tax_calc`='".$acm_fix_prev_var_tax_calc."', `cam_fix_tax_calc`='".$cam_fix_tax_calc."', `cam_fix_prev_tax_calc`='".$cam_fix_prev_tax_calc."', `cam_fix_prev_var_tax_calc`='".$cam_fix_prev_var_tax_calc."', `tax_ytd`='".$tax_ytd."', `total_tax_year`='".$total_tax_year."', `tax_previous`='".$tax_previous."', `tax_remaining`='".$tax_remaining."', `tax_fix_month`='".$tax_fix_month."', `tax_var_month`='".$tax_var_month."', `tax_this_month`='".$tax_this_month."', `tax_next_month`='".$tax_next_month."', `tax_tot_next_month`='".$tax_tot_next_month."', `total_net_income`= '".$total_net_income."', `total_net_pay`='".$total_net_pay."', `total_net_income_prev`='".$total_net_income_prev."', `total_net_pay_prev`='".$total_net_pay_prev."', `fullyear_net_income`='".$fullyear_net_income."', `fullyear_net_pay`='".$fullyear_net_pay."' WHERE `emp_id` = '".$key."' AND `payroll_modal_id`='".$_REQUEST['mid']."' AND `month` = '".$_SESSION['rego']['cur_month']."' ";
 			$dbc->query($upsql);
 			//echo $upsql;
 			//die();

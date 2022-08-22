@@ -440,7 +440,7 @@
 				<button class="commonhidebutton btn btn-primary btn-fr exportExcel" type="button"><i class="fa fa-upload fa-mr"></i><?=$lng['Export']?></button>
 				<button onclick="$('#import_employees').click()" class="commonhidebutton btn btn-primary btn-fr" type="button"><i class="fa fa-download fa-mr"></i><?=$lng['Import']?></button>
 
-				<button class="btn btn-primary btn-fr" id='continue_selection' type="button"><i class="fa fa-arrow-right  fa-mr"></i><?=$lng['Continue selection']?></button>				
+				<button class="btn btn-primary btn-fr" type="button"><i class="fa fa-arrow-right  fa-mr"></i><?=$lng['Continue selection']?></button>				
 				<button class="btn btn-primary btn-fr switchLayout" type="button"><i class="fa fa-retweet fa-mr"></i><?=$lng['Switch Layout']?></button>
 				<!-- <button id="redrawDatatable11" type="button"></button> -->
 				
@@ -2106,7 +2106,7 @@
 
 <script type="text/javascript">
 
-	var continue_sel=false,show_hide_columns_obj={};
+
 	$( document ).ready(function() {
 
 		var tempdatas = "<?=$tempdata?>";
@@ -4483,7 +4483,7 @@ function submitPopupModal(modal)
 function saveTpEmpsTable()
 {
 	// start the loader
-	$(".preloader").fadeIn(400);
+	//$(".preloader").fadeIn(400);
 	// run ajax to save data in employee table 
 	$.ajax({
 		url: "ajax/save_temporary_data_to_employee_table.php",
@@ -4496,7 +4496,7 @@ function saveTpEmpsTable()
 					duration: 1,
 				})
 				setTimeout(function(){
-					window.location.reload();
+					//window.location.reload();
 				}, 500); 
 			}
 		},
@@ -4944,9 +4944,7 @@ $(document).on("click", ".getTheErrors", function(e){
 	$('#modalViewErrors').modal('toggle');
 });
 
-$(document).on("click","#continue_selection",function(){
-	continue_sel=!continue_sel;
-})
+
 
 
 //======================== VIEW ERROR DATA IN MODAL  =======================//
@@ -5025,6 +5023,7 @@ function submitPopupModalEdit(valueCheck){
 <?php include('section_script/financial.php'); ?>
 // ===============================  Benefit SECTION SCRIPT ===================//
 <?php include('section_script/benefit.php'); ?>
+
 
 
 

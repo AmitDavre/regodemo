@@ -7,7 +7,87 @@
 	//var_dump($_REQUEST); exit;
 	//var_dump($_FILES); //exit;
 
+	// echo '<pre>';
+	// print_r($_REQUEST);
+	// echo '</pre>';
+
+	// die();
+// ===========================  CODE FOR UPDATING OTHER BENEFITS IN CAREER DATABASE =======================//
+	if($_REQUEST['hidden_edit_check'] == 'change')
+	{
+		// update in the employee career table and unset the fields after that 
+		$dir = DIR.$cid.'/career/';
+	  	if(!file_exists($dir)){
+	   		mkdir($dir);
+		}
+
+
+	
+			$sql = "SELECT attachments FROM ".$cid."_employee_career WHERE id = '".$_REQUEST['hidden_row_edit_id']."'";
+			if($res = $dbc->query($sql)){
+				$row = $res->fetch_assoc();
+
+				// if section is not changed then get old values and insert a new row
+				if(!empty($row['attachments'])){
+					$_REQUEST['attachments2'] = unserialize($row['attachments']);
+				}
+			}
+
+			if(!empty($_FILES['attachmentEdit']['tmp_name'][0])){
+				foreach($_FILES['attachmentEdit']['tmp_name'] as $k=>$v){
+					$filename = $_FILES['attachmentEdit']['name'][$k];	
+					$baseName = pathinfo($filename, PATHINFO_FILENAME );
+					$extension = pathinfo($filename, PATHINFO_EXTENSION );
+					$counter = 1;				
+					while(file_exists($dir.$filename)) {
+						 $filename = $baseName.'('.$counter.').'.$extension;
+						 $counter++;
+					};
+					if(move_uploaded_file($v,$dir.$filename)){
+						$_REQUEST['attachments2'][] = $filename;	
+					}
+				}
+
+			
+				$_REQUEST['attachments_curr2'] = serialize($_REQUEST['attachments2']);
+			
+				
+			}
+			else
+			{
+				$_REQUEST['attachments_curr2'] = $row['attachments'] ;
+			}
+
+
+		$sqlUpdateBenefits = "UPDATE ".$cid."_employee_career SET other_benifits = '".$_REQUEST['other_benifitsEdit']."' ,remarks = '".$_REQUEST['remarksEdit']."' ,attachments = '".$_REQUEST['attachments_curr2']."' , section_change = 'Other benefits'  WHERE id = '".$_REQUEST['hidden_row_edit_id']."'";
+
+
+		$resultUpdateBenefits = $dbc->query($sqlUpdateBenefits);
+
+		unset($_REQUEST['hidden_edit_check']);
+		unset($_REQUEST['hidden_row_edit_id']);
+		unset($_REQUEST['other_benifitsEdit']);
+		unset($_REQUEST['remarksEdit']);
+		unset($_REQUEST['attachments2']);
+		unset($_REQUEST['attachments_curr2']);
+	}
+	else
+	{
+		unset($_REQUEST['hidden_edit_check']);
+		unset($_REQUEST['hidden_row_edit_id']);
+		unset($_REQUEST['other_benifitsEdit']);
+		unset($_REQUEST['remarksEdit']);
+		unset($_REQUEST['attachments2']);
+		unset($_REQUEST['attachments_curr2']);
+	}
+// ===========================  CODE FOR UPDATING OTHER BENEFITS IN CAREER DATABASE =======================//
+
+	// ==========unset the columns which are used before but not needed in database to update =======//
 	unset($_REQUEST['addComp']);
+	unset($_REQUEST['employee_status']);
+
+	// ==========unset the columns which are used before but not needed in database to update =======//
+	
 	$update = 0;
 	if(isset($_REQUEST['updateEmp'])){
 		$update = $_REQUEST['updateEmp'];
@@ -281,7 +361,6 @@
 
 	// remove the extra columns which are not in the databse but are used above 
 
-	unset($_REQUEST['new_employee_check']);
 
 
 	$monthValue = $month=date("m",strtotime($_REQUEST['joining_date']));
@@ -293,8 +372,17 @@
 	$headTeamValue = $_REQUEST['team'];
 
 
+	if($_REQUEST['new_employee_check'] == '1')
+	{
+		$dbc->query("INSERT INTO ".$cid."_employee_career (month, emp_id, start_date, head_branch, head_division,head_department,team_supervisor,position) VALUES ('".$monthValue."','".$empIdValue."','".$joiningDateValue."','".$headBranchValue."','".$headDivisonValue."','".$headDepartmentValue."','".$headTeamValue."','1' ) ");
 
-	$dbc->query("INSERT INTO ".$cid."_employee_career (month, emp_id, start_date, head_branch, head_division,head_department,team_supervisor,position) VALUES ('".$monthValue."','".$empIdValue."','".$joiningDateValue."','".$headBranchValue."','".$headDivisonValue."','".$headDepartmentValue."','".$headTeamValue."','1' ) ");
+	}
+
+
+
+
+	unset($_REQUEST['new_employee_check']);
+
 
 	$sql = "INSERT INTO ".$cid."_employees (";
 	foreach($_REQUEST as $k=>$v){

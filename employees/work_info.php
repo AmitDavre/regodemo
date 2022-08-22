@@ -269,7 +269,6 @@
 													<option <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
 												<? } ?>
 											</select>
-											<b style="color:#b00"><?=$lng['Please change this from End Contract tab']?></b>
 										</td>
 									</tr>
 
@@ -880,7 +879,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title"><i class="fa fa-building-o"></i>&nbsp; <?=$lng['Organization Chart']?></h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close closeEditEmploymentDataPopup" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -1013,8 +1012,8 @@
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title"><i class="fa fa-user"></i>&nbsp; <?=ucwords($lng['Add Employee Benefits'])?></h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<h5 class="modal-title"><i class="fa fa-user"></i>&nbsp; <?=ucwords('Edit Responsibilities')?></h5>
+					<button type="button" class="close closeEditEmploymentDataPopup" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -1245,7 +1244,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title"><i class="fa fa-user"></i>&nbsp; <?=ucwords($lng['Edit Employment Data'])?></h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button  type="button" class="close closeEditEmploymentDataPopup" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -1278,16 +1277,16 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
+		<!-- 							<tr>
 										<th>No end of employment</th>
 										<td>
 											<input type="radio" id="noEndOfEmployment" class="ml-2 mt-2 checkbox-custom-blue-2" name="endofemployment" value="0" >
 										</td>
-									</tr>						
+									</tr>	 -->					
 									<tr>
 										<th>End of employment</th>
 										<td>
-											<input type="radio" id="endOfEmployment" class="ml-2 mt-1 checkbox-custom-blue-2" name="endofemployment" value="1" checked="checked">
+											<input type="checkbox" id="endOfEmployment" class="ml-2 mt-1 checkbox-custom-blue-2" name="endofemployment" value="1" checked="checked">
 										</td>
 									</tr>
 								</tbody>
@@ -1328,7 +1327,7 @@
 												<? } ?>
 											</select>
 
-											<select id="emp_status3val" name="emp_status2" style="width:140px;display: none;">
+											<select id="emp_status3val" name="emp_status3" style="width:140px;display: none;">
 												<? foreach($emp_status3 as $k=>$v){ ?>
 													<option <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
 												<? } ?>
@@ -2766,27 +2765,28 @@
 	  {
 	  	x[4].style.display = "none";
 	  }
-	  else if(n == 3 && $('#noEndOfEmployment').is(':checked') )
+
+	  else if(n == 3 && $('#endOfEmployment').is(':not(:checked)') )
 	  {
 	  	x[4].style.display = "none";
 	  	x[3].style.display = "block";
 	  	$('#emp_status3val').css('display','block');
 
 	  } 
-	  else if(n == 2 && $('#noEndOfEmployment').is(':checked') )
+	  else if(n == 2 &&  $('#endOfEmployment').is(':not(:checked)') )
 	  {
 	  	x[4].style.display = "none";
 	  	x[3].style.display = "none";
 	  	x[2].style.display = "block";
 	  }
-	  else if(n == 1 && $('#noEndOfEmployment').is(':checked') )
+	  else if(n == 1 &&  $('#endOfEmployment').is(':not(:checked)') )
 	  {
 	  	x[4].style.display = "none";
 	  	x[3].style.display = "none";
 	  	x[2].style.display = "none";
 	  	x[1].style.display = "block";
 	  }	  
-	  else if(n == 0 && $('#noEndOfEmployment').is(':checked') )
+	  else if(n == 0 &&  $('#endOfEmployment').is(':not(:checked)') )
 	  {
 	  	x[4].style.display = "none";
 	  	x[3].style.display = "none";
@@ -2800,13 +2800,24 @@
 	  }
 
 
+	  // check here if the checkbox is checked and show submit according to it 
+
+	  if( $('#endOfEmployment').is(':not(:checked)'))
+		{
+			var submitShowValue = 1;
+		}
+		else
+		{
+			var submitShowValue = 2;
+		}
+
 	
 	  if (n == 0) {
 	    document.getElementById("prevBtn2").style.display = "none";
 	  } else {
 	    document.getElementById("prevBtn2").style.display = "inline";
 	  }
-	  if (n == (x.length - 1)) {
+	  if (n == (x.length - submitShowValue)) {
 	    document.getElementById("nextBtn2").innerHTML = "Submit";
 	  } else {
 	    document.getElementById("nextBtn2").innerHTML = "Next";
@@ -2819,13 +2830,36 @@
 	  var x = document.getElementsByClassName("tab2");
 	  x[currentTab2].style.display = "none";
 	  currentTab2 = currentTab2 + n;
-	  if (currentTab2 >= x.length) {
-	    SaveEmployementDataForm();
-	    return false;
-	  }
 
 
-	  if($('#noEndOfEmployment').is(':checked'))
+	  console.log(currentTab2 +'-'+ x.length);
+
+
+		if($('#endOfEmployment').is(':checked'))
+		{
+			if(currentTab2 == 4)
+			{
+				SaveEmployementDataForm();
+	    		return false;
+			}
+		}
+		else
+		{
+			if(currentTab2 == 5)
+			{
+				SaveEmployementDataForm();
+	    		return false;
+			}
+		}
+
+
+	  // if (currentTab2 >= x.length) {
+	  //   SaveEmployementDataForm();
+	  //   return false;
+	  // }
+
+
+	  if( $('#endOfEmployment').is(':not(:checked)'))
 		{
 			if(currentTab2 == 2)
 			{
@@ -2894,7 +2928,7 @@
 	  }
 
 
-	  if($('#noEndOfEmployment').is(':checked'))
+	  if( $('#endOfEmployment').is(':not(:checked)'))
 		{
 			if(currentTab2 == 2)
 			{
@@ -3102,4 +3136,18 @@
 
 	}
 
+
+
+	// ======================HIDE THE DATA IS UPDATED MESSAGE ON POPUP CLOSE ===============//
+
+
+
+		$(document).on("click", ".closeEditEmploymentDataPopup", function(e){
+
+			$('#sAlert').css('display','none');
+		});		
+
+
+
+	// ======================HIDE THE DATA IS UPDATED MESSAGE ON POPUP CLOSE ===============//
 	</script>

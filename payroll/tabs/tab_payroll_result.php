@@ -464,7 +464,11 @@
 											var monthssLower = monthss.toLowerCase();
 											
 											if(currMnths == 'prevMnth'){
-												crmth_manual_feed = payroll_datas_prev[i][k1][monthssLower]; 
+												if(payroll_datas_prev[i].hasOwnProperty(k)){
+													crmth_manual_feed = payroll_datas_prev[i][k][monthssLower]; 
+												}else{
+													crmth_manual_feed = 0.00;
+												}
 											}else{
 												crmth_manual_feed = v[monthssLower];
 											}
@@ -548,7 +552,11 @@
 											var monthssLower = monthss.toLowerCase();
 											
 											if(currMnths == 'prevMnth'){
-												crmth_manual_feed = payroll_datas_prev[i][k1][monthssLower]; 
+												if(payroll_datas_prev[i].hasOwnProperty(k)){
+													crmth_manual_feed = payroll_datas_prev[i][k][monthssLower]; 
+												}else{
+													crmth_manual_feed = 0.00;
+												}
 											}else{
 												crmth_manual_feed = v[monthssLower];
 											}

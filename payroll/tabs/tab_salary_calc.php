@@ -1516,12 +1516,16 @@
 											var monthssLower = monthss.toLowerCase();
 
 											if(currMnths == 'prevMnth'){
-												crmth_manual_feed = payroll_datas_prev[i][k1][monthssLower]; 
+												if(payroll_datas_prev[i].hasOwnProperty(k)){
+													crmth_manual_feed = payroll_datas_prev[i][k][monthssLower]; 
+												}else{
+													crmth_manual_feed = 0.00;
+												}
 											}else{
 												crmth_manual_feed = v[monthssLower];
 											}
 											
-											if(crmth_manual_feed == ''){crmth_manual_feed=0.00;};
+											if(crmth_manual_feed == ''){crmth_manual_feed=0.00;}
 											
 											if(v['pnd'] == 1){ pnd1 = 'pnd1';}else{ pnd1 = '';}
 											if(data[0].calc_sso == 1 && v['sso'] == 1){ sso = 'sso';}else{ sso = '';}
@@ -1609,7 +1613,11 @@
 											var monthssLower = monthss.toLowerCase();
 											
 											if(currMnths == 'prevMnth'){
-												crmth_manual_feed = payroll_datas_prev[i][k1][monthssLower]; 
+												if(payroll_datas_prev[i].hasOwnProperty(k)){
+													crmth_manual_feed = payroll_datas_prev[i][k][monthssLower]; 
+												}else{
+													crmth_manual_feed = 0.00;
+												}
 											}else{
 												crmth_manual_feed = v[monthssLower];
 											}
@@ -3159,6 +3167,10 @@
 						//console.log(data);
 
 						var payroll_datas = data.payroll_data;
+						var payroll_data_coulmn_prev = data.payroll_data_coulmn_prev;
+
+						$('#modalSSO select[name="ss_calc_sso"] option').attr('selected',false);
+						$('#modalSSO select[name="ss_paidby_sso"] option').attr('selected',false);
 
 
 						$('#modalSSO #ssoEmpid').val(data[0].emp_id);
@@ -3303,11 +3315,23 @@
 								//sso_employer = sso_thbs;
 								sso_thb = payroll_datas[57][monthssLower];
 								sso_employer = payroll_datas['ssoemployer'][monthssLower];
+								//alert(ssothb);
+							}else if(ss_calc_sso == 1 && k < data[0].month){
+
+								//sso_thb = sso_thbs;
+								//sso_employer = sso_thbs;
+								sso_thb = payroll_datas[57][monthssLower];
+								sso_employer = payroll_datas['ssoemployer'][monthssLower];
+								//alert(ssothb);
 							}
 
 							if(ss_paidby_sso == 1 && k >= data[0].month){
 								ssobycompany = sso_thb;
 								//ssobycompany = payroll_datas[28][monthssLower];
+							}else if(ss_paidby_sso == 1 && k < data[0].month){
+								//ssobycompany = sso_thb;
+								//ssobycompany = payroll_datas[28][monthssLower];
+								ssobycompany = payroll_data_coulmn_prev[k][28][monthssLower];
 							}
 
 							sso_thb = parseFloat(sso_thb).toFixed(2);

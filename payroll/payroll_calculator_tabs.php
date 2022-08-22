@@ -3125,7 +3125,12 @@
 
 		//============== Tab ManualFeedDT ===============
 
-		
+		var totalmfcolumns=$('#showColsMF option').length;
+		var columns=[];
+		for(let i=5;i<totalmfcolumns+6;i++){
+			columns.push(i,totalmfcolumns+i+1);
+		} 
+
 		var dtmanual = $('#ManualFeedDT').DataTable({
 			scrollX: true,
 			lengthChange: false,
@@ -3134,12 +3139,12 @@
 			pagingType: 'full_numbers',
 			pageLength: 15,
 			filter: true,
-			//autoWidth: false,
 			info: true,
 			<?=$dtable_lang?>
 			columnDefs: [
+
 				{"targets": eColsmf, "visible": false, "searchable": false},
-				{"width": 200, "targets": 0},
+				{ "width": "75px", "targets": columns },
 				<?=$eColsMFd?>
 				<?=$eColsMFd11?>
 				<?=$hide2?>

@@ -108,7 +108,7 @@
 							$allow_deduct_ids=$rowpre['allow_deduct_ids'];
 						}
 
-						$data['payroll_data_coulmn_prev'][$rowpre['months']][] = $rowpre;
+						$data['payroll_data_coulmn_prev'][$rowpre['months']][$allow_deduct_ids] = $rowpre;
 					}
 				}
 			} 

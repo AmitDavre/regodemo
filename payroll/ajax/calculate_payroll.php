@@ -1095,16 +1095,37 @@
 			
 			//=============== Full Year totals calculations =============================//
 			$full_year_salary_grp = isset($full_year_total[$key]['inc_sal']) ? array_sum($full_year_total[$key]['inc_sal']) : 0;
+			$full_year_salary_grp += $salary_group_total_prev;
+
 			$full_year_overtime_grp = isset($full_year_total[$key]['inc_ot']) ? array_sum($full_year_total[$key]['inc_ot']) : 0;
+			$full_year_overtime_grp += $overtime_group_total_prev;
+
 			$full_year_fixincome_grp = isset($full_year_total[$key]['inc_fix']) ? array_sum($full_year_total[$key]['inc_fix']) : 0;
+			$full_year_fixincome_grp += $fix_income_group_total_prev;
+
 			$full_year_varincome_grp = isset($full_year_total[$key]['inc_var']) ? array_sum($full_year_total[$key]['inc_var']) : 0;
+			$full_year_varincome_grp += $var_income_group_total_prev;
+
 			$full_year_othincome_grp = isset($full_year_total[$key]['inc_oth']) ? array_sum($full_year_total[$key]['inc_oth']) : 0;
+			$full_year_othincome_grp += $other_income_group_total_prev;
+
 			$full_year_absence_grp = isset($full_year_total[$key]['ded_abs']) ? array_sum($full_year_total[$key]['ded_abs']) : 0;
+			$full_year_absence_grp += $absence_group_total_prev;
+
 			$full_year_fixded_grp = isset($full_year_total[$key]['ded_fix']) ? array_sum($full_year_total[$key]['ded_fix']) : 0;
+			$full_year_fixded_grp += $fix_ded_group_total_prev;
+
 			$full_year_varded_grp = isset($full_year_total[$key]['ded_var']) ? array_sum($full_year_total[$key]['ded_var']) : 0;
+			$full_year_varded_grp += $var_ded_group_total_prev;
+
 			$full_year_othded_grp = isset($full_year_total[$key]['ded_oth']) ? array_sum($full_year_total[$key]['ded_oth']) : 0;
+			$full_year_othded_grp += $other_ded_group_total_prev;
+
 			$full_year_legal_grp = isset($full_year_total[$key]['ded_leg']) ? array_sum($full_year_total[$key]['ded_leg']) : 0;
+			$full_year_legal_grp += $legal_ded_group_total_prev;
+
 			$full_year_advpay_grp = isset($full_year_total[$key]['ded_pay']) ? array_sum($full_year_total[$key]['ded_pay']) : 0;
+			$full_year_advpay_grp += $advance_pay_group_total_prev;
 
 			
 			//============ Net income or net pay calculation ============//

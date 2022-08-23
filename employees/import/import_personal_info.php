@@ -92,7 +92,8 @@
 	$field = array_filter($field);
 
 	unset($sheetData[0], $sheetData[1], $sheetData[2]);
-
+	//$sheetData2=array();
+	
 	$data = array();
 	foreach($sheetData as $key=>$val){
 		if(!empty($val[0])){
@@ -108,9 +109,12 @@
 				}
 
 			}
-
+			//print_r($val);exit;
 			foreach($val as $k=>$v){
-				if(isset($field[$k])){
+			    if(isset($field[$k])){
+				    
+			        $v1=$v;//copy value for empty checking
+			        
 					if($sys_settings['auto_id'] == '1' && $field[$k] == 'emp_id'){
 						$data[$key]['emp_id'] = $val[0];
 						//======= CHECK IS SCAN ID SETTING IS ON FROM EMPLOYEE DEFAULT AND SET VALUE ACCORDING TO THAT 
@@ -295,9 +299,9 @@
 					}					
 					if($field[$k] == 'idcard_nr')
 					{
-						if (preg_match("/^\d+$/", $v)) 
+					    if (preg_match("/^\d+$/", $v)) 
 						{
-							$v= $v;    
+							$v= $v;
 						} 
 						else 
 						{
@@ -408,7 +412,11 @@
 							$v = 'NULL';
 						}
 					}
-
+					///////////////////
+					//check in array for empty fields
+					if(in_array($field[$k],array('idcard_nr'))&&empty($v1))
+					    $v=$v1;
+					///////////////////
 				
 					$data[$key]['user_id'] = $sesssionUserId;
 
@@ -490,7 +498,7 @@
 
 	//===============================GET TEMPOARRY DATA BEFORE IMPORT=======================//
 	reset($data);
-
+    //print_r($data);exit;
 	
 	if($data){	
 		$sql = "INSERT INTO ".$_SESSION['rego']['cid']."_temp_employee_data (";
@@ -1032,7 +1040,7 @@
 
 
 
-		ob_clean();
+		//ob_clean();
 		echo 'success';
 		exit;
 		

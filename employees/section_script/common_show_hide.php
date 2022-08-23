@@ -104,6 +104,28 @@
 			showTitle : false,
 			triggerChangeCombined: true,
 		});
+		$('#showHideclm10').SumoSelect({
+			placeholder: '<?=$lng['Show Hide Columns']?>',
+			captionFormat: '<?=$lng['Show Hide Columns']?> ({0})',
+			captionFormatAllSelected: '<?=$lng['Show Hide Columns']?> ({0})',
+			csvDispCount:1,
+			outputAsCSV: true,
+			selectAll:true,
+			okCancelInMulti:false, 
+			showTitle : false,
+			triggerChangeCombined: true,
+		});
+		$('#showHideclm11').SumoSelect({
+			placeholder: '<?=$lng['Show Hide Columns']?>',
+			captionFormat: '<?=$lng['Show Hide Columns']?> ({0})',
+			captionFormatAllSelected: '<?=$lng['Show Hide Columns']?> ({0})',
+			csvDispCount:1,
+			outputAsCSV: true,
+			selectAll:true,
+			okCancelInMulti:false, 
+			showTitle : false,
+			triggerChangeCombined: true,
+		});
 
 		$("li#showHideClmss .SumoSelect li").bind('click.check', function(event) {
 			var nr = $(this).index()+2;

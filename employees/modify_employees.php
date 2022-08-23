@@ -715,6 +715,8 @@
 									<option <?php if($selectionSelectValue == '8'){echo  "selected"; }?> value="8"><?=$lng['Benefits']?></option>
 									<option <?php if($selectionSelectValue == '9'){echo  "selected"; }?> value="9"><?=$lng['Payroll Models']?></option>
 									<option <?php if($selectionSelectValue == '10'){echo  "selected"; }?> value="10"><?=$lng['Tax deductions']?></option>
+									<option <?php if($selectionSelectValue == '11'){echo  "selected"; }?> value="11"><?=$lng['EMPLOYMENT DATA']?></option>
+									<option <?php if($selectionSelectValue == '12'){echo  "selected"; }?> value="12"><?=$lng['Responsibilities']?></option>
 								</select>
 
 
@@ -793,7 +795,20 @@
 											echo '>'.$v[1].'</option>';
 									} ?>
 								</select>
-								
+								<select class="ml-1 button" multiple="multiple" id="showHideclm10" style="background: #ffffff;font-weight: 600;padding: 1px !important;">
+									<?	foreach($eatt_cols10 as $k=>$v){
+											echo '<option class="optCol" value="'.$k.'" ';
+											if(in_array($k, $shCols2)){echo 'selected ';}
+											echo '>'.$v[1].'</option>';
+									} ?>
+								</select>
+								<select class="ml-1 button" multiple="multiple" id="showHideclm11" style="background: #ffffff;font-weight: 600;padding: 1px !important;">
+									<?	foreach($eatt_cols11 as $k=>$v){
+											echo '<option class="optCol" value="'.$k.'" ';
+											if(in_array($k, $shCols2)){echo 'selected ';}
+											echo '>'.$v[1].'</option>';
+									} ?>
+								</select>
 							</td>
 						</tr>
 					</table>
@@ -1041,7 +1056,47 @@
 								 <a  style="border-right: none;" ><span > Edit Benefits<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>		
 						</ul>						
-					</div>	
+					</div>
+					<div class="smallNav" id= "employment_div_data" style="display: none;">
+						<ul style="">
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_joinig_date_li">
+								 <a  style="border-right: none;" ><span > Edit Joining Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_service_years_li">
+								 <a  style="border-right: none;" ><span > Edit Service Years<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>		
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_employment_end_date_li">
+								 <a  style="border-right: none;" ><span > Edit Employment End Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_employee_status_li">
+								 <a  style="border-right: none;" ><span > Edit Employee Status<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+						</ul>						
+					</div>
+					<div class="smallNav" id= "responsibilities_div_data" style="display: none;">
+						<ul style="">
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_position_li">
+								 <a  style="border-right: none;" ><span > Position<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_date_start_position_li">
+								 <a  style="border-right: none;" ><span > Date start Position<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>		
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_head_of_location_li">
+								 <a  style="border-right: none;" ><span > Head of Location<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_head_of_division_li">
+								 <a  style="border-right: none;" ><span > Head of division<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_head_of_department_li">
+								 <a  style="border-right: none;" ><span > Head of department<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_team_supervisor_li">
+								 <a  style="border-right: none;" ><span > Team supervisor<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							</li>
+						</ul>						
+					</div>
+					
+						
 
 					</div>
 				</div>
@@ -1475,7 +1530,75 @@
 								</tbody>
 							</table>
 						</div>
+						<div style= "display: none;" id="div_employment_data">
+							<table  id="datatables27" class="dataTable hoverable selectable nowrap" >
 
+								<thead>
+									<tr>
+										<th class="par30"><?=$lng['Emp. ID']?></th>
+										<th class="tal par30"><?=$lng['Employee name']?></th>
+										<th class="tal "><?=$lng['Joining date']?></th>
+										<th class="tal "><?=$lng['Service years']?></th>
+										<th class="tal "><?=$lng['Employment End Date']?></th>
+										<th class="tal "><?=$lng['Employee status']?></th>
+									</tr>
+								</thead>
+								<tbody id="seldata2">
+
+									<? if(isset($alltempdata) && is_array($alltempdata)){ 
+										foreach ($alltempdata as $key => $value) { ?>
+										 	
+											<tr data-id="<?=$value['emp_id']?>">
+												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
+												<td><?=$value['en_name'];?></td>
+												<td><?=$value['joining_date'];?></td>
+												<td><?=$value['service_years'];?></td>
+												<td><?=$value['employment_end_date'];?></td>
+												<td><?=$value['employee_status'];?></td>
+												
+											</tr>
+
+									<? } } ?>
+
+								</tbody>
+							</table>
+						</div>
+						<div style= "display: none;" id="div_responsibilities">
+							<table  id="datatables29" class="dataTable hoverable selectable nowrap" >
+
+								<thead>
+									<tr>
+										<th class="par30"><?=$lng['Emp. ID']?></th>
+										<th class="tal par30"><?=$lng['Employee name']?></th>
+										<th class="tal "><?=$lng['Position']?></th>
+										<th class="tal "><?=$lng['Date start Position']?></th>
+										<th class="tal "><?=$lng['Head of Location']?></th>
+										<th class="tal "><?=$lng['Head of division']?></th>
+										<th class="tal "><?=$lng['Head of department']?></th>
+										<th class="tal "><?=$lng['Team supervisor']?></th>
+									</tr>
+								</thead>
+								<tbody id="seldata2">
+
+									<? if(isset($alltempdata) && is_array($alltempdata)){ 
+										foreach ($alltempdata as $key => $value) { ?>
+										 	
+											<tr data-id="<?=$value['emp_id']?>">
+												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
+												<td><?=$value['en_name'];?></td>
+												<td><?=$value['position'];?></td>
+												<td><?=$value['date_start_position'];?></td>
+												<td><?=$value['head_of_location'];?></td>
+												<td><?=$value['head_of_division'];?></td>
+												<td><?=$value['head_of_department'];?></td>
+												<td><?=$value['team_supervisor'];?></td>
+											</tr>
+
+									<? } } ?>
+
+								</tbody>
+							</table>
+						</div>
 
 						<div class="row " id="hidediv2" style="background-color: #fff;margin-bottom: 11px;padding-bottom: 12px;">
 
@@ -1912,6 +2035,75 @@
 								</tbody>
 							</table>
 						</div>
+						<div style= "display: none;" id="employment_old_data">
+							<table  id="datatables28" class="dataTable hoverable selectable nowrap" >
+
+								<thead>
+									<tr>
+										<th class="par30"><?=$lng['Emp. ID']?></th>
+										<th class="tal par30"><?=$lng['Employee name']?></th>
+										<th class="tal "><?=$lng['Joining date']?></th>
+										<th class="tal "><?=$lng['Service years']?></th>
+										<th class="tal "><?=$lng['Employment End Date']?></th>
+										<th class="tal "><?=$lng['Employee status']?></th>
+									</tr>
+								</thead>
+								<tbody id="seldata2">
+
+									<? if(isset($allOlddata) && is_array($allOlddata)){ 
+										foreach ($allOlddata as $key => $value) { ?>
+										 	
+											<tr data-id="<?=$value['emp_id']?>">
+												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
+												<td><?=$value['en_name'];?></td>
+												<td><?=$value['joining_date'];?></td>
+												<td><?=$value['service_years'];?></td>
+												<td><?=$value['employment_end_date'];?></td>
+												<td><?=$value['employee_status'];?></td>
+												
+											</tr>
+
+									<? } } ?>
+
+								</tbody>
+							</table>
+						</div>
+						<div style= "display: none;" id="responsibilities_old_data">
+							<table  id="datatables30" class="dataTable hoverable selectable nowrap" >
+
+								<thead>
+									<tr>
+										<th class="par30"><?=$lng['Emp. ID']?></th>
+										<th class="tal par30"><?=$lng['Employee name']?></th>
+										<th class="tal "><?=$lng['Position']?></th>
+										<th class="tal "><?=$lng['Date start Position']?></th>
+										<th class="tal "><?=$lng['Head of Location']?></th>
+										<th class="tal "><?=$lng['Head of division']?></th>
+										<th class="tal "><?=$lng['Head of department']?></th>
+										<th class="tal "><?=$lng['Team supervisor']?></th>
+									</tr>
+								</thead>
+								<tbody id="seldata2">
+
+									<? if(isset($allOlddata) && is_array($allOlddata)){ 
+										foreach ($allOlddata as $key => $value) { ?>
+										 	
+											<tr data-id="<?=$value['emp_id']?>">
+												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
+												<td><?=$value['en_name'];?></td>
+												<td><?=$value['position'];?></td>
+												<td><?=$value['date_start_position'];?></td>
+												<td><?=$value['head_of_location'];?></td>
+												<td><?=$value['head_of_division'];?></td>
+												<td><?=$value['head_of_department'];?></td>
+												<td><?=$value['team_supervisor'];?></td>
+											</tr>
+
+									<? } } ?>
+
+								</tbody>
+							</table>
+						</div>
 
 						<div class="row">
 							<div class="col-md-2 <?php if($classNamePhpValue == ''){echo 'displayNone';}else{echo '';}?> " style="margin: -30px 0px 0px 0px;margin-left: auto;margin-right: auto;min-width: 38%;">
@@ -2263,7 +2455,29 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','');
-		}
+		}/* else if(selectionSelectSectionData == '11')
+		{
+			$('#country_div_data').css('display','none');
+			$('#personal_div_data').css('display','none');
+			$('#work_div_data').css('display','none');
+			$('#time_div_data').css('display','none');
+			$('#leave_div_data').css('display','none');
+			$('#organization_div_data').css('display','none');
+			$('#financial_div_data').css('display','none');
+			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','');
+			$('#responsibilities_div_data').css('display','none');
+		}else if(selectionSelectSectionData == '12')
+		{
+			$('#country_div_data').css('display','none');
+			$('#personal_div_data').css('display','none');
+			$('#work_div_data').css('display','none');
+			$('#time_div_data').css('display','none');
+			$('#leave_div_data').css('display','none');
+			$('#organization_div_data').css('display','none');
+			$('#financial_div_data').css('display','none');
+			$('#benefits_div_data').css('display','');
+		} */
 		else
 		{
 			$('#personal_div_data').css('display','none');
@@ -2493,22 +2707,22 @@
 <?php include('section_script/common_datatable_script.php'); ?>
 // ===============================  COMMON DATATABLE SECTION SCRIPT ===============================//
 	
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables11').show(function(){setTimeout(function(){
 		dtable.columns.adjust();dtable2.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables13').show(function(){setTimeout(function(){
 		dtable3.columns.adjust();dtable4.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables15').show(function(){setTimeout(function(){
 		dtable5.columns.adjust();dtable6.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables17').show(function(){setTimeout(function(){
 		dtable7.columns.adjust();dtable8.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables19').show(function(){setTimeout(function(){
 		dtable9.columns.adjust();dtable10.columns.adjust();
 	}, 1000); });
-	$('#datatables25').show(function(){setTimeout(function(){
+	$('#datatables21').show(function(){setTimeout(function(){
 		dtable11.columns.adjust();dtable12.columns.adjust();
 	}, 1000); });
 	$('#datatables23').show(function(){setTimeout(function(){
@@ -3051,6 +3265,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 			
 
@@ -3090,6 +3306,12 @@
 			$('#div_benfits').css("display","none");
 			$('#benefits_old_data').css("display","none");
 
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+
 			var hideAllcolumn = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 			$.each(hideAllcolumn, function(key,val) {    
 				dtable.column(val).visible(true);
@@ -3107,6 +3329,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 
 			dtable.columns.adjust();
@@ -3140,6 +3364,12 @@
 			$('#div_benfits').css("display","none");
 			$('#benefits_old_data').css("display","none");
 
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+
 
 			$('#showHideclm2').prop("disabled",false);
 			$('#showHideClmss2').removeClass('displayNone');
@@ -3153,6 +3383,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 
 
@@ -3187,6 +3419,12 @@
 			$('#div_benfits').css("display","none");
 			$('#benefits_old_data').css("display","none");
 
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+
 
 			$("#showHideclm2").closest("div").css('display','none');
 			$("#showHideclm3").closest("div").css('display','none');
@@ -3196,6 +3434,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 			
 
@@ -3231,6 +3471,12 @@
 			$('#div_benfits').css("display","none");
 			$('#benefits_old_data').css("display","none");
 
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+
 
 			$("#showHideclm2").closest("div").css('display','none');
 			$("#showHideclm3").closest("div").css('display','none');
@@ -3240,6 +3486,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 
 			dtable7.columns.adjust();
@@ -3274,6 +3522,12 @@
 			$('#div_benfits').css("display","none");
 			$('#benefits_old_data').css("display","none");
 
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+
 			$("#showHideclm2").closest("div").css('display','none');
 			$("#showHideclm3").closest("div").css('display','none');
 			$("#showHideclm4").closest("div").css('display','none');
@@ -3282,6 +3536,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 
 			dtable10.columns.adjust();
@@ -3315,6 +3571,12 @@
 
 			$('#div_benfits').css("display","none");
 			$('#benefits_old_data').css("display","none");
+
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
 			
 
 			$("#showHideclm2").closest("div").css('display','none');
@@ -3325,6 +3587,8 @@
 			$("#showHideclm7").closest("div").css('display','');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','none');
 
 
@@ -3354,6 +3618,13 @@
 
 			$('#div_financial').css("display","");
 			$('#financial_old_data').css("display","");
+
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+			
 			dtable15.columns.adjust();
 			dtable16.columns.adjust();
 
@@ -3369,6 +3640,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 
 
@@ -3402,6 +3675,12 @@
 			$('#div_benfits').css("display","");
 			$('#benefits_old_data').css("display","");
 
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+
 
 			$("#showHideclm2").closest("div").css('display','none');
 			$("#showHideclm3").closest("div").css('display','none');
@@ -3411,10 +3690,111 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','none');
 
 			dtable13.columns.adjust();
 			dtable14.columns.adjust();
+
+
+		}else if(defaultSectionValue == '11')
+		{	
+			// perosnal section
+			$('#div_personal').css("display","none");
+			$('#personal_old_data').css("display","none");
+			// contact section
+			$('#div_contacts').css("display","none");
+			$('#contacts_old_data').css("display","none");
+			// work data section
+			$('#div_work_data').css("display","none");
+			$('#work_data_old_data').css("display","none");
+			// time section
+			$('#div_time').css("display","none");
+			$('#time_old_data').css("display","none");
+			// leave section
+			$('#div_leave').css("display","none");
+			$('#leave_old_data').css("display","none")
+			// organization section
+			$('#div_organization').css("display","none");
+			$('#organization_old_data').css("display","none");
+
+			$('#div_financial').css("display","none");
+			$('#financial_old_data').css("display","none");
+
+			$('#div_benfits').css("display","none");
+			$('#benefits_old_data').css("display","none");
+
+			$('#div_employment_data').css("display","");
+			$('#employment_old_data').css("display","");
+
+			$('#div_responsibilities').css("display","none");
+			$('#responsibilities_old_data').css("display","none");
+
+
+			$("#showHideclm2").closest("div").css('display','none');
+			$("#showHideclm3").closest("div").css('display','none');
+			$("#showHideclm4").closest("div").css('display','none');
+			$("#showHideclm5").closest("div").css('display','none');
+			$("#showHideclm6").closest("div").css('display','none');
+			$("#showHideclm7").closest("div").css('display','none');
+			$("#showHideclm9").closest("div").css('display','none');
+			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','');
+			$("#showHideclm11").closest("div").css('display','none');
+			$(".commonhidebutton").css('display','none');
+
+			dtable17.columns.adjust();
+			dtable18.columns.adjust();
+
+
+		}else if(defaultSectionValue == '12')
+		{	
+			// perosnal section
+			$('#div_personal').css("display","none");
+			$('#personal_old_data').css("display","none");
+			// contact section
+			$('#div_contacts').css("display","none");
+			$('#contacts_old_data').css("display","none");
+			// work data section
+			$('#div_work_data').css("display","none");
+			$('#work_data_old_data').css("display","none");
+			// time section
+			$('#div_time').css("display","none");
+			$('#time_old_data').css("display","none");
+			// leave section
+			$('#div_leave').css("display","none");
+			$('#leave_old_data').css("display","none")
+			// organization section
+			$('#div_organization').css("display","none");
+			$('#organization_old_data').css("display","none");
+
+			$('#div_financial').css("display","none");
+			$('#financial_old_data').css("display","none");
+
+			$('#div_benfits').css("display","none");
+			$('#benefits_old_data').css("display","none");
+
+			$('#div_employment_data').css("display","none");
+			$('#employment_old_data').css("display","none");
+
+			$('#div_responsibilities').css("display","");
+			$('#responsibilities_old_data').css("display","");
+			
+			$("#showHideclm2").closest("div").css('display','none');
+			$("#showHideclm3").closest("div").css('display','none');
+			$("#showHideclm4").closest("div").css('display','none');
+			$("#showHideclm5").closest("div").css('display','none');
+			$("#showHideclm6").closest("div").css('display','none');
+			$("#showHideclm7").closest("div").css('display','none');
+			$("#showHideclm9").closest("div").css('display','none');
+			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','');
+			$(".commonhidebutton").css('display','none');
+
+			dtable19.columns.adjust();
+			dtable20.columns.adjust();
 
 
 		}
@@ -3438,6 +3818,8 @@
 			$("#showHideclm7").closest("div").css('display','none');
 			$("#showHideclm9").closest("div").css('display','none');
 			$("#showHideclm8").closest("div").css('display','none');
+			$("#showHideclm10").closest("div").css('display','none');
+			$("#showHideclm11").closest("div").css('display','none');
 			$(".commonhidebutton").css('display','');
 
 
@@ -3581,11 +3963,11 @@
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
 
-
-
-
-
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 
 				var hideAllcolumn = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
@@ -3656,6 +4038,11 @@
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 				$("select#showHideclm3")[0].sumo.selectAll();	
 				var columns =[];
@@ -3714,6 +4101,11 @@
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 
 
@@ -3777,6 +4169,11 @@
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 
 				$("select#showHideclm5")[0].sumo.selectAll();	
@@ -3840,6 +4237,11 @@
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 
 				$("select#showHideclm6")[0].sumo.selectAll();	
@@ -3903,6 +4305,11 @@
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 
 				$("select#showHideclm7")[0].sumo.selectAll();	
@@ -3963,6 +4370,11 @@
 				$('#div_benfits').css("display","none");
 				$('#benefits_old_data').css("display","none");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 
 				$("select#showHideclm9")[0].sumo.selectAll();	
@@ -4024,6 +4436,11 @@
 				$('#div_benfits').css("display","");
 				$('#benefits_old_data').css("display","");
 
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
 
 
 				$("select#showHideclm8")[0].sumo.selectAll();	
@@ -4056,6 +4473,132 @@
 
 				dtable13.columns.adjust();
 				dtable14.columns.adjust();
+			}else if(this.value  == '11')
+			{
+				// show contact table 
+				$('#div_personal').css("display","none");
+				$('#personal_old_data').css("display","none");
+				// contact section
+				$('#div_contacts').css("display","none");
+				$('#contacts_old_data').css("display","none");
+				// work data section
+				$('#div_work_data').css("display","none");
+				$('#work_data_old_data').css("display","none");
+				// time section
+				$('#div_time').css("display","none");
+				$('#time_old_data').css("display","none");
+				// leave section
+				$('#div_leave').css("display","none");
+				$('#leave_old_data').css("display","none");
+				// organization section
+				$('#div_organization').css("display","none");
+				$('#organization_old_data').css("display","none");
+
+				$('#div_financial').css("display","none");
+				$('#financial_old_data').css("display","none");
+				
+				$('#div_benfits').css("display","none");
+				$('#benefits_old_data').css("display","none");
+
+				$('#div_employment_data').css("display","");
+				$('#employment_old_data').css("display","");
+
+				$('#div_responsibilities').css("display","none");
+				$('#responsibilities_old_data').css("display","none");
+
+				$("select#showHideclm9")[0].sumo.selectAll();	
+
+				var columns =[];
+				$('#showHideclm9 option:selected').each(function(i) {
+			  
+			    	 columns.push($(this).val());
+
+			    });
+
+		    	var att_cols = [];
+				$.each(columns, function(index, item) {
+					att_cols.push({id:item, db:tableCols9[item][0], name:tableCols9[item][1]})
+				})
+
+		    	$.ajax({
+					url: "ajax/update_show_hide_clm2.php",
+					data: {cols: att_cols},
+					success: function(result){
+					},
+					error:function (xhr, ajaxOptions, thrownError){
+						$("body").overhang({
+							type: "error",
+							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+							duration: 4,
+						})
+					}
+				});
+
+				dtable17.columns.adjust();
+				dtable18.columns.adjust();
+			}else if(this.value  == '12')
+			{
+				// show contact table 
+				$('#div_personal').css("display","none");
+				$('#personal_old_data').css("display","none");
+				// contact section
+				$('#div_contacts').css("display","none");
+				$('#contacts_old_data').css("display","none");
+				// work data section
+				$('#div_work_data').css("display","none");
+				$('#work_data_old_data').css("display","none");
+				// time section
+				$('#div_time').css("display","none");
+				$('#time_old_data').css("display","none");
+				// leave section
+				$('#div_leave').css("display","none");
+				$('#leave_old_data').css("display","none");
+				// organization section
+				$('#div_organization').css("display","none");
+				$('#organization_old_data').css("display","none");
+
+				$('#div_financial').css("display","none");
+				$('#financial_old_data').css("display","none");
+				
+				$('#div_benfits').css("display","none");
+				$('#benefits_old_data').css("display","none");
+
+				$('#div_employment_data').css("display","none");
+				$('#employment_old_data').css("display","none");
+
+				$('#div_responsibilities').css("display","");
+				$('#responsibilities_old_data').css("display","");
+
+				$("select#showHideclm10")[0].sumo.selectAll();	
+
+				var columns =[];
+				$('#showHideclm10 option:selected').each(function(i) {
+			  
+			    	 columns.push($(this).val());
+
+			    });
+
+		    	var att_cols = [];
+				$.each(columns, function(index, item) {
+					att_cols.push({id:item, db:tableCols10[item][0], name:tableCols10[item][1]})
+				})
+
+		    	$.ajax({
+					url: "ajax/update_show_hide_clm2.php",
+					data: {cols: att_cols},
+					success: function(result){
+					},
+					error:function (xhr, ajaxOptions, thrownError){
+						$("body").overhang({
+							type: "error",
+							message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+							duration: 4,
+						})
+					}
+				});
+
+				dtable19.columns.adjust();
+				dtable20.columns.adjust();
 			}
 			else
 			{
@@ -4074,6 +4617,8 @@
 				$("select#showHideclm7")[0].sumo.unSelectAll();
 				$("select#showHideclm9")[0].sumo.unSelectAll();
 				$("select#showHideclm8")[0].sumo.unSelectAll();
+				$("select#showHideclm10")[0].sumo.unSelectAll();
+				$("select#showHideclm11")[0].sumo.unSelectAll();
 
 
 			}
@@ -4117,7 +4662,7 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
-
+		
 		// hide show dropdown display  none here 
 		// show perosnal div 
 		// hide other div
@@ -4129,6 +4674,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 		$(".commonhidebutton").css('display','');
 
 		//dtable.columns.adjust();
@@ -4159,6 +4706,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 		$(".commonhidebutton").css('display','');
 
 
@@ -4187,6 +4736,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 		$(".commonhidebutton").css('display','');
 
 
@@ -4216,6 +4767,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 		$(".commonhidebutton").css('display','');
 
 
@@ -4245,6 +4798,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 		$(".commonhidebutton").css('display','');
 
 
@@ -4275,6 +4830,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 		$(".commonhidebutton").css('display','none');
 
 
@@ -4305,6 +4862,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 		$(".commonhidebutton").css('display','');
 
 
@@ -4336,6 +4895,70 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
+		$(".commonhidebutton").css('display','none');
+
+
+
+		//dtable13.columns.adjust();
+		//dtable14.columns.adjust();
+
+
+	}else if(selectionSelect == '9')
+	{
+		$('#country_div_data').css('display','none');
+		$('#personal_div_data').css('display','none');
+		$('#work_div_data').css('display','none');
+		$('#time_div_data').css('display','none');
+		$('#leave_div_data').css('display','none');
+		$('#organization_div_data').css('display','none');
+		$('#financial_div_data').css('display','none');
+		$('#benefits_div_data').css('display','');
+
+
+		// hide all div 
+		$("#showHideclm2").closest("div").css('display','none');
+		$("#showHideclm3").closest("div").css('display','none');
+		$("#showHideclm4").closest("div").css('display','none');
+		$("#showHideclm5").closest("div").css('display','none');
+		$("#showHideclm6").closest("div").css('display','none');
+		$("#showHideclm7").closest("div").css('display','none');
+		$("#showHideclm9").closest("div").css('display','none');
+		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','');
+		$("#showHideclm11").closest("div").css('display','none');
+		$(".commonhidebutton").css('display','none');
+
+
+
+		//dtable13.columns.adjust();
+		//dtable14.columns.adjust();
+
+
+	}else if(selectionSelect == '10')
+	{
+		$('#country_div_data').css('display','none');
+		$('#personal_div_data').css('display','none');
+		$('#work_div_data').css('display','none');
+		$('#time_div_data').css('display','none');
+		$('#leave_div_data').css('display','none');
+		$('#organization_div_data').css('display','none');
+		$('#financial_div_data').css('display','none');
+		$('#benefits_div_data').css('display','');
+
+
+		// hide all div 
+		$("#showHideclm2").closest("div").css('display','none');
+		$("#showHideclm3").closest("div").css('display','none');
+		$("#showHideclm4").closest("div").css('display','none');
+		$("#showHideclm5").closest("div").css('display','none');
+		$("#showHideclm6").closest("div").css('display','none');
+		$("#showHideclm7").closest("div").css('display','none');
+		$("#showHideclm9").closest("div").css('display','none');
+		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','');
 		$(".commonhidebutton").css('display','none');
 
 
@@ -4368,6 +4991,8 @@ function getDataDiv(){
 		$("#showHideclm7").closest("div").css('display','none');
 		$("#showHideclm9").closest("div").css('display','none');
 		$("#showHideclm8").closest("div").css('display','none');
+		$("#showHideclm10").closest("div").css('display','none');
+		$("#showHideclm11").closest("div").css('display','none');
 
 
 

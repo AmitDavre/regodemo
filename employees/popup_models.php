@@ -2400,8 +2400,280 @@
 <!-------------------------------------------- COMMON MODAL FOR FINANCIAL SECTION ---------------------------------------------------->
 
 
-<!-------------------------------------------- COMMON MODAL FOR BENEFIT DATA SECTION ---------------------------------------------------->
+<!-- ------------------------------------------COMMON MODAL FOR EMPLOYMENT DATA SECTION ----------------------------------------------->
 
+<div class="modal fade" id="modal_responsibilities_common_text" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="responsibilities_text_field_span"></span></th>
+								<td>
+									<input placeholder="__" name="modal_edit_responsibilities_text_value" id="modal_edit_responsibilities_text_value" type="text" value="" />
+									<input type="hidden" name="responsibilities_hidden_field_to_update" id="responsibilities_hidden_field_to_update" value="">
+									<input type="hidden" name="responsibilities_hidden_which_modal" id="responsibilities_hidden_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonResponsibilities('text');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="modal_responsibilities_common_date" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="responsibilities_date_field_span"></span></th>
+								<td>
+									<input class="date_year" placeholder="__" name="modal_edit_responsibilities_date_value" id="modal_edit_responsibilities_date_value" type="text" value="" />
+									<input type="hidden" name="responsibilities_hidden_date_field_to_update" id="responsibilities_hidden_date_field_to_update" value="">
+									<input type="hidden" name="responsibilities_hidden_date_which_modal" id="responsibilities_hidden_date_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonResponsibilities('date');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalEdit_responsibilities_drop_down" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="responsibilities_dropdown_field_span"></span></th>
+								<td>
+									<select id='modal_responsibilities_edit_dropdown_value'></select>
+									<input type="hidden" name="responsibilities_hidden_field_to_update_edit" id="responsibilities_hidden_field_to_update_dropdown" value="">
+									<input type="hidden" name="responsibilities_hidden_row_id" id="responsibilities_hidden_row_id_dropdown" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalDropdownResponsibilities('dropdown');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- ------------------------------------------COMMON MODAL FOR RESPONSBILITIES SECTION ----------------------------------------------->
+
+
+<!-- ------------------------------------------COMMON MODAL FOR EMPLOYMENT DATA SECTION ----------------------------------------------->
+
+<div class="modal fade" id="modal_employment_data_common_text" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="employment_data_text_field_span"></span></th>
+								<td>
+									<input placeholder="__" name="modal_edit_employment_data_text_value" id="modal_edit_employment_data_text_value" type="text" value="" />
+									<input type="hidden" name="employment_data_hidden_field_to_update" id="employment_data_hidden_field_to_update" value="">
+									<input type="hidden" name="employment_data_hidden_which_modal" id="employment_data_hidden_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonEmploymentData('text');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="modal_employment_data_common_date" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="employment_data_date_field_span"></span></th>
+								<td>
+									<input class="date_year" placeholder="__" name="modal_edit_employment_data_date_value" id="modal_edit_employment_data_date_value" type="text" value="" />
+									<input type="hidden" name="employment_data_hidden_date_field_to_update" id="employment_data_hidden_date_field_to_update" value="">
+									<input type="hidden" name="employment_data_hidden_date_which_modal" id="employment_data_hidden_date_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonEmploymentData('date');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalEdit_employment_data_drop_down" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="employment_data_dropdown_field_span"></span></th>
+								<td>
+									<select id='modal_employment_data_edit_dropdown_value'></select>
+									<input type="hidden" name="employment_data_hidden_field_to_update_edit" id="employment_data_hidden_field_to_update_dropdown" value="">
+									<input type="hidden" name="employment_data_hidden_row_id" id="employment_data_hidden_row_id_dropdown" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalDropdownEmploymentData('dropdown');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- ------------------------------------------COMMON MODAL FOR EMPLOYMENT DATA SECTION ----------------------------------------------->
+
+<!-------------------------------------------- COMMON MODAL FOR BENEFIT DATA SECTION ---------------------------------------------------->
 
 <div class="modal fade" id="modal_benefit_common_text" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog" role="document" style="min-width: 600px;">
@@ -2491,7 +2763,6 @@
 		</div>
 	</div>
 </div>
-
 
 <!-------------------------------------------- COMMON MODAL FOR LEAVE DATA SECTION ---------------------------------------------------->
 

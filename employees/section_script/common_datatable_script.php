@@ -16,6 +16,8 @@
 		var tableCols7 = <?=json_encode($eatt_cols7)?>;
 		var tableCols8 = <?=json_encode($eatt_cols8)?>;
 		var tableCols9 = <?=json_encode($eatt_cols9)?>;
+		var tableCols10 = <?=json_encode($eatt_cols10)?>;
+		var tableCols11 = <?=json_encode($eatt_cols11)?>;
 
 		// console.log(tableCols8);
 
@@ -348,8 +350,8 @@
 
 
 		});	
-		//console.log($('#datatables51'));
-		var dtable50=$('#datatables51').DataTable({
+
+		var dtable17 = $('#datatables27').DataTable({
 
 			lengthChange: false,
 			searching: true,
@@ -362,11 +364,19 @@
 	        scrollCollapse: true,
 	        scrollX: true,
 	        paging:         true,
-	        <?=$dtable_lang?>
-	    });
-	    dtable50.columns.adjust();
-	    setTimeout(function(){dtable50.columns.adjust()},1000);
-	    var dtable52=$('#datatables52').DataTable({
+	        "columnDefs": [
+							       { className: "commonEditColumnEmploymentData joining_date", "targets": [ 2 ] },
+							       { className: "commonEditColumnEmploymentData service_years", "targets": [ 3 ] },
+							       { className: "commonEditColumnEmploymentData employment_end_date", "targets": [ 4 ] },
+							       { className: "commonEditColumnEmploymentData employee_status", "targets": [ 5 ] },
+						    ],
+			<?=$dtable_lang?>
+
+
+
+		});	
+
+		var dtable19 = $('#datatables29').DataTable({
 
 			lengthChange: false,
 			searching: true,
@@ -379,10 +389,19 @@
 	        scrollCollapse: true,
 	        scrollX: true,
 	        paging:         true,
-	        <?=$dtable_lang?>
-	    });
-	    dtable50.columns.adjust();
-	    setTimeout(function(){dtable52.columns.adjust()},1000);
+	        "columnDefs": [
+							       { className: "commonEditColumnResponsibilities position", "targets": [ 2 ] },
+							       { className: "commonEditColumnResponsibilities date_start_position", "targets": [ 3 ] },
+							       { className: "commonEditColumnResponsibilities head_of_location", "targets": [ 4 ] },
+							       { className: "commonEditColumnResponsibilities head_of_division", "targets": [ 5 ] },
+							       { className: "commonEditColumnResponsibilities head_of_department", "targets": [ 6 ] },
+							       { className: "commonEditColumnResponsibilities team_supervisor", "targets": [ 7 ] },
+						    ],
+			<?=$dtable_lang?>
+
+
+
+		});	
 
 		// switch layput case 
 
@@ -711,6 +730,73 @@
 					}
 			  }
 		});
+
+		var dtable18 = $('#datatables28').DataTable({
+
+			lengthChange: false,
+			searching: true,
+			ordering: false,
+			pagingType: 'full_numbers',
+			pageLength: pagelengthValue,
+			filter: true,
+			info: true,
+			scrollY:        '250px',
+	        scrollCollapse: true,
+	        scrollX: true,
+	        paging:         true,
+			<?=$dtable_lang?>
+			"initComplete": function(settings, json) {
+
+					// adding switch javscript 
+					if(classnamevaluejq == '')
+					{
+						$("#hidediv2").removeClass(classnamevaluejq);
+						$("div#datatables28_wrapper div.row:nth-last-child(2)").removeClass('displayNone');
+						$("#datatables27_wrapper").css('height', '');
+						$("table#oldatatable").removeClass('displayNone');
+					}
+					else
+					{
+						$("#hidediv2").addClass(classnamevaluejq);
+						$("div#datatables28_wrapper div.row:nth-last-child(2)").addClass('displayNone');
+						$("table#oldatatable").addClass('displayNone');
+					}
+			  }
+		});
+
+		var dtable20 = $('#datatables30').DataTable({
+
+			lengthChange: false,
+			searching: true,
+			ordering: false,
+			pagingType: 'full_numbers',
+			pageLength: pagelengthValue,
+			filter: true,
+			info: true,
+			scrollY:        '250px',
+	        scrollCollapse: true,
+	        scrollX: true,
+	        paging:         true,
+			<?=$dtable_lang?>
+			"initComplete": function(settings, json) {
+
+					// adding switch javscript 
+					if(classnamevaluejq == '')
+					{
+						$("#hidediv2").removeClass(classnamevaluejq);
+						$("div#datatables30_wrapper div.row:nth-last-child(2)").removeClass('displayNone');
+						$("#datatables29_wrapper").css('height', '');
+						$("table#oldatatable").removeClass('displayNone');
+					}
+					else
+					{
+						$("#hidediv2").addClass(classnamevaluejq);
+						$("div#datatables30_wrapper div.row:nth-last-child(2)").addClass('displayNone');
+						$("table#oldatatable").addClass('displayNone');
+					}
+			  }
+		});
+
 		//dtables.columns.adjust();
 		//dtables15.columns.adjust();
 		//for(i=)

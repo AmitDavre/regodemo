@@ -119,7 +119,21 @@
 	$allfieldsArray['savings'] = $lng['Savings'];
 	$allfieldsArray['legal_execution'] = $lng['Legal execution deduction'];
 	$allfieldsArray['kor_yor_sor'] = $lng['Kor.Yor.Sor (Student loan)'];
-
+	
+	$allfieldsArray['joining_date']=$lng['Joining date'];
+	$allfieldsArray['service_years']=$lng['Service years'];
+	$allfieldsArray['employment_end_date']=$lng['Employment End Date'];
+	$allfieldsArray['employee_status']=$lng['Employee status'];
+	
+	$allfieldsArray['position']=$lng['Position'];
+	$allfieldsArray['date_start_position']=$lng['Date start Position'];
+	$allfieldsArray['head_of_location']=$lng['Head of Location'];
+	$allfieldsArray['head_of_division']=$lng['Head of division'];
+	$allfieldsArray['head_of_department']=$lng['Head of department'];
+	$allfieldsArray['team_supervisor']=$lng['Team supervisor'];
+	
+	
+	
 	//===============================MAKE ARRAY ACCORDING TO FIELD TYPES TO BE USED IN JQUERY===================//
 	//show/hide column
 
@@ -278,8 +292,29 @@
 	$last_col8 = key($eatt_cols8) + 1;
 
 	// ==================== BENEFITS SECTION SHOW HIDE ARRAY  ==================== //
-
-
+	
+	// ==================== EMPLOYMENT DATA SHOW HIDE ARRAY ======================//
+	
+	$eatt_cols10 = array();
+	$eatt_cols10[] = array('joining_date',$lng['Joining date']);
+	$eatt_cols10[] = array('service_years',$lng['Service years']);
+	$eatt_cols10[] = array('employment_end_date',$lng['Employment End Date']);
+	$eatt_cols10[] = array('employee_status',$lng['Employee status']);
+	end($eatt_cols10);
+	$last_col10 = key($eatt_cols10) + 1;
+	// ==================== EMPLOYMENT DATA SHOW HIDE ARRAY ======================//
+	// ==================== RESPONSIBILITIES SHOW HIDE ARRAY ======================//
+	$eatt_cols11 = array();
+	$eatt_cols11[] = array('position',$lng['Position']);
+	$eatt_cols11[] = array('date_start_position',$lng['Date start Position']);
+	$eatt_cols11[] = array('head_of_location',$lng['Head of Location']);
+	$eatt_cols11[] = array('head_of_division',$lng['Head of division']);
+	$eatt_cols11[] = array('head_of_department',$lng['Head of department']);
+	$eatt_cols11[] = array('team_supervisor',$lng['Team supervisor']);
+	end($eatt_cols11);
+	$last_col11 = key($eatt_cols11) + 1;
+	// ==================== RESPONSIBILITIES SHOW HIDE ARRAY ======================//
+	
 	$resED = $dbc->query("SELECT common_save_check,modify_empdata_section_showhide_cols,modify_empdata_showhide_cols FROM ".$_SESSION['rego']['cid']."_sys_settings");
 	$rowED = $resED->fetch_assoc();
 	$common_save_check =$rowED['common_save_check'];
@@ -301,6 +336,9 @@
 	$emptyCols7 = array();
 	$emptyCols8 = array();
 	$emptyCols9 = array();
+	$emptyCols10 = array();
+	$emptyCols11 = array();
+	
  
 	foreach($eatt_cols as $k=>$v){
 		if(!in_array($k, $shCols)){
@@ -349,6 +387,16 @@
 		if(!in_array($k, $shCols2)){
 			$emptyCols8[] = $k;
 		}
+	}
+	foreach($eatt_cols10 as $k=>$v){
+	    if(!in_array($k, $shCols2)){
+	        $emptyCols10[] = $k;
+	    }
+	}
+	foreach($eatt_cols11 as $k=>$v){
+	    if(!in_array($k, $shCols2)){
+	        $emptyCols11[] = $k;
+	    }
 	}
 
 	//========================== GET ENTITY/ LOCATION/DIVISION/DEPARTMENT NAME  =============================//

@@ -115,7 +115,7 @@ function submitPopupModalCommonWorkDataOnclick(valueCheck){
 					message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
 					duration: 1,
 				})
-				// setTimeout(function(){location.reload();}, 1000);
+				 setTimeout(function(){location.reload();}, 1000);
 
 
 

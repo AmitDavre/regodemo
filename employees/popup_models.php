@@ -2400,8 +2400,674 @@
 <!-------------------------------------------- COMMON MODAL FOR FINANCIAL SECTION ---------------------------------------------------->
 
 
-<!-------------------------------------------- COMMON MODAL FOR BENEFIT DATA SECTION ---------------------------------------------------->
+<!-- ------------------------------------------COMMON MODAL FOR EMPLOYMENT DATA SECTION ----------------------------------------------->
 
+<div class="modal fade" id="modal_responsibilities_common_text" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="responsibilities_text_field_span"></span></th>
+								<td>
+									<input placeholder="__" name="modal_edit_responsibilities_text_value" id="modal_edit_responsibilities_text_value" type="text" value="" />
+									<input type="hidden" name="responsibilities_hidden_field_to_update" id="responsibilities_hidden_field_to_update" value="">
+									<input type="hidden" name="responsibilities_hidden_which_modal" id="responsibilities_hidden_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonResponsibilities('text');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="modal_responsibilities_common_date" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="responsibilities_date_field_span"></span></th>
+								<td>
+									<input class="date_year" placeholder="__" name="modal_edit_responsibilities_date_value" id="modal_edit_responsibilities_date_value" type="text" value="" />
+									<input type="hidden" name="responsibilities_hidden_date_field_to_update" id="responsibilities_hidden_date_field_to_update" value="">
+									<input type="hidden" name="responsibilities_hidden_date_which_modal" id="responsibilities_hidden_date_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonResponsibilities('date');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalEdit_responsibilities_drop_down" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="responsibilities_dropdown_field_span"></span></th>
+								<td>
+									<select id='modal_responsibilities_edit_dropdown_value'></select>
+									<input type="hidden" name="responsibilities_hidden_field_to_update_edit" id="responsibilities_hidden_field_to_update_dropdown" value="">
+									<input type="hidden" name="responsibilities_hidden_row_id" id="responsibilities_hidden_row_id_dropdown" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalDropdownResponsibilities('dropdown');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="modalOpenResponsibilities" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"><i class="fa fa-user"></i>&nbsp; <?=ucwords('Edit Responsibilities')?></h5>
+					<button type="button" class="close closeEditEmploymentDataPopup" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body modal-tabs">
+
+					<form id="careerForm">
+
+						<input type="hidden" name="emp_id" value="<?=$empID?>">
+						<input type="hidden" name="career_id_curr" value="<?=isset($ecdata) ? $ecdata[0]['id'] : '';?>">
+
+						
+						<div class="tab3">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+										<th colspan="3"><?=$lng['Select Start Date']?></th>
+									</tr>
+								</thead>
+								<thead>
+									<tr style="line-height:100%">
+										<th></th>
+										<th class="tac"><?=$lng['New']?></th>
+										<th class="tac"><?=$lng['Current']?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th><?=$lng['Start Date']?></th>
+										<td><input type="text" id="sdates" class="" name="start_date_new" autocomplete="off"></td>
+										<td><input type="text" class="datepick1" name="start_date_curr" autocomplete="off" value="<? if(!empty($ecdata[0]['start_date'])){echo date('d-m-Y', strtotime($ecdata[0]['start_date']));}?>"></td>
+									</tr>
+
+									<tr>
+										<th><?=$lng['End date']?></th>
+										<td><input type="text" name="end_date_new" autocomplete="off" readonly></td>
+										<td><input type="text" name="end_date_curr" id="end_curr" autocomplete="off" value="<? if(!empty($ecdata[0]['end_date'])){echo date('d-m-Y', strtotime($ecdata[0]['end_date']));}?>" readonly></td>
+									</tr>
+
+									<tr>
+										<th><?=$lng['Position']?></th>
+										<td>
+											<select name="position_new">
+												<option value="">...</option>
+												<? foreach($positions as $k => $v){ ?>
+													<option value="<?=$v['id']?>" ><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+										<td>
+											<select name="position_curr">
+												<option value="">...</option>
+												<? foreach($positions as $k => $v){ ?>
+													<option value="<?=$v['id']?>" <?if($v['id'] == $ecdata[0]['position']){echo 'selected';}?>><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>
+
+
+								</tbody>
+							</table>
+						</div>
+						<div class="tab3">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+										<th colspan="3"><?=$lng['RESPONSIBILITIESS']?></th>
+									</tr>
+								</thead>
+								<thead>
+									<tr style="line-height:100%">
+										<th></th>
+										<th class="tac"><?=$lng['New']?></th>
+										<th class="tac"><?=$lng['Current']?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th><?=$lng['Head of Location']?></th>
+										<td>
+											<select name="head_branch_new" >
+												<option value="">...</option>
+												<? foreach($branches as $k=>$v){ ?>
+													<option  value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+										<td>
+											<select name="head_branch_cur" >
+												<option value="">...</option>
+												<? foreach($branches as $k=>$v){ ?>
+													<option <? if($ecdata[0]['head_branch'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>									
+
+									<tr>
+										<th><?=$lng['Head of division']?></th>
+										<td>
+											<select name="head_division_new">
+												<option value="">...</option>
+												<? foreach($divisions as $k=>$v){ ?>
+													<option  value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+										<td>
+											<select name="head_division_cur">
+												<option value="">...</option>
+												<? foreach($divisions as $k=>$v){ ?>
+													<option <? if($ecdata[0]['head_division'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>									
+									<tr>
+										<th><?=$lng['Head of department']?></th>
+										<td>
+											<select name="head_department_new" >
+												<option value="">...</option>
+												<? foreach($departments as $k=>$v){ ?>
+													<option  value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+										<td>
+											<select name="head_department_curr" >
+												<option value="">...</option>
+												<? foreach($departments as $k=>$v){ ?>
+													<option <? if($ecdata[0]['head_department'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>									
+									<tr>
+										<th><?=$lng['Team supervisor']?></th>
+										<td>
+											<select name="team_supervisor_new" >
+												<option value="">...</option>
+												<? foreach($teams as $k=>$v){ ?>
+													<option  value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+										<td>
+											<select name="team_supervisor_curr" >
+												<option value="">...</option>
+												<? foreach($teams as $k=>$v){ ?>
+													<option <? if($ecdata[0]['team_supervisor'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>
+									
+			
+								</tbody>
+							</table>
+						</div>
+
+						<div class="tab3">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+										<th colspan="3"><?=$lng['Other']?></th>
+									</tr>
+								</thead>
+								<thead>
+									<tr style="line-height:100%">
+										<th></th>
+										<th class="tac"><?=$lng['New']?></th>
+										<th class="tac"><?=$lng['Current']?></th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<tr>
+										<th><?=$lng['Other benefits']?></th>
+										<td>
+											<textarea data-autoresize style="resize:vertical" rows="2" name="other_benifits_new" placeholder="..."></textarea>
+										</td>
+										<td>
+											<textarea data-autoresize style="resize:vertical" rows="2" name="other_benifits_curr" placeholder="..."><?=isset($ecdata) ? $ecdata[0]['other_benifits'] : '';?></textarea>
+										</td>
+									</tr>
+
+									<tr>
+										<th><?=$lng['Remarks']?></th>
+										<td>
+											<textarea data-autoresize style="resize:vertical" rows="2" name="remarks_new" placeholder="..."></textarea>
+										</td>
+										<td>
+											<textarea data-autoresize style="resize:vertical" rows="2" name="remarks_curr" placeholder="..."><?=isset($ecdata) ? $ecdata[0]['remarks'] : '';?></textarea>
+										</td>
+									</tr>
+									
+									<tr>
+										<th><?=$lng['Attachments']?></th>
+										<td>
+											<input type="file" name="attachment_new[]">
+										</td>
+										<td>
+											<input type="file" name="attachment_curr[]">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div style="overflow:auto;" class="mt-4" id="hideauto">
+						    <div>
+						      <button type="button" class="btn btn-primary btn-fl" id="prevBtn3" onclick="nextPrev2(-1)"><?=$lng['Prev']?></button>
+						      <button type="button" class="btn btn-primary btn-fr" id="nextBtn3" onclick="nextPrev2(1)"><?=$lng['Next']?></button>
+						    </div>
+						</div>
+
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+<!-- ------------------------------------------COMMON MODAL FOR RESPONSBILITIES SECTION ----------------------------------------------->
+
+
+<!-- ------------------------------------------COMMON MODAL FOR EMPLOYMENT DATA SECTION ----------------------------------------------->
+
+<div class="modal fade" id="modal_employment_data_common_text" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="employment_data_text_field_span"></span></th>
+								<td>
+									<input placeholder="__" name="modal_edit_employment_data_text_value" id="modal_edit_employment_data_text_value" type="text" value="" />
+									<input type="hidden" name="employment_data_hidden_field_to_update" id="employment_data_hidden_field_to_update" value="">
+									<input type="hidden" name="employment_data_hidden_which_modal" id="employment_data_hidden_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonEmploymentData('text');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="modal_employment_data_common_date" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="employment_data_date_field_span"></span></th>
+								<td>
+									<input class="date_year" placeholder="__" name="modal_edit_employment_data_date_value" id="modal_edit_employment_data_date_value" type="text" value="" />
+									<input type="hidden" name="employment_data_hidden_date_field_to_update" id="employment_data_hidden_date_field_to_update" value="">
+									<input type="hidden" name="employment_data_hidden_date_which_modal" id="employment_data_hidden_date_which_modal" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonEmploymentData('date');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalEdit_employment_data_drop_down" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document" style="min-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fa fa-cog"></i>&nbsp; <?=$lng['Modify Data']?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="tab"> 
+					<table class="basicTable inputs mb-2" id="makeitem" border="0">
+						<thead>
+							<tr>
+								<th colspan="2"><?=$lng['Enter Data']?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="tal"><span id="employment_data_dropdown_field_span"></span></th>
+								<td>
+									<select id='modal_employment_data_edit_dropdown_value'></select>
+									<input type="hidden" name="employment_data_hidden_field_to_update_edit" id="employment_data_hidden_field_to_update_dropdown" value="">
+									<input type="hidden" name="employment_data_hidden_row_id" id="employment_data_hidden_row_id_dropdown" value="">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="overflow:auto;" id="hideauto">
+				    <div>
+				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalDropdownEmploymentData('dropdown');"><?=$lng['Submit']?></button>
+				    </div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+	<div class="modal fade" id="modalOpenEmploymentData" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"><i class="fa fa-user"></i>&nbsp; <?=ucwords($lng['Edit Employment Data'])?></h5>
+					<button  type="button" class="close closeEditEmploymentDataPopup" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body modal-tabs">
+
+					<form id="employementDataForm">
+
+						<input type="hidden" name="emp_id" value="<?=$empID?>">
+
+						
+						<div class="tab2">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+										<th colspan="3"><?=$lng['Select Joining Date']?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th><?=$lng['Joining date']?></th>
+										<td><input  class="datepick" type="text" name="joining_date_2" id="joining_date_2" placeholder="..." value="<? if(!empty($data['joining_date'])){echo date('d-m-Y', strtotime($data['joining_date']));}?>"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab2">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+									</tr>
+								</thead>
+								<tbody>
+		<!-- 							<tr>
+										<th>No end of employment</th>
+										<td>
+											<input type="radio" id="noEndOfEmployment" class="ml-2 mt-2 checkbox-custom-blue-2" name="endofemployment" value="0" >
+										</td>
+									</tr>	 -->					
+									<tr>
+										<th>End of employment</th>
+										<td>
+											<input type="checkbox" id="endOfEmployment" class="ml-2 mt-1 checkbox-custom-blue-2" name="endofemployment" value="1" checked="checked">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab2 dateTab">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th><?=$lng['Employment End Date']?></th>
+										<td>
+
+										<input class="datepick"  type="text" style="width:140px;" id="resign_date2" name="resign_date2" placeholder="..." value="" >
+
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="tab2 nextToNextTab">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th><?=$lng['Employee status']?></th>
+										<td>
+											<select id="emp_status2val"  name="emp_status2" style="width:140px;display: none;">
+												<? foreach($emp_status2 as $k=>$v){ ?>
+													<option <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
+												<? } ?>
+											</select>
+
+											<select id="emp_status3val" name="emp_status3" style="width:140px;display: none;">
+												<? foreach($emp_status3 as $k=>$v){ ?>
+													<option <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
+												<? } ?>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="tab2 noticeDateDiv">  
+							<table class="basicTable" border="0" style="width: 100%;">
+								<thead>
+									<tr style="line-height:100%">
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th>Notice date</th>
+										<td>
+
+										<input class="datepick"  type="text" style="width:140px;" id="notice_day_field" name="notice_day_field" placeholder="..." value="<? if(!empty($data['notice_date'])){echo date('d-m-Y', strtotime($data['notice_date']));}?>" >
+
+										</td>
+									</tr>								
+
+									<tr>
+										<th>Last working day</th>
+										<td>
+
+										<input class="datepick"  type="text" style="width:140px;pointer-events: none;" id="last_working_day" name="last_working_day" placeholder="..." value="<? if(!empty($data['resign_date'])){echo date('d-m-Y', strtotime($data['resign_date']));}?>" >
+
+										</td>
+									</tr>									
+									<tr>
+										<th>End of employment reason</th>
+										<td>
+
+										<input type="text" style="width:140px;" id="end_of_employment_reason" name="end_of_employment_reason" placeholder="..." value="<? if(!empty($data['resign_reason'])){echo $data['resign_reason'];}?>" >
+
+										</td>
+									</tr>									
+									<tr>
+										<th>Last month in payroll</th>
+										<td>
+
+											<input type="text" style="width:140px;" id="last_month_payroll" name="last_month_payroll" placeholder="..." value="<? if(!empty($data['resign_date'])){echo date('m', strtotime($data['resign_date']));}?>" >
+
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" style="text-align: center;color: red;font-weight: 600;">Other data on end of contract can be filled in section End contract</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+
+
+		
+
+						<div style="overflow:auto;" class="mt-4" id="hideauto">
+						    <div>
+						      <button type="button" class="btn btn-primary btn-fl prevBtn2" id="prevBtn2" onclick="nextPrev(-1)"><?=$lng['Prev']?></button>
+						      <button type="button" class="btn btn-primary btn-fr nextBtn2" id="nextBtn2" onclick="nextPrev(1)"><?=$lng['Next']?></button>
+						    </div>
+						</div>
+
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+<!-- ------------------------------------------COMMON MODAL FOR EMPLOYMENT DATA SECTION ----------------------------------------------->
+
+<!-------------------------------------------- COMMON MODAL FOR BENEFIT DATA SECTION ---------------------------------------------------->
 
 <div class="modal fade" id="modal_benefit_common_text" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog" role="document" style="min-width: 600px;">
@@ -2491,7 +3157,6 @@
 		</div>
 	</div>
 </div>
-
 
 <!-------------------------------------------- COMMON MODAL FOR LEAVE DATA SECTION ---------------------------------------------------->
 

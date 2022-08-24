@@ -8,20 +8,39 @@
 
 	if(empty($_REQUEST['emp_id'])){exit;}
 
-
 	// echo '<pre>';
 	// print_r($_REQUEST);
 	// echo '</pre>';
 
 	// die();
 
+
+	if($_REQUEST['endofemployment'] == '1')
+	{
+		// run for second checkbox
+
+		$resign_date2 = date('Y-m-d', strtotime($_REQUEST['resign_date2']));
+		// UPDATE INTO EMPLOYEE TABLE 
+		$USQl = $dbc->query("UPDATE ".$cid."_employees SET emp_status='".$_REQUEST['emp_status3']."', resign_date = '".$resign_date2."' WHERE emp_id = '".$_REQUEST['emp_id']."' ");
+
+	}
+	else 
+	{
+		// run for first checkbox
+
+		$noticeDate = date('Y-m-d', strtotime($_REQUEST['notice_day_field']));
+
+		// UPDATE INTO EMPLOYEE TABLE 
+		$USQl = $dbc->query("UPDATE ".$cid."_employees SET emp_status='".$_REQUEST['emp_status2']."', resign_reason='".$_REQUEST['end_of_employment_reason']."', notice_date = '".$_REQUEST['notice_day_field']."' WHERE emp_id = '".$_REQUEST['emp_id']."' ");
+
+	}
+
+
+
+
 	// update data in employee table 
 	// add a entry in carrer table 
 
-	$noticeDate = date('Y-m-d', strtotime($_REQUEST['notice_day_field']));
-
-	// UPDATE INTO EMPLOYEE TABLE 
-	$USQl = $dbc->query("UPDATE ".$cid."_employees SET emp_status='".$_REQUEST['emp_status2']."', resign_reason='".$_REQUEST['end_of_employment_reason']."', notice_date = '".$_REQUEST['notice_day_field']."' WHERE emp_id = '".$_REQUEST['emp_id']."' ");
 
 	// INSERT INRO EMPLOYEE CAREER TABLE 
 

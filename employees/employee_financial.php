@@ -76,6 +76,7 @@
 	//echo '</pre>';
 	//exit;
 
+
 ?>
 
 	<style type="text/css">
@@ -143,6 +144,7 @@
 
 			<?if($_SESSION['rego']['empView'] == 'active'){ ?>
 				<button id="submitBtn" class="btn btn-primary mr-4" type="submit"><i class="fa fa-save"></i>&nbsp;&nbsp;<?=$lng['Update']?></button>
+				<button style="display: none;" id="submitBtnEdit" class="btn btn-primary mr-4" type="button"><i class="fa fa-save"></i>&nbsp;&nbsp;<?=$lng['Update']?></button>
 				<button style="display: none;" id="editBtn" class="btn btn-primary mr-4" type="button"><i class="fa fa-edit"></i>&nbsp;&nbsp;<?=$lng['Edit']?></button>
 				<input type="hidden" name="updateEmp" value="1">
 			<? } ?>
@@ -869,16 +871,17 @@
 			<div class="tab-pane" id="tab_his_career">
 				<table style="width:100%; height:100%">
 					<tr>
-						<td style="width:50%; padding-right:15px; vertical-align:top">
+						<td style="width:50%;  vertical-align:top">
 							
 								<table id="career_table" class="basicTable">
 									<thead>
 										<tr>
 											<th><?=$lng['Start date']?></th>
 											<th><?=$lng['End date']?></th>
-											<!-- <th><?=$lng['Field Changed']?></th> -->
-											<th><?=$lng['Position']?></th>
-											<th><?=$lng['Salary']?></th>
+											
+							<!-- 				<th><?=$lng['Position']?></th>
+											<th><?=$lng['Salary']?></th> -->
+											<th>Section Modified</th>
 										</tr>
 								 	</thead>
 								 	<tbody>
@@ -889,8 +892,9 @@
 								 				<? if(!empty($row['start_date'])){echo date('d-m-Y', strtotime($row['start_date']));}?>
 								 			</td>
 								 			<td><? if(!empty($row['end_date'])){echo date('d-m-Y', strtotime($row['end_date']));}?></td>
-						 		 			<td><?=$positions[$row['position']][$lang]?></td>
-								 			<td><?=$row['salary']?></td> 
+						 		 			<!-- <td><?=$positions[$row['position']][$lang]?></td> -->
+								 			<!-- <td><?=$row['salary']?></td>  -->
+								 			<td><? if(!empty($row['section_change'])){echo $row['section_change'];}?></td>
 								 		</tr>
 								 	<? } } ?>
 								 	</tbody>
@@ -942,12 +946,14 @@
 												<input readonly style="cursor:pointer"  type="text" name="end_date" placeholder="...">
 											</td>
 										</tr>
+
 										<tr style="border-bottom: 1px #ccc solid;">
-											<th><?=$lng['Salary']?></th>
-											<td style="padding:0">
-												<input readonly type="text" id="salary" name="salary" placeholder="...">
+											<th>Employee status</th>
+											<td colspan="3" style="padding:0">
+												<input style="pointer-events: none;"  type="text" name="employee_status" placeholder="...">
 											</td>
 										</tr>
+						
 										
 										<thead>
 											<tr style="background: #eee;">
@@ -955,7 +961,17 @@
 											</tr>
 										</thead>
 										<!-- <tr style="background: #ebfbea;" id="fixallowsec"><th class="tal" colspan="2"><?=$lng['Fixed allowances']?></th></tr> -->
-										<tr  id="fixallowsec"><th class="tal" colspan="2"><?=$lng['Fixed allowances']?></th></tr>
+										<tr >
+											<th><?=$lng['Salary']?></th>
+											<td style="padding:0">
+												<input readonly type="text" id="salary" name="salary" placeholder="...">
+											</td>
+										</tr>
+					
+										<tr  id="fixallowsec">
+		
+										</tr>						
+								
 										<? /*
 										if($getNewFixAllowDeduct['inc_fix']){ 
 										 	foreach($getNewFixAllowDeduct['inc_fix'] as $k=>$v){
@@ -969,7 +985,9 @@
 										<? } } } */?>
 
 										<!-- <tr style="background: #ebfbea;" id="fixdeductsec"><th class="tal" colspan="2"><?=$lng['Fixed deductions']?></th></tr> -->
-										<tr  id="fixdeductsec"><th class="tal" colspan="2"><?=$lng['Fixed deductions']?></th></tr>
+										<tr  id="fixdeductsec">
+											<!-- <th class="tal" colspan="2"><?=$lng['Fixed deductions']?></th> -->
+										</tr>
 										<? /*
 										if($getNewFixAllowDeduct['ded_fix']){ 
 										 	foreach($getNewFixAllowDeduct['ded_fix'] as $k=>$v){
@@ -1032,22 +1050,23 @@
 											</td>
 										</tr>
 
-
 										<thead>
 											<tr style="background: #eee;">
-												<th style="border-top: 1px #ccc solid;" colspan="4">Other</th>
+												<input type="hidden" name="hidden_edit_check" id="hidden_edit_check" value="">
+												<input type="hidden" name="hidden_row_edit_id" id="hidden_row_edit_id" value="">
+												<th style="border-top: 1px #ccc solid;" colspan="4">Other <a class="text-success float-right" id="editOtherBenefits"><i class="fa fa-edit font-weight-bold  fa-lg"></i></a></th>
 											</tr>
 										</thead>
 										<tr>
 											<th><?=$lng['Other benefits']?></th>
 											<td style="padding:0">
-												<textarea readonly="readonly" data-autoresize style="resize:vertical" rows="2" name="other_benifits" placeholder="..."></textarea>
+												<textarea readonly="readonly" data-autoresize style="resize:vertical" rows="2" id="other_benifitsEdit" name="other_benifitsEdit" placeholder="..."></textarea>
 											</td>
 										</tr>
 										<tr>
 											<th><?=$lng['Remarks']?></th>
 											<td colspan="3" style="padding:0">
-												<textarea readonly ="readonly" data-autoresize style="resize:vertical" rows="2" name="remarks" placeholder="..."></textarea>
+												<textarea readonly ="readonly" data-autoresize style="resize:vertical" rows="2" id="remarksEdit" name="remarksEdit" placeholder="..."></textarea>
 											</td>
 										</tr>
 										<tr style="border:0">
@@ -1056,7 +1075,8 @@
 												<!-- <b style="display:block; margin-bottom:3px"><?=$lng['Attachments']?></b> -->
 												<div id="caAttach"></div>
 												<div id="attachCareer" style="clear:both">
-													<!-- <input style="margin:0 0 5px 0" class="attachBtn" name="attachment[]" type="file" /> -->
+													<input style="margin:0 0 5px 0;pointer-events: none;" class="attachBtn" id="attachmentEdit" name="attachmentEdit[]" type="file" />
+
 												</div>
 											</td>
 										</tr>
@@ -1148,24 +1168,35 @@
 
 						<tr>
 							<th><?=$lng['Notice date']?></th>
-							<td><input type="text" readonly style="cursor:pointer" class="datepick" name="notice_date" placeholder="..." value="<?=$data['notice_date']?>"></td>
+							<td><input type="text" readonly style="cursor:pointer;pointer-events:none;" class="datepick" name="notice_date" placeholder="..." value="<?=$data['notice_date']?>"></td>
 						</tr>
 						<tr>
 							<th><?=$lng['End date']?></th>
-							<td><input type="text" style="cursor:pointer; width:109px" class="datepick" name="resign_date" id="resign_dateValue" placeholder="..." value="<? if(!empty($data['resign_date'])){echo date('d-m-Y', strtotime($data['resign_date']));}?>"><b style="color:#b00"><?=$lng['Last working day']?></b></td>
+							<td><input type="text" style="cursor:pointer; width:109px;pointer-events:none;" class="datepick" name="resign_date" id="resign_dateValue" placeholder="..." value="<? if(!empty($data['resign_date'])){echo date('d-m-Y', strtotime($data['resign_date']));}?>"><b style="color:#b00"><?=$lng['Last working day']?></b></td>
 						</tr>
 						<tr>
 							<th><?=$lng['End reason']?></th>
-							<td><input type="text" name="resign_reason" placeholder="..." value="<?=$data['resign_reason']?>"></td>
+							<td><input readonly="readonly" type="text" name="resign_reason" placeholder="..." value="<?=$data['resign_reason']?>"></td>
 						</tr>
 						<tr>
 							<th><?=$lng['Employee status']?></th><td>
-								<select name="emp_status" id="emp_status" onChange="$('#empstatus').val(this.value)" style="width:auto">
+								<select name="emp_status" id="emp_status" onChange="$('#empstatus').val(this.value)" style="width:auto;pointer-events:none;-webkit-appearance: none;-moz-appearance: none;text-indent: 1px;text-overflow: '';">
 									<? foreach($emp_status as $k=>$v){ ?>
 										<option <? if($data['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
 									<? } ?>
 								</select>
 								<b style="color:#b00"><?=$lng['When resign date filled in...']?></b></td>
+							</td>
+						</tr>
+
+						<tr>
+							<th>Month Last Payroll</th>
+							<td>
+								<select name="month_payroll" id="month_payroll" style="pointer-events: none;-webkit-appearance: none;-moz-appearance: none;text-indent: 1px;text-overflow: '';">
+									<?foreach($months as $k => $v){?>
+										<option value="<?=$k?>"><?=$v?></option>
+									<? } ?>
+								</select>
 							</td>
 						</tr>
 
@@ -1182,17 +1213,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th><?=$lng['Month Payroll']?></th>
-							<td>
-								<select name="month_payroll" id="month_payroll">
-									<option value="0"><?=$lng['Please select']?></option>
-									<?foreach($months as $k => $v){?>
-										<option value="<?=$k?>"><?=$v?></option>
-									<? } ?>
-								</select>
-							</td>
-						</tr>
+			
 						<tr>
 							<th><?=$lng['Remaining salary']?></th>
 							<td><input class="float72 sel notnull" type="text" id="remaining_salary" name="remaining_salary" placeholder="..." value="<?=$data['remaining_salary']?>"></td>
@@ -2175,31 +2196,33 @@
 			// show popup here for yes no and save value in hidden field 
 
 			// when there is a value in additional compensation fields 
-			$("body").overhang({
-				type: "confirm",
-				primary: "#228B22",
-				//accent: "#27AE60",
-				yesColor: "#3498DB",
-				message: "Add additional compensations in career database?",
-				overlay: true,
-				callback: function (value) {
+
+			// if tab is end contract
+			// $("body").overhang({
+			// 	type: "confirm",
+			// 	primary: "#228B22",
+			// 	//accent: "#27AE60",
+			// 	yesColor: "#3498DB",
+			// 	message: "Add additional compensations in career database?",
+			// 	overlay: true,
+			// 	callback: function (value) {
 
 
-					if(value == true)
-					{
-						// set compensation data
-						var addComp = 'yes';
+			// 		if(value == true)
+			// 		{
+			// 			// set compensation data
+			// 			var addComp = 'yes';
 
-					}
-					else
-					{
-						// do not set compensation data 	
-						var addComp = 'no';
-					}
+			// 		}
+			// 		else
+			// 		{
+			// 			// do not set compensation data 	
+			// 			var addComp = 'no';
+			// 		}
 
-					data.append('addComp',addComp);
-					if(addComp)
-					{
+			// 		data.append('addComp',addComp);
+			// 		if(addComp)
+			// 		{
 						$.ajax({
 							url: "ajax/update_employees.php",
 							type: 'POST',
@@ -2242,9 +2265,9 @@
 								})
 							}
 						});
-					}
-				}
-			});
+			// 		}
+			// 	}
+			// });
 
 			// when there is no value in additional compensation field donot show the popup 
 
@@ -2378,6 +2401,8 @@
 			$('select[name="position"] option').attr('selected',false)
 			var id = $(this).data('id');
 
+			var empStatus = <?=json_encode($emp_status)?>;
+
 			$.ajax({
 				url: "ajax/get_employee_benefit.php",
 				type: "POST", 
@@ -2397,8 +2422,10 @@
 					$('input#salary').val(data.salary)
 					$('textarea[name="benefits"]').val(data.benefits)
 					$('textarea[name="other_benifits"]').val(data.other_benifits)
+					$('textarea[name="other_benifitsEdit"]').val(data.other_benifits)
 					$('textarea[name="classification"]').val(data.classification)
 					$('textarea[name="remarks"]').val(data.remarks)
+					$('textarea[name="remarksEdit"]').val(data.remarks)
 					$('#caAttach').empty();
 					$.each(data.attachment, function(i,val){
 						$('#caAttach').append(
@@ -2408,6 +2435,8 @@
 						)
 					})					
 
+					$('input[name="employee_status"]').val(empStatus[data.employeeStatus]);
+					$('input[name="hidden_row_edit_id"]').val(data.employee_career_row_id);
 					// $.each(data.attachment, function(i,val){
 					// 	$('#caAttach').append(
 					// 		'<div class="attachDiv">'+
@@ -2427,16 +2456,10 @@
 					
 
 					// check here which row is selected if it has end date then show the edit button for that row
-					if(data.end_date != '')
-					{
-						$('button#editBtn').css('display','block');
-					}
-					else
-					{
-						$('button#editBtn').css('display','none');
-					}
 
-
+					if(data.end_date == null){$('button#editBtn').css('display','none');}
+					else if(data.end_date != ''){$('button#editBtn').css('display','block');}
+					else{$('button#editBtn').css('display','none');}
 
 
 					$.each(data.fix_allows, function(i,val){
@@ -3132,10 +3155,17 @@
 				var withoutLeadingZero  = from[1].replace(/^0+/, '');
 				// now we have the last month need to remove the rest of the months  
 				var plusOneInMonth =  parseInt(withoutLeadingZero) + 1;
-				for (var i = plusOneInMonth; i <= 12; i++) {
+				for (var i = 0; i <= 12; i++) {
 					 // remove these from payroll months array
-					$("#month_payroll option[value='"+i+"']").remove();
+					if(i != withoutLeadingZero)
+					{
+						$("#month_payroll option[value='"+i+"']").remove();
+					}
 				}
+			}
+			else
+			{
+				$('#month_payroll').empty();
 			}
 
 		});
@@ -3143,6 +3173,57 @@
 
 
 	// =============================REMOVE MONTHS FROM PAYROLL MONTHS ACCORDING TO END DATE  ON CHANGE==================================//
+
+
+	// ============================= TAB CHECK BEFORE UPDATE ==============================//
+
+		$(document).on("change", "#attachmentEdit", function(e){
+				
+			$('#hidden_edit_check').val('change');
+
+		});	
+		
+		$(document).on("keyup", "#other_benifitsEdit, #remarksEdit", function(e){
+				
+			$('#hidden_edit_check').val('change');
+
+		});	
+
+		
+	// ============================= TAB CHECK BEFORE UPDATE ==============================//
+
+	// ============================= MAKE CHANGES IN OTHER BENEFITS =================================//
+
+		$(document).on("click", "#editOtherBenefits", function(e){
+			
+			// remove readonly from other benefits
+			$('#other_benifitsEdit').attr("readonly", false);
+			// remove readonly from remarks 
+			$('#remarksEdit').attr("readonly", false);
+			// remove pointe none from attachments
+			$('#attachmentEdit').css("pointer-events", '');
+
+			// show update button at the top to update these three fields only 
+			$('#submitBtn').css('display','');
+
+		});			
+
+		// $(document).on("click", "#submitBtnEdit", function(e){
+
+		// 	$( "#financialForm" ).submit();
+		// });	
+
+
+
+		// $("#testform").on('submit', function(e){ // SUBMIT EMPLOYEE FORM ///////////////////////////////////
+		// 	e.preventDefault();
+
+		// 	console.log('11');
+		// 	// var data = new FormData(this);
+
+
+		// });
+	// ============================= MAKE CHANGES IN OTHER BENEFITS =================================//
 	</script>
 	
 

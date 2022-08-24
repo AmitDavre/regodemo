@@ -406,6 +406,13 @@
 	height: 100%;
 }
 
+.tab2 {
+	  display: none;
+	}
+.tab3{
+  display: none;
+}
+
 </style>
 
 <h2 style="padding-right:20px"><i class="fa fa-users fa-mr"></i> <?=$lng['Modify Employee Register']?>
@@ -2375,6 +2382,8 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 			
 		}
 		else if(selectionSelectSectionData == '2')
@@ -2387,6 +2396,8 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 
 		}	
 		else if(selectionSelectSectionData == '3')
@@ -2399,6 +2410,8 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 
 		}	
 		else if(selectionSelectSectionData == '4')
@@ -2411,6 +2424,8 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 
 		}	
 		else if(selectionSelectSectionData == '5')
@@ -2423,6 +2438,8 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 		}		
 		else if(selectionSelectSectionData == '6')
 		{
@@ -2434,6 +2451,8 @@
 			$('#organization_div_data').css('display','');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 		}else if(selectionSelectSectionData == '7')
 		{
 			$('#country_div_data').css('display','none');
@@ -2444,6 +2463,8 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','');
 			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 		}		
 		else if(selectionSelectSectionData == '8')
 		{
@@ -2455,7 +2476,9 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','');
-		}/* else if(selectionSelectSectionData == '11')
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
+		} else if(selectionSelectSectionData == '11')
 		{
 			$('#country_div_data').css('display','none');
 			$('#personal_div_data').css('display','none');
@@ -2476,8 +2499,10 @@
 			$('#leave_div_data').css('display','none');
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
-			$('#benefits_div_data').css('display','');
-		} */
+			$('#benefits_div_data').css('display','none');
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','');
+		} 
 		else
 		{
 			$('#personal_div_data').css('display','none');
@@ -2488,7 +2513,8 @@
 			$('#organization_div_data').css('display','none');
 			$('#financial_div_data').css('display','none');
 			$('#benefits_div_data').css('display','none');
-
+			$('#employment_div_data').css('display','none');
+			$('#responsibilities_div_data').css('display','none');
 		}
 
 		//======================================= GET SELECTED SECTION ON PAGE RELOAD =============================//
@@ -2600,53 +2626,6 @@
 	}
 
 
-	var currentTab = 0; 
-	showTab(currentTab);
-
-	function showTab(n) {
-	  // This function will display the specified tab of the form...
-	  var x = document.getElementsByClassName("tab"); 
-	  x[n].style.display = "block";
-	  //... and fix the Previous/Next buttons:
-	  if (n == 0) {
-	    document.getElementById("prevBtn").style.display = "none";
-	  } else {
-	    document.getElementById("prevBtn").style.display = "inline";
-	    //$('#SaveNewUser').attr('id','nextBtn');
-	  }
-	  if (n == (x.length - 1)) {
-	  	checkAllcheckboxes();
-	    document.getElementById("nextBtn").innerHTML = "<?=$lng['Modify Data']?>";
-	    
-	    //$('#nextBtn').attr('id','SaveNewUser');
-	  } else {
-	    document.getElementById("nextBtn").innerHTML = "Next";
-	    
-	    //$('#nextBtn').attr('id','nextBtn'); 
-	  }
-	  //... and run a function that will display the correct step indicator:
-	  //fixStepIndicator(n)
-	}
-
-	function nextPrev(n) {
-	  // This function will figure out which tab to display
-	  var x = document.getElementsByClassName("tab");
-	  // Exit the function if any field in the current tab is invalid:
-	  //if (n == 1 && !validateForm()) return false;
-	  // Hide the current tab:
-	  x[currentTab].style.display = "none";
-	  // Increase or decrease the current tab by 1:
-	  currentTab = currentTab + n;
-	  // if you have reached the end of the form...
-	  if (currentTab >= x.length) {
-	    // ... the form gets submitted:
-	    //document.getElementById("regForm").submit();
-	    SaveNewEmployeesdata();
-	    return false;
-	  }
-	  // Otherwise, display the correct tab:
-	  showTab(currentTab);
-	}
 
 
 	function SaveNewEmployeesdata(){
@@ -4506,10 +4485,10 @@
 				$('#div_responsibilities').css("display","none");
 				$('#responsibilities_old_data').css("display","none");
 
-				$("select#showHideclm9")[0].sumo.selectAll();	
+				$("select#showHideclm10")[0].sumo.selectAll();	
 
 				var columns =[];
-				$('#showHideclm9 option:selected').each(function(i) {
+				$('#showHideclm10 option:selected').each(function(i) {
 			  
 			    	 columns.push($(this).val());
 
@@ -4517,7 +4496,7 @@
 
 		    	var att_cols = [];
 				$.each(columns, function(index, item) {
-					att_cols.push({id:item, db:tableCols9[item][0], name:tableCols9[item][1]})
+					att_cols.push({id:item, db:tableCols10[item][0], name:tableCols10[item][1]})
 				})
 
 		    	$.ajax({
@@ -4569,10 +4548,10 @@
 				$('#div_responsibilities').css("display","");
 				$('#responsibilities_old_data').css("display","");
 
-				$("select#showHideclm10")[0].sumo.selectAll();	
+				$("select#showHideclm11")[0].sumo.selectAll();	
 
 				var columns =[];
-				$('#showHideclm10 option:selected').each(function(i) {
+				$('#showHideclm11 option:selected').each(function(i) {
 			  
 			    	 columns.push($(this).val());
 
@@ -4580,7 +4559,7 @@
 
 		    	var att_cols = [];
 				$.each(columns, function(index, item) {
-					att_cols.push({id:item, db:tableCols10[item][0], name:tableCols10[item][1]})
+					att_cols.push({id:item, db:tableCols11[item][0], name:tableCols11[item][1]})
 				})
 
 		    	$.ajax({
@@ -4623,10 +4602,72 @@
 
 			}
 		})
-
-
+		//document ready code block end
+		
+		showTab2(currentTab2);
+		showTab(currentTab);
+		//$('#modalOpenResponsibilities').modal('toggle');
 	});
+	var currentTab = 0,currentTab2 = 0;
+	function showTab1(n) {
+		  var x = document.getElementsByClassName("tab2"); 
 
+		  console.log(x);
+		  x[n].style.display = "block";
+		
+		  if (n == 0) {
+		    document.getElementById("prevBtn2").style.display = "none";
+		  } else {
+		    document.getElementById("prevBtn2").style.display = "inline";
+		  }
+		  if (n == (x.length - 1)) {
+		    document.getElementById("nextBtn2").innerHTML = "Submit";
+		  } else {
+		    document.getElementById("nextBtn2").innerHTML = "Next";
+		  }
+		}
+
+	function showTab2(n) {
+		  var x = document.getElementsByClassName("tab3"); 
+
+		  console.log(n);
+		  x[n].style.display = "block";
+		
+		  if (n == 0) {
+		    document.getElementById("prevBtn3").style.display = "none";
+		  } else {
+		    document.getElementById("prevBtn3").style.display = "inline";
+		  }
+		  //console.log(x.length+" "+n+" ");
+		  if (n == (x.length - 1)) {
+			  //console.log(x.length);
+		    document.getElementById("nextBtn3").innerHTML = "Submit";
+		  } else {
+			  ///console.log(x.length);
+		    document.getElementById("nextBtn3").innerHTML = "Next";
+		  }
+		}
+		function nextPrev(n) {
+		  var x = document.getElementsByClassName("tab2");
+		  x[currentTab].style.display = "none";
+		  currentTab = currentTab + n;
+		  if (currentTab >= x.length) {
+		    //SaveNewUsersssForm1();
+		    return false;
+		  }
+		 showTab1(currentTab);
+		}
+
+		function nextPrev2(n) {
+			  var x = document.getElementsByClassName("tab3");
+			  x[currentTab2].style.display = "none";
+			  currentTab2 = currentTab2 + n;
+			  if (currentTab2 >= x.length) {
+			    //SaveNewUsersssForm1();
+			    return false;
+			  }
+			 showTab2(currentTab2);
+		}
 	
 	
 	function getSelectedTeamEmployee(locations,divisions,departments,teams){
@@ -4662,6 +4703,9 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 		
 		// hide show dropdown display  none here 
 		// show perosnal div 
@@ -4692,6 +4736,8 @@ function getDataDiv(){
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
 		$(".commonhidebutton").css('display','');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 
 
 
@@ -4727,6 +4773,8 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 
 		$("#showHideclm2").closest("div").css('display','none');
 		$("#showHideclm3").closest("div").css('display','none');
@@ -4756,6 +4804,8 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 
 		// hide other div 
 
@@ -4787,6 +4837,8 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 
 
 		// hide all div 
@@ -4819,6 +4871,8 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 
 
 		// hide all div 
@@ -4850,6 +4904,8 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','');
 		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 		
 
 
@@ -4884,6 +4940,8 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 
 
 		// hide all div 
@@ -4897,7 +4955,7 @@ function getDataDiv(){
 		$("#showHideclm8").closest("div").css('display','');
 		$("#showHideclm10").closest("div").css('display','none');
 		$("#showHideclm11").closest("div").css('display','none');
-		$(".commonhidebutton").css('display','none');
+		$(".commonhidebutton").css('display','');
 
 
 
@@ -4905,7 +4963,7 @@ function getDataDiv(){
 		//dtable14.columns.adjust();
 
 
-	}else if(selectionSelect == '9')
+	}else if(selectionSelect == '11')
 	{
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
@@ -4914,7 +4972,9 @@ function getDataDiv(){
 		$('#leave_div_data').css('display','none');
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
-		$('#benefits_div_data').css('display','');
+		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','');
+		$('#responsibilities_div_data').css('display','none');
 
 
 		// hide all div 
@@ -4928,7 +4988,7 @@ function getDataDiv(){
 		$("#showHideclm8").closest("div").css('display','none');
 		$("#showHideclm10").closest("div").css('display','');
 		$("#showHideclm11").closest("div").css('display','none');
-		$(".commonhidebutton").css('display','none');
+		$(".commonhidebutton").css('display','');
 
 
 
@@ -4936,7 +4996,7 @@ function getDataDiv(){
 		//dtable14.columns.adjust();
 
 
-	}else if(selectionSelect == '10')
+	}else if(selectionSelect == '12')
 	{
 		$('#country_div_data').css('display','none');
 		$('#personal_div_data').css('display','none');
@@ -4945,7 +5005,9 @@ function getDataDiv(){
 		$('#leave_div_data').css('display','none');
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
-		$('#benefits_div_data').css('display','');
+		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','');
 
 
 		// hide all div 
@@ -4978,6 +5040,8 @@ function getDataDiv(){
 		$('#organization_div_data').css('display','none');
 		$('#financial_div_data').css('display','none');
 		$('#benefits_div_data').css('display','none');
+		$('#employment_div_data').css('display','none');
+		$('#responsibilities_div_data').css('display','none');
 		$(".commonhidebutton").css('display','');
 
 

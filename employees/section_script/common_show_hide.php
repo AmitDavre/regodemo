@@ -699,7 +699,42 @@
 				dtable14.column(nr).visible(false);
 			}
     	})
+
+	$("table#showHideClmss2 div.SumoSelect:nth-child(9) li").bind('click.check', function(event) {
+			var nr = $(this).index()+2;
+
+			// console.log(nr);
+
+			
+			if($(this).hasClass('selected') == true){
+
+				dtable17.column(nr).visible(true);
+				dtable18.column(nr).visible(true);
+			}
+			else
+			{	
+				dtable17.column(nr).visible(false);
+				dtable18.column(nr).visible(false);
+			}
+    	})
     	
+    	$("table#showHideClmss2 div.SumoSelect:nth-child(10) li").bind('click.check', function(event) {
+			var nr = $(this).index()+2;
+
+			// console.log(nr);
+
+			
+			if($(this).hasClass('selected') == true){
+
+				dtable19.column(nr).visible(true);
+				dtable20.column(nr).visible(true);
+			}
+			else
+			{	
+				dtable19.column(nr).visible(false);
+				dtable20.column(nr).visible(false);
+			}
+    	})
     
     	
     	
@@ -881,7 +916,7 @@
 			});
 		}); 		
 
-$("table#showHideClmss2 select#showHideclm9").on('sumo:closing', function(o) {
+		$("table#showHideClmss2 select#showHideclm9").on('sumo:closing', function(o) {
 
 			var columns = $(this).val();
 			var att_cols = [];
@@ -930,3 +965,53 @@ $("table#showHideClmss2 select#showHideclm9").on('sumo:closing', function(o) {
 				}
 			});
 		}); 
+
+		$("table#showHideClmss2 select#showHideclm10").on('sumo:closing', function(o) {
+
+			var columns = $(this).val();
+			var att_cols = [];
+			$.each(columns, function(index, item) {
+				att_cols.push({id:item, db:tableCols10[item][0], name:tableCols10[item][1]})
+			})	
+
+			$.ajax({
+				url: "ajax/update_show_hide_clm2.php",
+				data: {cols: att_cols},
+				success: function(result){
+
+					
+				},
+				error:function (xhr, ajaxOptions, thrownError){
+					$("body").overhang({
+						type: "error",
+						message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+						duration: 4,
+					})
+				}
+			});
+		});
+
+		$("table#showHideClmss2 select#showHideclm10").on('sumo:closing', function(o) {
+
+			var columns = $(this).val();
+			var att_cols = [];
+			$.each(columns, function(index, item) {
+				att_cols.push({id:item, db:tableCols11[item][0], name:tableCols11[item][1]})
+			})	
+
+			$.ajax({
+				url: "ajax/update_show_hide_clm2.php",
+				data: {cols: att_cols},
+				success: function(result){
+
+					
+				},
+				error:function (xhr, ajaxOptions, thrownError){
+					$("body").overhang({
+						type: "error",
+						message: '<i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;<?=$lng['Sorry but someting went wrong']?> <b><?=$lng['Error']?></b> : '+thrownError,
+						duration: 4,
+					})
+				}
+			});
+		});

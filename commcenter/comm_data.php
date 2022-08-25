@@ -1,8 +1,5 @@
 <?
-	// $jsonCustomers = getJsonCustomers();
-	// $jsonProducts = getJsonProducts('A');
-	// $emailTemplates = getEmailTemplates();
-	// $contactEmails = getContactEmails();
+
 	
 	$tot_record = 1;
 	$sqltt = "SELECT COUNT(*) as tot_record FROM ".$cid."_comm_centers WHERE month = '".date('m')."'";

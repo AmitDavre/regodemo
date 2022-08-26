@@ -1,6 +1,6 @@
 <?
 
-
+//print_r($emp_status);die();
 	$getEmpName = getEmpName();
 	$tempdata = '';
 	$teamsUni = array();
@@ -1067,16 +1067,16 @@
 					<div class="smallNav" id= "employment_div_data" style="display: none;">
 						<ul style="">
 							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_joinig_date_li">
-								 <a  style="border-right: none;" ><span > Edit Joining Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("joining_date","date")'> Edit Joining Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>
 							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_service_years_li">
-								 <a  style="border-right: none;" ><span > Edit Service Years<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("service_years","text")' > Edit Service Years<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>		
 							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_employment_end_date_li">
-								 <a  style="border-right: none;" ><span > Edit Employment End Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("employment_end_date","date")'> Edit Employment End Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>
 							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_employee_status_li">
-								 <a  style="border-right: none;" ><span > Edit Employee Status<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("employee_status","dropdown")'> Edit Employee Status<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>
 						</ul>						
 					</div>
@@ -5708,10 +5708,12 @@ function submitPopupModalEdit(valueCheck){
 <?php include('section_script/time.php'); ?>
 // ===============================  ORGANIZATION SECTION SCRIPT ===================//
 <?php include('section_script/organization.php'); ?>
-//===============================  Benefit SECTION SCRIPT ===================//
+//===============================  Financial SECTION SCRIPT ===================//
 <?php include('section_script/financial.php'); ?>
 // ===============================  Benefit SECTION SCRIPT ===================//
 <?php include('section_script/benefit.php'); ?>
+//===============================  Employment Data SECTION SCRIPT ===================//
+<?php include('section_script/employment.php'); ?>
 
 
 

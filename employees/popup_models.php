@@ -2803,7 +2803,7 @@
 				<div style="overflow:auto;" id="hideauto">
 				    <div>
 				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
-				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonEmploymentData('text');"><?=$lng['Submit']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalEditEmployment('text');"><?=$lng['Submit']?></button>
 				    </div>
 				</div>
 			</div>
@@ -2848,7 +2848,7 @@
 				<div style="overflow:auto;" id="hideauto">
 				    <div>
 				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
-				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalCommonEmploymentData('date');"><?=$lng['Submit']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalEditEmployment('date');"><?=$lng['Submit']?></button>
 				    </div>
 				</div>
 			</div>
@@ -2876,9 +2876,13 @@
 						</thead>
 						<tbody>
 							<tr>
-								<th class="tal"><span id="employment_data_dropdown_field_span"></span></th>
+								<th class="tal"><span id="employment_data_dropdown_field_span">
+												
+								</span></th>
 								<td>
-									<select id='modal_employment_data_edit_dropdown_value'></select>
+									<select id='modal_employment_data_edit_dropdown_value'><? foreach($emp_status as $k=>$v){ ?>
+													<option value="<?=$k?>"><?=$v?></option>
+												<? } ?></select>
 									<input type="hidden" name="employment_data_hidden_field_to_update_edit" id="employment_data_hidden_field_to_update_dropdown" value="">
 									<input type="hidden" name="employment_data_hidden_row_id" id="employment_data_hidden_row_id_dropdown" value="">
 
@@ -2892,7 +2896,7 @@
 				<div style="overflow:auto;" id="hideauto">
 				    <div>
 				      <button type="button" data-dismiss="modal" class=" btn btn-primary btn-fl" id="" ><?=$lng['Cancel']?></button>
-				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalDropdownEmploymentData('dropdown');"><?=$lng['Submit']?></button>
+				      <button type="button" class="btn btn-primary btn-fr" id="submit" onclick="submitPopupModalEditEmployment('dropdown');"><?=$lng['Submit']?></button>
 				    </div>
 				</div>
 			</div>

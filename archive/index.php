@@ -93,7 +93,8 @@
 	<script src="../assets/js/rego.js?<?=time()?>"></script>
 
 	<? //include('../include/common_script.php')?>
-	<? //include('../include/main_menu_script_pr.php')?>
+	<? //srththh aethre etsrhthh
+		//include('../include/main_menu_script_pr.php')?>
 
 <script type="text/javascript">
 		

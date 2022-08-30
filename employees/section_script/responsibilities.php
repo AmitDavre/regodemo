@@ -25,10 +25,10 @@ function comomonEmploymentModal(field,valueCheck){
 
 }
 
-function commonEmploymentModal(){
-	$("#modalOpenEmploymentData").modal('toggle');
-	currentTab=0;
-	showTab1(currentTab);
+function commonResponsibilitiesModal(){
+	$("#modalOpenResponsibilities").modal('toggle');
+	currentTab2=0;
+	showTab2(currentTab2);
 }
 
 
@@ -101,14 +101,12 @@ function submitPopupModalEditEmployment(valueCheck){
 	}
 }
 
-$(document).on("click", ".commonEditColumnEmploymentData", function(e){
+$(document).on("click", ".commonEditColumnResponsibilities", function(e){
 
-	$("#modalOpenEmploymentData").modal('toggle');
-	currentTab=0;
-	showTab1(currentTab);
-	var rowId = $(this).closest('tr').children('td:first').find('span#rowIdDatatableSpan').html();//
-	$('#joining_date_2').val($(this).closest('tr').children('.joining_date').text());
-	$('#resign_date2').val($(this).closest('tr').children('.employment_end_date').text());
+	$("#modalOpenResponsibilities").modal('toggle');
+	currentTab2=0;
+	showTab2(currentTab2);
+	var rowId = $(this).closest('tr').children('td:first').find('span#rowIdDatatableSpan').html();
 
 });
 

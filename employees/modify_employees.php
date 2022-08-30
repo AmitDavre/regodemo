@@ -1066,39 +1066,15 @@
 					</div>
 					<div class="smallNav" id= "employment_div_data" style="display: none;">
 						<ul style="">
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_joinig_date_li">
-								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("joining_date","date")'> Edit Joining Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_service_years_li">
-								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("service_years","text")' > Edit Service Years<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>		
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_employment_end_date_li">
-								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("employment_end_date","date")'> Edit Employment End Date<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>
 							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_employee_status_li">
-								 <a  style="border-right: none;" ><span onclick='comomonEmploymentModal("employee_status","dropdown")'> Edit Employee Status<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+								 <a  style="border-right: none;" ><span onclick='commonEmploymentModal("employee_status","dropdown")'> Edit Employment Data<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>
 						</ul>						
 					</div>
 					<div class="smallNav" id= "responsibilities_div_data" style="display: none;">
 						<ul style="">
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_position_li">
-								 <a  style="border-right: none;" ><span > Position<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_date_start_position_li">
-								 <a  style="border-right: none;" ><span > Date start Position<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>		
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_head_of_location_li">
-								 <a  style="border-right: none;" ><span > Head of Location<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_head_of_division_li">
-								 <a  style="border-right: none;" ><span > Head of division<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_head_of_department_li">
-								 <a  style="border-right: none;" ><span > Head of department<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
-							</li>
-							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_team_supervisor_li">
-								 <a  style="border-right: none;" ><span > Team supervisor<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
+							<li style="margin-top: 5px;display: block;background: #ddd; " id="modifydata_employee_status_li">
+								 <a  style="border-right: none;" ><span onclick='commonResponsibilitiesModal("employee_status","dropdown")'> Edit Employment Data<i style="margin-left: 10px;" class="fa fa-edit"></i></span></a>
 							</li>
 						</ul>						
 					</div>
@@ -1560,8 +1536,13 @@
 												<td><?=$value['en_name'];?></td>
 												<td><?=$value['joining_date'];?></td>
 												<td><?=$value['service_years'];?></td>
-												<td><?=$value['employment_end_date'];?></td>
-												<td><?=$value['employee_status'];?></td>
+												<td><?=$value['resign_date'];?></td>
+												<td>
+												<select readonly name="emp_status" style="pointer-events: none;width:140px;">
+												<? foreach($emp_status as $k=>$v){ ?>
+													<option <? if($value['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
+												<? } ?>
+												</td>
 												
 											</tr>
 
@@ -1593,8 +1574,15 @@
 											<tr data-id="<?=$value['emp_id']?>">
 												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
 												<td><?=$value['en_name'];?></td>
-												<td><?=$value['position'];?></td>
-												<td><?=$value['date_start_position'];?></td>
+												<td>
+												<select readonly class="disabledropdown"  name="position" id="position" style="pointer-events: none;width:140px;-webkit-appearance: none;-moz-appearance: none;text-indent: 0.01px;text-overflow: '';">
+												<!-- <option value="">...</option> -->
+												<? foreach($positions as $k=>$v){ ?>
+													<option <? if($value['position'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+												</select>
+												</td>
+												<td><?=$value['date_position'];?></td>
 												<td><?=$value['head_of_location'];?></td>
 												<td><?=$value['head_of_division'];?></td>
 												<td><?=$value['head_of_department'];?></td>
@@ -2065,8 +2053,13 @@
 												<td><?=$value['en_name'];?></td>
 												<td><?=$value['joining_date'];?></td>
 												<td><?=$value['service_years'];?></td>
-												<td><?=$value['employment_end_date'];?></td>
-												<td><?=$value['employee_status'];?></td>
+												<td><?=$value['resign_date'];?></td>
+												<td>
+												<select readonly name="emp_status" style="pointer-events: none;width:140px;">
+												<? foreach($emp_status as $k=>$v){ ?>
+													<option <? if($value['emp_status'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v?></option>
+												<? } ?>
+												</td>
 												
 											</tr>
 
@@ -2098,8 +2091,15 @@
 											<tr data-id="<?=$value['emp_id']?>">
 												<td><span id="rowIdDatatableSpan" style="display: none;"><?=$value['id']?></span><?=$value['emp_id']?></td>
 												<td><?=$value['en_name'];?></td>
-												<td><?=$value['position'];?></td>
-												<td><?=$value['date_start_position'];?></td>
+												<td>
+												<select readonly class="disabledropdown"  name="position" id="position" style="pointer-events: none;width:140px;-webkit-appearance: none;-moz-appearance: none;text-indent: 0.01px;text-overflow: '';">
+												<!-- <option value="">...</option> -->
+												<? foreach($positions as $k=>$v){ ?>
+													<option <? if($value['position'] == $k){echo 'selected';}?> value="<?=$k?>"><?=$v[$lang]?></option>
+												<? } ?>
+    											</select>
+    											</td>
+												<td><?=$value['date_position'];?></td>
 												<td><?=$value['head_of_location'];?></td>
 												<td><?=$value['head_of_division'];?></td>
 												<td><?=$value['head_of_department'];?></td>
@@ -2618,7 +2618,7 @@
 					message: '<i class="fa fa-check"></i>&nbsp;&nbsp;<?=$lng['Data updated successfully']?>',
 					duration: 2,
 					callback: function(value){
-						window.location.reload();
+						//window.location.reload();
 					}
 				})
 			}
@@ -4602,17 +4602,20 @@
 
 			}
 		})
+		
 		//document ready code block end
 		
-		showTab2(currentTab2);
-		showTab(currentTab);
+		//showTab2(currentTab2);
+		//showTab1(currentTab);
 		//$('#modalOpenResponsibilities').modal('toggle');
 	});
 	var currentTab = 0,currentTab2 = 0;
 	function showTab1(n) {
 		  var x = document.getElementsByClassName("tab2"); 
 
-		  console.log(x);
+		  //console.log(x);
+		  for(let i=0;i<x.length;i++)
+			  x[i].style.display="none";
 		  x[n].style.display = "block";
 		
 		  if (n == 0) {
@@ -4625,12 +4628,16 @@
 		  } else {
 		    document.getElementById("nextBtn2").innerHTML = "Next";
 		  }
-		}
+		  if(n == x.length-2&&$('#endOfEmployment').is(':checked'))
+		  document.getElementById("nextBtn2").innerHTML = "Submit";
+	}
 
 	function showTab2(n) {
 		  var x = document.getElementsByClassName("tab3"); 
 
-		  console.log(n);
+		  //console.log(n);
+		  for(let i=0;i<x.length;i++)
+			  x[i].style.display="none";
 		  x[n].style.display = "block";
 		
 		  if (n == 0) {
@@ -4646,15 +4653,42 @@
 			  ///console.log(x.length);
 		    document.getElementById("nextBtn3").innerHTML = "Next";
 		  }
-		}
+	}
 		function nextPrev(n) {
 		  var x = document.getElementsByClassName("tab2");
 		  x[currentTab].style.display = "none";
 		  currentTab = currentTab + n;
+		  
+		  if($('#endOfEmployment').is(':checked'))
+			{
+
+			  if(currentTab == x.length-2){
+				$('#emp_status3val').css('display','block');
+				$('#emp_status2val').css('display','none');
+
+			
+				$('.noticeDateDiv').css('display','none');
+				
+			  }
+				if (currentTab == x.length-1) {
+					//console.log(currentTab);
+					currentTab = currentTab - n;
+					    //SaveNewUsersssForm1();
+					    //return false;
+				}
+			}else{
+				$('#emp_status3val').css('display','none');
+				$('#emp_status2val').css('display','block');
+				$('.noticeDateDiv').css('display','none');
+				if(currentTab == x.length-1)
+				$('.noticeDateDiv').css('display','block');
+			}
 		  if (currentTab >= x.length) {
+			  currentTab = currentTab - n;
 		    //SaveNewUsersssForm1();
-		    return false;
+		    //return false;
 		  }
+		  //console.log('thwh');
 		 showTab1(currentTab);
 		}
 
@@ -4663,8 +4697,9 @@
 			  x[currentTab2].style.display = "none";
 			  currentTab2 = currentTab2 + n;
 			  if (currentTab2 >= x.length) {
+				  currentTab2 = currentTab2 - n;
 			    //SaveNewUsersssForm1();
-			    return false;
+			   // return false;
 			  }
 			 showTab2(currentTab2);
 		}
@@ -5185,7 +5220,7 @@ function saveTpEmpsTable()
 					duration: 1,
 				})
 				setTimeout(function(){
-					//window.location.reload();
+					window.location.reload();
 				}, 500); 
 			}
 		},
@@ -5714,6 +5749,8 @@ function submitPopupModalEdit(valueCheck){
 <?php include('section_script/benefit.php'); ?>
 //===============================  Employment Data SECTION SCRIPT ===================//
 <?php include('section_script/employment.php'); ?>
+//===============================  Responsibilities SECTION SCRIPT ===================//
+<?php include('section_script/responsibilities.php'); ?>
 
 
 

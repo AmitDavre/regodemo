@@ -5,7 +5,8 @@
 	}
 	include(DIR.'files/payroll_functions.php');
 	
-		/*$income = 480000;
+		/*commentsm jusrt 
+		$income = 480000;
 		$deductions = 0;
 		$taxable = $income - $deductions;
 		$rules = unserialize($rego_settings['taxrules']);	

@@ -3,7 +3,7 @@
 <script type="text/javascript" src='../assets/js/autosize.min.js'></script>
 
 <script>
-	
+	/////////comment in script new edit employee
 	var height = window.innerHeight-265;
 	
 	function getAge(date){	

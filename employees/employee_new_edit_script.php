@@ -4,7 +4,6 @@
 
 <script>
 	/////////comment in script new edit employee
-	//added new comment changed recent comment 27-09-2022-a
 	var height = window.innerHeight-265;
 	
 	function getAge(date){	

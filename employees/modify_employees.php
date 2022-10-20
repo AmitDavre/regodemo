@@ -1,5 +1,4 @@
 <?
-//edit comment 17-10-2022
 //print_r($emp_status);die();
 	$getEmpName = getEmpName();
 	$tempdata = '';

@@ -1,6 +1,5 @@
 <?
 //print_r($emp_status);die();
-//changed comment 04-11-2022
 	$getEmpName = getEmpName();
 	$tempdata = '';
 	$teamsUni = array();

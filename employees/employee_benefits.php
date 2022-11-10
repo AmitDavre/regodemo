@@ -1,5 +1,5 @@
 <?php
-	
+	//added new comment 09-11-2022
 	if(!$_SESSION['rego']['employee_benefit']['view']){ 
 		echo '<div class="msg_nopermit">You have no access to this page</div>'; exit;
 	}

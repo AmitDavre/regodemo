@@ -1,4 +1,4 @@
-	
+<!-- added comment 15-11-2022 -->
 	<? if(empty($data['image'])){
 		echo '<style>.croppie-container {background:url(../images/profile_image.jpg) no-repeat center center;}</style>';
 	}else{

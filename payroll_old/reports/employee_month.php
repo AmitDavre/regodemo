@@ -1,4 +1,5 @@
 <?
+//added comment 21-11-2022
 	include(DIR.'files/arrays_'.$_SESSION['rego']['lang'].'.php');
 	if(!isset($_GET['m'])){$_GET['m'] = $_SESSION['rego']['cur_month'];}
 	

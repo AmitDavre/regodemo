@@ -1,4 +1,5 @@
-<?
+<?	
+	//added new comment 21-12-2022
 	/*$res = $dbc->query("SELECT emp_id, name, SUM(days) as days, leave_type FROM ".$cid."_leaves_data GROUP BY emp_id, leave_type"); 
 	while($row = $res->fetch_assoc()){
 		//$data[$row['emp_id']][$row['leave_type']]['name'] = $row['name'];
